@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 
-import { icons, images, SIZES, COLORS, FONTS } from "../constants";
+import { icons, images, sizes, colors, fonts } from "../constants";
 
 const Home = ({ navigation }) => {
   // Dummy Datas
@@ -358,7 +358,7 @@ const Home = ({ navigation }) => {
         <TouchableOpacity
           style={{
             width: 50,
-            paddingLeft: SIZES.padding * 2,
+            paddingLeft: sizes.padding * 2,
             justifyContent: "center",
           }}
         >
@@ -379,20 +379,20 @@ const Home = ({ navigation }) => {
             style={{
               width: "70%",
               height: "100%",
-              backgroundColor: COLORS.lightGray3,
+              backgroundColor: colors.lightGray3,
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: SIZES.radius,
+              borderRadius: sizes.radius,
             }}
           >
-            <Text style={{ ...FONTS.h3 }}>{currentLocation.streetName}</Text>
+            <Text style={{ ...fonts.h3 }}>{currentLocation.streetName}</Text>
           </View>
         </View>
 
         <TouchableOpacity
           style={{
             width: 50,
-            paddingRight: SIZES.padding * 2,
+            paddingRight: sizes.padding * 2,
             justifyContent: "center",
           }}
         >
@@ -414,14 +414,14 @@ const Home = ({ navigation }) => {
       return (
         <TouchableOpacity
           style={{
-            padding: SIZES.padding,
-            paddingBottom: SIZES.padding * 2,
+            padding: sizes.padding,
+            paddingBottom: sizes.padding * 2,
             backgroundColor:
-              selectedCategory?.id == item.id ? COLORS.primary : COLORS.white,
-            borderRadius: SIZES.radius,
+              selectedCategory?.id == item.id ? colors.primary : colors.white,
+            borderRadius: sizes.radius,
             alignItems: "center",
             justifyContent: "center",
-            marginRight: SIZES.padding,
+            marginRight: sizes.padding,
             ...styles.shadow,
           }}
           onPress={() => onSelectCategory(item)}
@@ -435,8 +435,8 @@ const Home = ({ navigation }) => {
               justifyContent: "center",
               backgroundColor:
                 selectedCategory?.id == item.id
-                  ? COLORS.white
-                  : COLORS.lightGray,
+                  ? colors.white
+                  : colors.lightGray,
             }}
           >
             <Image
@@ -451,10 +451,10 @@ const Home = ({ navigation }) => {
 
           <Text
             style={{
-              marginTop: SIZES.padding,
+              marginTop: sizes.padding,
               color:
-                selectedCategory?.id == item.id ? COLORS.white : COLORS.black,
-              ...FONTS.body5,
+                selectedCategory?.id == item.id ? colors.white : colors.black,
+              ...fonts.body5,
             }}
           >
             {item.name}
@@ -464,9 +464,9 @@ const Home = ({ navigation }) => {
     };
 
     return (
-      <View style={{ padding: SIZES.padding * 2 }}>
-        <Text style={{ ...FONTS.h1 }}>Main</Text>
-        <Text style={{ ...FONTS.h1 }}>Categories</Text>
+      <View style={{ padding: sizes.padding * 2 }}>
+        <Text style={{ ...fonts.h1 }}>Main</Text>
+        <Text style={{ ...fonts.h1 }}>Categories</Text>
 
         <FlatList
           data={categories}
@@ -474,7 +474,7 @@ const Home = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingVertical: SIZES.padding * 2 }}
+          contentContainerStyle={{ paddingVertical: sizes.padding * 2 }}
         />
       </View>
     );
@@ -483,7 +483,7 @@ const Home = ({ navigation }) => {
   function renderRestaurantList() {
     const renderItem = ({ item }) => (
       <TouchableOpacity
-        style={{ marginBottom: SIZES.padding * 2 }}
+        style={{ marginBottom: sizes.padding * 2 }}
         onPress={() =>
           navigation.navigate("Restaurant", {
             item,
@@ -494,7 +494,7 @@ const Home = ({ navigation }) => {
         {/* Image */}
         <View
           style={{
-            marginBottom: SIZES.padding,
+            marginBottom: sizes.padding,
           }}
         >
           <Image
@@ -503,7 +503,7 @@ const Home = ({ navigation }) => {
             style={{
               width: "100%",
               height: 200,
-              borderRadius: SIZES.radius,
+              borderRadius: sizes.radius,
             }}
           />
 
@@ -512,25 +512,25 @@ const Home = ({ navigation }) => {
               position: "absolute",
               bottom: 0,
               height: 50,
-              width: SIZES.width * 0.3,
-              backgroundColor: COLORS.white,
-              borderTopRightRadius: SIZES.radius,
-              borderBottomLeftRadius: SIZES.radius,
+              width: sizes.width * 0.3,
+              backgroundColor: colors.white,
+              borderTopRightRadius: sizes.radius,
+              borderBottomLeftRadius: sizes.radius,
               alignItems: "center",
               justifyContent: "center",
               ...styles.shadow,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>{item.duration}</Text>
+            <Text style={{ ...fonts.h4 }}>{item.duration}</Text>
           </View>
         </View>
 
         {/* Restaurant Info */}
-        <Text style={{ ...FONTS.body2 }}>{item.name}</Text>
+        <Text style={{ ...fonts.body2 }}>{item.name}</Text>
 
         <View
           style={{
-            marginTop: SIZES.padding,
+            marginTop: sizes.padding,
             flexDirection: "row",
           }}
         >
@@ -540,11 +540,11 @@ const Home = ({ navigation }) => {
             style={{
               height: 20,
               width: 20,
-              tintColor: COLORS.primary,
+              tintColor: colors.primary,
               marginRight: 10,
             }}
           />
-          <Text style={{ ...FONTS.body3 }}>{item.rating}</Text>
+          <Text style={{ ...fonts.body3 }}>{item.rating}</Text>
 
           {/* Categories */}
           <View
@@ -556,10 +556,10 @@ const Home = ({ navigation }) => {
             {item.categories.map((categoryId) => {
               return (
                 <View style={{ flexDirection: "row" }} key={categoryId}>
-                  <Text style={{ ...FONTS.body3 }}>
+                  <Text style={{ ...fonts.body3 }}>
                     {getCategoryNameById(categoryId)}
                   </Text>
-                  <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>
+                  <Text style={{ ...fonts.h3, color: colors.darkgray }}>
                     {" "}
                     .{" "}
                   </Text>
@@ -572,11 +572,11 @@ const Home = ({ navigation }) => {
               <Text
                 key={priceRating}
                 style={{
-                  ...FONTS.body3,
+                  ...fonts.body3,
                   color:
                     priceRating <= item.priceRating
-                      ? COLORS.black
-                      : COLORS.darkgray,
+                      ? colors.black
+                      : colors.darkgray,
                 }}
               >
                 $
@@ -593,7 +593,7 @@ const Home = ({ navigation }) => {
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         contentContainerStyle={{
-          paddingHorizontal: SIZES.padding * 2,
+          paddingHorizontal: sizes.padding * 2,
           paddingBottom: 30,
         }}
       />
@@ -612,7 +612,7 @@ const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.lightGray4,
+    backgroundColor: colors.lightGray4,
   },
   shadow: {
     shadowColor: "#000",

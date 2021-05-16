@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-export const COLORS = {
+export const colors = {
   // base colors
   primary: "#6232c5",
 
@@ -17,76 +17,36 @@ export const COLORS = {
   cyan: "#00cfce",
   red: "#ee4238",
 
-  purplesmoke: "#e0d6f5",
-  gray1: "#F5F5F6",
-  gray2: "#F6F6F7",
-  gray3: "#EFEFF1",
+  smoke: "whitesmoke",
   darkgray: "#898C95",
   transparent: "transparent",
 };
 
-export const SIZES = {
+export const sizes = {
   // global sizes
-  base: 8,
-  font: 14,
-  radius: 30,
-  padding: 10,
-  padding2: 12,
+  base: 14,
 
   // font sizes
-  largeTitle: 50,
   h1: 30,
   h2: 22,
-  h3: 20,
-  h4: 18,
-  body1: 30,
-  body2: 20,
-  body3: 16,
-  body4: 14,
-  body5: 12,
+  h3: 16,
+  body: 16,
 
   // app dimensions
   width,
   height,
 };
 
-export const FONTS = {
-  largeTitle: {
-    fontFamily: "Roboto-regular",
-    fontSize: SIZES.largeTitle,
-    lineHeight: 55,
-  },
-  h1: { fontFamily: "Roboto-Black", fontSize: SIZES.h1, lineHeight: 36 },
-  h2: { fontFamily: "Roboto-Bold", fontSize: SIZES.h2, lineHeight: 30 },
-  h3: { fontFamily: "Roboto-Bold", fontSize: SIZES.h3, lineHeight: 22 },
-  h4: { fontFamily: "Roboto-Bold", fontSize: SIZES.h4, lineHeight: 22 },
-  body1: {
+export const fonts = {
+  h1: { fontFamily: "Roboto-Black", fontSize: sizes.h1 },
+  h2: { fontFamily: "Roboto-Bold", fontSize: sizes.h2 },
+  h3: { fontFamily: "Roboto-Bold", fontSize: sizes.h3 },
+  body: {
     fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body1,
-    lineHeight: 36,
-  },
-  body2: {
-    fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body2,
-    lineHeight: 30,
-  },
-  body3: {
-    fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body3,
-    lineHeight: 22,
-  },
-  body4: {
-    fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body4,
-    lineHeight: 22,
-  },
-  body5: {
-    fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body5,
-    lineHeight: 22,
+    fontSize: sizes.body,
   },
 };
 
-const appTheme = { COLORS, SIZES, FONTS };
+const appTheme = { colors, sizes, fonts };
 
 export default appTheme;
