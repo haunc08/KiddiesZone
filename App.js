@@ -8,6 +8,8 @@ import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
+import { Heading1 } from "./components/Typography";
+import { View } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -55,6 +57,9 @@ const App = () => {
         <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
       </Stack.Navigator>
     </NavigationContainer>
+    // <View>
+    //   <Heading1>Ok</Heading1>
+    // </View>
   );
 };
 

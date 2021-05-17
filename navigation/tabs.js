@@ -38,7 +38,7 @@ const TabBarCustomButton = ({ accessibilityState, children, onPress }) => {
             width: 50,
             height: 50,
             borderRadius: 25,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.darkprimary,
           }}
           onPress={onPress}
         >
@@ -74,7 +74,7 @@ const CustomTabBar = (props) => {
             left: 0,
             right: 0,
             height: 0,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.darkprimary,
           }}
         ></View>
         <BottomTabBar {...props.props} />
@@ -113,7 +113,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.primary,
+                tintColor: focused ? colors.white : colors.darkprimary,
               }}
             />
           ),
@@ -132,7 +132,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.primary,
+                tintColor: focused ? colors.white : colors.darkprimary,
               }}
             />
           ),
@@ -151,7 +151,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.primary,
+                tintColor: focused ? colors.white : colors.darkprimary,
               }}
             />
           ),
@@ -170,7 +170,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.primary,
+                tintColor: focused ? colors.white : colors.darkprimary,
               }}
             />
           ),

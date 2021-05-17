@@ -22,20 +22,34 @@ export const ScreenView = ({ children, bgColor }) => {
   );
 };
 
-export const NoScrollView = ({ children, bgColor }) => {
+export const NoScrollView = ({ children, bgColor, imgSource }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ImageBackground
-        source={require("../assets/images/background.png")}
-        style={{
-          flex: 1,
-          resizeMode: "cover",
-          justifyContent: "center",
-          padding: sizes.base * 2,
-        }}
-      >
-        {children}
-      </ImageBackground>
+      {imgSource ? (
+        <ImageBackground
+          source={imgSource}
+          style={{
+            flex: 1,
+            resizeMode: "cover",
+            justifyContent: "center",
+            padding: sizes.base * 2,
+          }}
+        >
+          {children}
+        </ImageBackground>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            resizeMode: "cover",
+            justifyContent: "center",
+            padding: sizes.base * 2,
+            backgroundColor: bgColor || colors.primary,
+          }}
+        >
+          {children}
+        </View>
+      )}
     </SafeAreaView>
   );
 };

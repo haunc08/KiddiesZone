@@ -16,7 +16,7 @@ import { ImageBackground, SafeAreaView } from "react-native";
 
 const SignInScreen = ({ navigation }) => {
   return (
-    <NoScrollView>
+    <NoScrollView imgSource={require("../../assets/images/background.png")}>
       <Card title="Đăng nhập">
         <TextInput />
         <TextInput />
