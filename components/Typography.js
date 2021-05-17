@@ -15,6 +15,17 @@ export const Heading3 = ({ children, style }) => {
   return <Text style={{ ...fonts.h3, ...style }}>{children}</Text>;
 };
 
-export const Body = ({ children, style }) => {
-  return <Text style={{ ...fonts.body, ...style }}>{children}</Text>;
+export const Body = ({ children, style, white, center }) => {
+  return (
+    <Text
+      style={{
+        ...fonts.body,
+        color: white ? colors.white : colors.black,
+        textAlign: center ? "center" : "auto",
+        ...style,
+      }}
+    >
+      {children}
+    </Text>
+  );
 };

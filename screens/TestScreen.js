@@ -6,13 +6,24 @@ import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 import { GameList } from "../components/GameList";
 
-export const KidsZoneScreen = () => {
+export const TestScreen = () => {
   return (
     <ScreenView>
       <Space>
         <Card>
           <Space>
             <TextInput />
+            <Row>
+              <Button
+                style={{ flex: 0.5, marginRight: sizes.base / 2 }}
+                type="secondary"
+              >
+                Đăng ký
+              </Button>
+              <Button style={{ flex: 0.5, marginLeft: sizes.base / 2 }}>
+                Đăng nhập
+              </Button>
+            </Row>
             <Row>
               <Button
                 style={{ flex: 0.5, marginRight: sizes.base / 2 }}
@@ -38,3 +49,5 @@ export const KidsZoneScreen = () => {
     </ScreenView>
   );
 };
+
+export default TestScreen;

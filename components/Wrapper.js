@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, ScrollView } from "react-native";
+import { SafeAreaView, View, ScrollView, ImageBackground } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { Heading2 } from "./Typography";
@@ -18,6 +18,24 @@ export const ScreenView = ({ children, bgColor }) => {
           {children}
         </View>
       </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export const NoScrollView = ({ children, bgColor }) => {
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ImageBackground
+        source={require("../assets/images/background.png")}
+        style={{
+          flex: 1,
+          resizeMode: "cover",
+          justifyContent: "center",
+          padding: sizes.base * 2,
+        }}
+      >
+        {children}
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -46,12 +64,12 @@ export const Card = ({ children, bgColor, title }) => {
   );
 };
 
-export const Row = ({ children }) => {
+export const Row = ({ children, style }) => {
   return (
     <View
       style={{
         flexDirection: "row",
-        flex: 1,
+        ...style,
       }}
     >
       {children}

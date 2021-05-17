@@ -7,10 +7,9 @@ import {
 import Svg, { Path } from "react-native-svg";
 import { isIphoneX } from "react-native-iphone-x-helper";
 
-import { Home } from "../screens";
+import { Home, SignInScreen, TestScreen, SignUpScreen } from "../screens";
 
 import { colors, icons } from "../constants";
-import { KidsZoneScreen } from "../screens/KidsZoneScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -105,7 +104,7 @@ const Tabs = () => {
     >
       <Tab.Screen
         name="Home"
-        component={KidsZoneScreen}
+        component={TestScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
@@ -124,7 +123,7 @@ const Tabs = () => {
 
       <Tab.Screen
         name="Search"
-        component={Home}
+        component={SignInScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
@@ -143,7 +142,7 @@ const Tabs = () => {
 
       <Tab.Screen
         name="Like"
-        component={Home}
+        component={SignUpScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
