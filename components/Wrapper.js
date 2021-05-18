@@ -6,7 +6,7 @@ import { Heading2 } from "./Typography";
 
 export const ScreenView = ({ children, bgColor }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -18,13 +18,13 @@ export const ScreenView = ({ children, bgColor }) => {
           {children}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export const NoScrollView = ({ children, bgColor, imgSource }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {imgSource ? (
         <ImageBackground
           source={imgSource}
@@ -50,7 +50,7 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
           {children}
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
