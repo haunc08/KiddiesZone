@@ -10,7 +10,6 @@ import Orientation from "react-native-orientation-locker";
 export const KidsZone = () => {
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
-    console.log("LOCK TO FUCKING LANDSCAPE");
   }, []);
   return (
     <ScreenView>

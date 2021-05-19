@@ -92,25 +92,21 @@ export const Row = ({ children, style }) => {
 };
 
 export const Space = ({ children, row }) => {
-  const renderChildren = () => {
-    const list = [];
-    React.Children.forEach(children, function (child) {
-      list.push(child);
-      list.push(
-        <View
-          style={{
-            width: sizes.base,
-            height: sizes.base,
-          }}
-        />
-      );
-    });
-    list.pop();
-    return list;
-  };
   return (
     <View style={{ flexDirection: row ? "row" : "column" }}>
-      {renderChildren()}
+      {children.map((c, index) => {
+        return index !== children.length - 1
+          ? [
+              c,
+              <View
+                style={{
+                  width: sizes.base,
+                  height: sizes.base,
+                }}
+              />,
+            ]
+          : c;
+      })}
     </View>
   );
 };
