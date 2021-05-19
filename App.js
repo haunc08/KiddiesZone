@@ -12,6 +12,7 @@ import { Heading1 } from "./components/Typography";
 import { View } from "react-native";
 import { NoScrollView } from "./components/Wrapper";
 import KidsZone from "./screens/main/KidsZone";
+import TestScreenHorizontal from "./screens/TestScreenHorizontal";
 
 const Stack = createStackNavigator();
 
@@ -60,7 +61,7 @@ const App = () => {
     //   </Stack.Navigator>
     // </NavigationContainer>
 
-    <KidsZone />
+    <TestScreenHorizontal />
   );
 };
 

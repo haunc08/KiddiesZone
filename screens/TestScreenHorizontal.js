@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
-import { sizes } from "../../constants";
-import { Card, Row, ScreenView, Space } from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
-import { Button } from "../../components/Button";
-import { GameList } from "../../components/GameList";
+import { sizes } from "../constants";
+import { Card, Row, ScreenView, Space } from "../components/Wrapper";
+import { TextInput } from "../components/TextInput";
+import { Button } from "../components/Button";
+import { GameList } from "../components/GameList";
 import Orientation from "react-native-orientation-locker";
 
-export const KidsZone = () => {
+export const TestScreenHorizontal = () => {
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
   }, []);
@@ -54,4 +54,4 @@ export const KidsZone = () => {
   );
 };
 
-export default KidsZone;
+export default TestScreenHorizontal;

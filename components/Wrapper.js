@@ -4,17 +4,29 @@ import { SafeAreaView, View, ScrollView, ImageBackground } from "react-native";
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { Heading2 } from "./Typography";
 
-export const ScreenView = ({ children, bgColor }) => {
+export const ScreenView = ({ children, bgColor, horizontal }) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        horizontal={horizontal}
         style={{
           backgroundColor: bgColor || colors.smoke,
         }}
       >
-        <View style={{ padding: sizes.base, marginBottom: 100 }}>
+        <View
+          style={
+            horizontal
+              ? {
+                  alignContent: "stretch",
+                  padding: sizes.base,
+                  paddingRight: 100,
+                  flexDirection: "row",
+                }
+              : { padding: sizes.base, paddingBottom: 100 }
+          }
+        >
           {children}
         </View>
       </ScrollView>
@@ -93,7 +105,11 @@ export const Row = ({ children, style }) => {
 
 export const Space = ({ children, row }) => {
   return (
-    <View style={{ flexDirection: row ? "row" : "column" }}>
+    <View
+      style={{
+        flexDirection: row ? "row" : "column",
+      }}
+    >
       {children.map((c, index) => {
         return index !== children.length - 1
           ? [
