@@ -32,9 +32,6 @@ export const KidsZone = () => {
     {
       name: "Đọc truyện",
     },
-    {
-      name: "...",
-    },
   ];
   return (
     <View style={{ flex: 1, backgroundColor: colors.darkprimary }}>
@@ -73,9 +70,7 @@ export const KidsZone = () => {
         >
           <Space loose>
             {games.map((g) => (
-              <Card style={{ width: 320 }}>
-                <Heading1>{g.name}</Heading1>
-              </Card>
+              <Card touchable style={{ width: 320 }} title={g.name} />
             ))}
           </Space>
         </View>

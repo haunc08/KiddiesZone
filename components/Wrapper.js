@@ -1,5 +1,11 @@
 import React from "react";
-import { SafeAreaView, View, ScrollView, ImageBackground } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  ScrollView,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { Heading2 } from "./Typography";
@@ -66,21 +72,29 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
   );
 };
 
-export const Card = ({ children, bgColor, title, style }) => {
-  return (
-    <View
-      style={{
-        backgroundColor: bgColor || "white",
-        padding: sizes.base,
-        paddingBottom: sizes.base * 2,
-        borderWidth: 0,
-        borderRadius: sizes.base,
-        alignItems: "stretch",
-        elevation: sizes.base,
-        shadowOpacity: 0,
-        ...style,
-      }}
-    >
+export const Card = ({ children, bgColor, title, style, touchable }) => {
+  const containerStyle = {
+    backgroundColor: bgColor || "white",
+    padding: sizes.base,
+    paddingBottom: sizes.base * 2,
+    borderWidth: 0,
+    borderRadius: sizes.base,
+    alignItems: "stretch",
+    elevation: sizes.base,
+    shadowOpacity: 0,
+    ...style,
+  };
+  return touchable ? (
+    <TouchableOpacity style={containerStyle}>
+      {title && (
+        <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
+          {title}
+        </Heading2>
+      )}
+      {children}
+    </TouchableOpacity>
+  ) : (
+    <View style={containerStyle}>
       {title && (
         <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
           {title}
