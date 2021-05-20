@@ -40,7 +40,7 @@ export const ScreenView = ({ children, bgColor, horizontal }) => {
   );
 };
 
-export const NoScrollView = ({ children, bgColor, imgSource }) => {
+export const NoScrollView = ({ children, bgColor, imgSource, style }) => {
   return (
     <View style={{ flex: 1 }}>
       {imgSource ? (
@@ -51,6 +51,7 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
             resizeMode: "cover",
             justifyContent: "center",
             padding: sizes.base * 2,
+            ...style,
           }}
         >
           {children}
@@ -59,10 +60,10 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
         <View
           style={{
             flex: 1,
-            resizeMode: "cover",
             justifyContent: "center",
             padding: sizes.base * 2,
-            backgroundColor: bgColor || colors.primary,
+            backgroundColor: bgColor || colors.darkprimary,
+            ...style,
           }}
         >
           {children}
@@ -72,7 +73,14 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
   );
 };
 
-export const Card = ({ children, bgColor, title, style, touchable }) => {
+export const Card = ({
+  children,
+  bgColor,
+  title,
+  style,
+  touchable,
+  onPress,
+}) => {
   const containerStyle = {
     backgroundColor: bgColor || "white",
     padding: sizes.base,
@@ -85,7 +93,7 @@ export const Card = ({ children, bgColor, title, style, touchable }) => {
     ...style,
   };
   return touchable ? (
-    <TouchableOpacity style={containerStyle}>
+    <TouchableOpacity style={containerStyle} onPress={onPress}>
       {title && (
         <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
           {title}

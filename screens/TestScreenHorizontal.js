@@ -4,13 +4,31 @@ import { sizes } from "../constants";
 import { Card, Row, ScreenView, Space } from "../components/Wrapper";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
-import { GameList } from "../components/GameList";
 import Orientation from "react-native-orientation-locker";
+import { HorizontalList } from "../components/HorizontalList";
 
 export const TestScreenHorizontal = () => {
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
   }, []);
+  const games = [
+    {
+      key: "sandbox",
+      name: "Vẽ trên cát",
+    },
+    {
+      key: "counting",
+      name: "Đếm số",
+    },
+    {
+      key: "spelling",
+      name: "Đánh vần",
+    },
+    {
+      key: "reading",
+      name: "Đọc truyện",
+    },
+  ];
   return (
     <ScreenView horizontal>
       <Space>
@@ -48,7 +66,7 @@ export const TestScreenHorizontal = () => {
             <Button type="outlined">Outlined button</Button>
           </Space>
         </Card>
-        <GameList />
+        <HorizontalList title="Tất cả game" data={games} />
       </Space>
     </ScreenView>
   );

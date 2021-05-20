@@ -48,20 +48,19 @@ const DisplayedScreens = () => {
 
 const App = () => {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //     screenOptions={{
-    //       headerShown: false,
-    //     }}
-    //     initialRouteName={"Home"}
-    //   >
-    //     <Stack.Screen name="Home" component={Tabs} />
-    //     <Stack.Screen name="Restaurant" component={Restaurant} />
-    //     <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName={"KidsZone"}
+      >
+        <Stack.Screen name="kidszone" component={KidsZone} />
+        <Stack.Screen name="sandbox" component={TestScreenHorizontal} />
+      </Stack.Navigator>
+    </NavigationContainer>
 
-    <KidsZone />
+    // <KidsZone />
   );
 };
 
