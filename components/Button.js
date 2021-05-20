@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
+import { Heading3 } from "./Typography";
 
 export const Button = ({ children, type, onPress, style, small }) => {
   var matchType;
@@ -54,10 +55,26 @@ export const Button = ({ children, type, onPress, style, small }) => {
   );
 };
 
-export const ImageButton = ({ style, source, onPress }) => {
+export const ImageButton = ({
+  style,
+  source,
+  onPress,
+  disable,
+  small,
+  title,
+}) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Image style={{ width: 60, height: 60, ...style }} source={source} />
+    <TouchableOpacity onPress={onPress} style={{ alignItems: "center" }}>
+      <Image
+        style={{
+          width: small ? 45 : 60,
+          height: small ? 45 : 60,
+          ...style,
+          opacity: disable ? 0.25 : 1,
+        }}
+        source={source}
+      />
+      {title ? <Heading3>{title}</Heading3> : null}
     </TouchableOpacity>
   );
 };
