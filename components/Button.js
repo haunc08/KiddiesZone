@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 
@@ -50,6 +50,14 @@ export const Button = ({ children, type, onPress, style, small }) => {
       >
         {children}
       </Text>
+    </TouchableOpacity>
+  );
+};
+
+export const ImageButton = ({ style, source, onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Image style={{ width: 60, height: 60, ...style }} source={source} />
     </TouchableOpacity>
   );
 };

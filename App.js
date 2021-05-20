@@ -13,6 +13,8 @@ import { View } from "react-native";
 import { NoScrollView } from "./components/Wrapper";
 import KidsZone from "./screens/main/KidsZone";
 import TestScreenHorizontal from "./screens/TestScreenHorizontal";
+import Sandbox from "./screens/games/Sandbox";
+import TestViewShot from "./screens/TestViewShot";
 
 const Stack = createStackNavigator();
 
@@ -56,7 +58,8 @@ const App = () => {
         initialRouteName={"KidsZone"}
       >
         <Stack.Screen name="kidszone" component={KidsZone} />
-        <Stack.Screen name="sandbox" component={TestScreenHorizontal} />
+        <Stack.Screen name="sandbox" component={Sandbox} />
+        <Stack.Screen name="counting" component={TestViewShot} />
       </Stack.Navigator>
     </NavigationContainer>
 

@@ -10,7 +10,7 @@ import {
 } from "../../components/Wrapper";
 import Orientation from "react-native-orientation-locker";
 
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, StatusBar } from "react-native";
 import { KidsZoneNavbar } from "../../components/Navigation";
 import { FullHorizontalList } from "../../components/HorizontalList";
 
@@ -38,6 +38,7 @@ export const KidsZone = ({ navigation }) => {
   ];
   return (
     <NoScrollView style={{ padding: 0 }}>
+      <StatusBar hidden />
       <KidsZoneNavbar />
       <FullHorizontalList data={games} navigation={navigation} />
     </NoScrollView>

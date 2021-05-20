@@ -128,7 +128,7 @@ export const Row = ({ children, style }) => {
 
 export const Space = ({ children, loose }) => {
   return React.Children.map(children, (c, index) => {
-    return index !== children.length - 1
+    return index !== children.length - 1 && children.length > 1
       ? [
           c,
           <View
