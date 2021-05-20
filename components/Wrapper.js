@@ -110,7 +110,7 @@ export const Space = ({ children, row }) => {
         flexDirection: row ? "row" : "column",
       }}
     >
-      {children.map((c, index) => {
+      {React.Children.map(children, (c, index) => {
         return index !== children.length - 1
           ? [
               c,

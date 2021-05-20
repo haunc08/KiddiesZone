@@ -61,7 +61,7 @@ const App = () => {
     //   </Stack.Navigator>
     // </NavigationContainer>
 
-    <TestScreenHorizontal />
+    <KidsZone />
   );
 };
 
