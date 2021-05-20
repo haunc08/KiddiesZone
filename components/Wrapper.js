@@ -66,7 +66,7 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
   );
 };
 
-export const Card = ({ children, bgColor, title }) => {
+export const Card = ({ children, bgColor, title, style }) => {
   return (
     <View
       style={{
@@ -78,6 +78,7 @@ export const Card = ({ children, bgColor, title }) => {
         alignItems: "stretch",
         elevation: sizes.base,
         shadowOpacity: 0,
+        ...style,
       }}
     >
       {title && (
@@ -103,26 +104,25 @@ export const Row = ({ children, style }) => {
   );
 };
 
-export const Space = ({ children, row }) => {
-  return (
-    <View
-      style={{
-        flexDirection: row ? "row" : "column",
-      }}
-    >
-      {React.Children.map(children, (c, index) => {
-        return index !== children.length - 1
-          ? [
-              c,
-              <View
-                style={{
-                  width: sizes.base,
-                  height: sizes.base,
-                }}
-              />,
-            ]
-          : c;
-      })}
-    </View>
-  );
+export const Space = ({ children, loose }) => {
+  return React.Children.map(children, (c, index) => {
+    return index !== children.length - 1
+      ? [
+          c,
+          <View
+            style={
+              loose
+                ? {
+                    width: sizes.base * 2,
+                    height: sizes.base * 2,
+                  }
+                : {
+                    width: sizes.base,
+                    height: sizes.base,
+                  }
+            }
+          />,
+        ]
+      : c;
+  });
 };

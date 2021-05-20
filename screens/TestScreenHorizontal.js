@@ -13,7 +13,7 @@ export const TestScreenHorizontal = () => {
   }, []);
   return (
     <ScreenView horizontal>
-      <Space row>
+      <Space>
         <Card>
           <Space>
             <TextInput />

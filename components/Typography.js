@@ -3,12 +3,32 @@ import { Text } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 
-export const Heading1 = ({ children, style }) => {
-  return <Text style={{ ...fonts.h1, ...style }}>{children}</Text>;
+export const Heading1 = ({ children, style, white }) => {
+  return (
+    <Text
+      style={{
+        ...fonts.h1,
+        color: white ? colors.white : colors.black,
+        ...style,
+      }}
+    >
+      {children}
+    </Text>
+  );
 };
 
-export const Heading2 = ({ children, style }) => {
-  return <Text style={{ ...fonts.h2, ...style }}>{children}</Text>;
+export const Heading2 = ({ children, style, white }) => {
+  return (
+    <Text
+      style={{
+        ...fonts.h2,
+        color: white ? colors.white : colors.black,
+        ...style,
+      }}
+    >
+      {children}
+    </Text>
+  );
 };
 
 export const Heading3 = ({ children, style }) => {

@@ -18,6 +18,7 @@ export const colors = {
   cyan: "#00cfce",
   red: "#ee4238",
 
+  fadeblack: "rgba(30, 31, 32, 0.25)",
   smoke: "whitesmoke",
   darkgray: "#898C95",
   transparent: "transparent",
@@ -26,6 +27,7 @@ export const colors = {
 export const sizes = {
   // global sizes
   base: 14,
+  nav: 56,
 
   // font sizes
   h1: 30,
