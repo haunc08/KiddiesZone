@@ -27,7 +27,10 @@ const SignInScreen = ({ navigation }) => {
           >
             Đăng ký
           </Button>
-          <Button style={{ flex: 0.5, marginLeft: sizes.base / 2 }}>
+          <Button
+            style={{ flex: 0.5, marginLeft: sizes.base / 2 }}
+            onPress={() => navigation.navigate("GameCountNumber")}
+          >
             Đăng nhập
           </Button>
         </Row>

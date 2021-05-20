@@ -3,7 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { Restaurant, OrderDelivery } from "./screens";
+import { Restaurant, OrderDelivery, GameCountNumberScreen } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -55,6 +55,10 @@ const App = () => {
         <Stack.Screen name="Home" component={Tabs} />
         <Stack.Screen name="Restaurant" component={Restaurant} />
         <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
+        <Stack.Screen
+          name="GameCountNumber"
+          component={GameCountNumberScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     // <View>
