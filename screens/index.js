@@ -4,7 +4,7 @@ import OrderDelivery from "./OrderDelivery";
 import SignInScreen from "./authentication/SignInScreen";
 import SignUpScreen from "./authentication/SignUpScreen";
 import TestScreen from "./TestScreen";
-import GameCountNumberScreen from "./game/GameCountNumberScreen";
+import GameCountNumberScreen from "./games/GameCountNumberScreen";
 
 export {
   Home,

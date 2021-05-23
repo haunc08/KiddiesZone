@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, View, StyleSheet } from "react-native";
 import { Button, Icon, Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
-//import Orientation from "react-native-orientation-locker";
+import Orientation from "react-native-orientation-locker";
 import Sound from "react-native-sound";
 
 const GameCountNumberScreen = () => {
@@ -25,7 +25,7 @@ const GameCountNumberScreen = () => {
   const [numberOfItems, setNumberOfItems] = useState(randomNum);
 
   useEffect(() => {
-    //Orientation.lockToLandscapeLeft();
+    Orientation.lockToLandscapeLeft();
     setNumberOfItems(randomNum);
   }, []);
 
