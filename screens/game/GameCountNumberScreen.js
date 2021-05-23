@@ -3,11 +3,22 @@ import { Image, View, StyleSheet } from "react-native";
 import { Button, Icon, Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 //import Orientation from "react-native-orientation-locker";
+import Sound from "react-native-sound";
 
 const GameCountNumberScreen = () => {
   const [lifePoint, setLifePoint] = useState(3);
   const [question, setQuestion] = useState("Có mấy cái bánh?");
   const [isAnswered, setIsAnswered] = useState(false);
+
+  const mySound = new Sound("catrunning.mp3", Sound.MAIN_BUNDLE, (error) => {
+    if (error) {
+      console.log("Error loading sound: ", error);
+      return;
+    }
+  });
+
+  mySound.setVolume(0.9);
+  mySound.release();
 
   // random from 1 to 9
   const randomNum = Math.floor(Math.random() * 9) + 1;
@@ -17,6 +28,17 @@ const GameCountNumberScreen = () => {
     //Orientation.lockToLandscapeLeft();
     setNumberOfItems(randomNum);
   }, []);
+
+  const PlayLocalSoundFile = () => {
+    Sound.setCategory("Playback");
+    mySound.play((success) => {
+      if (success) {
+        console.log("Sound playing");
+      } else {
+        console.log("Issue playing file");
+      }
+    });
+  };
 
   if (lifePoint <= 0) {
     console.log("Game over");
@@ -210,7 +232,7 @@ const GameCountNumberScreen = () => {
       >
         <View style={{ flexDirection: "row" }}>{LifePoints()}</View>
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => PlayLocalSoundFile()}>
             <Image
               source={require("../../assets/icons/sushi.png")}
               style={styles.imageButton}
