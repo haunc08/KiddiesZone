@@ -10,6 +10,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
 import { Heading1 } from "./components/Typography";
 import { View } from "react-native";
+import { NoScrollView } from "./components/Wrapper";
+import KidsZone from "./screens/main/KidsZone";
+import TestScreenHorizontal from "./screens/TestScreenHorizontal";
+import Sandbox from "./screens/games/SandBox";
+import TestViewShot from "./screens/TestViewShot";
 
 const Stack = createStackNavigator();
 
@@ -50,7 +55,7 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={"Home"}
+        initialRouteName={"KidsZone"}
       >
         <Stack.Screen name="Home" component={Tabs} />
         <Stack.Screen name="Restaurant" component={Restaurant} />
@@ -59,11 +64,13 @@ const App = () => {
           name="GameCountNumber"
           component={GameCountNumberScreen}
         />
+        <Stack.Screen name="kidszone" component={KidsZone} />
+        <Stack.Screen name="sandbox" component={Sandbox} />
+        <Stack.Screen name="counting" component={TestViewShot} />
       </Stack.Navigator>
     </NavigationContainer>
-    // <View>
-    //   <Heading1>Ok</Heading1>
-    // </View>
+
+    // <KidsZone />
   );
 };
 

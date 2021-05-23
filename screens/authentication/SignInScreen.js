@@ -10,9 +10,6 @@ import {
 } from "../../components/Wrapper";
 import { TextInput } from "../../components/TextInput";
 import { Button } from "../../components/Button";
-import { GameList } from "../../components/GameList";
-import { Body } from "../../components/Typography";
-import { ImageBackground, SafeAreaView } from "react-native";
 
 const SignInScreen = ({ navigation }) => {
   return (

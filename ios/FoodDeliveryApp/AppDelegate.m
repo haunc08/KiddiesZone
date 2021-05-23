@@ -12,6 +12,7 @@
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "Orientation.h"
 
 
 static void InitializeFlipper(UIApplication *application) {
@@ -29,6 +30,8 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+
 
 [GMSServices provideAPIKey:@"AIzaSyD_lMXvGFGsiO2qhvX7Vs49r-sdICRtrAQ"]; // add this line using the api key obtained from Google Console
 
@@ -58,6 +61,10 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+return [Orientation getOrientation];
 }
 
 @end

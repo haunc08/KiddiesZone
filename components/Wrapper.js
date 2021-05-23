@@ -1,30 +1,48 @@
 import React from "react";
-import { SafeAreaView, View, ScrollView, ImageBackground } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  ScrollView,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { Heading2 } from "./Typography";
 
-export const ScreenView = ({ children, bgColor }) => {
+export const ScreenView = ({ children, bgColor, horizontal }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        horizontal={horizontal}
         style={{
           backgroundColor: bgColor || colors.smoke,
         }}
       >
-        <View style={{ padding: sizes.base, marginBottom: 100 }}>
+        <View
+          style={
+            horizontal
+              ? {
+                  alignContent: "stretch",
+                  padding: sizes.base,
+                  paddingRight: 100,
+                  flexDirection: "row",
+                }
+              : { padding: sizes.base, paddingBottom: 100 }
+          }
+        >
           {children}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export const NoScrollView = ({ children, bgColor, imgSource }) => {
+export const NoScrollView = ({ children, bgColor, imgSource, style }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {imgSource ? (
         <ImageBackground
           source={imgSource}
@@ -33,6 +51,7 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
             resizeMode: "cover",
             justifyContent: "center",
             padding: sizes.base * 2,
+            ...style,
           }}
         >
           {children}
@@ -41,33 +60,49 @@ export const NoScrollView = ({ children, bgColor, imgSource }) => {
         <View
           style={{
             flex: 1,
-            resizeMode: "cover",
             justifyContent: "center",
             padding: sizes.base * 2,
-            backgroundColor: bgColor || colors.primary,
+            backgroundColor: bgColor || colors.darkprimary,
+            ...style,
           }}
         >
           {children}
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
-export const Card = ({ children, bgColor, title }) => {
-  return (
-    <View
-      style={{
-        backgroundColor: bgColor || "white",
-        padding: sizes.base,
-        paddingBottom: sizes.base * 2,
-        borderWidth: 0,
-        borderRadius: sizes.base,
-        alignItems: "stretch",
-        elevation: sizes.base,
-        shadowOpacity: 0,
-      }}
-    >
+export const Card = ({
+  children,
+  bgColor,
+  title,
+  style,
+  touchable,
+  onPress,
+}) => {
+  const containerStyle = {
+    backgroundColor: bgColor || "white",
+    padding: sizes.base,
+    paddingBottom: sizes.base * 2,
+    borderWidth: 0,
+    borderRadius: sizes.base,
+    alignItems: "stretch",
+    elevation: sizes.base,
+    shadowOpacity: 0,
+    ...style,
+  };
+  return touchable ? (
+    <TouchableOpacity style={containerStyle} onPress={onPress}>
+      {title && (
+        <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
+          {title}
+        </Heading2>
+      )}
+      {children}
+    </TouchableOpacity>
+  ) : (
+    <View style={containerStyle}>
       {title && (
         <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
           {title}
@@ -91,26 +126,25 @@ export const Row = ({ children, style }) => {
   );
 };
 
-export const Space = ({ children, row }) => {
-  const renderChildren = () => {
-    const list = [];
-    React.Children.forEach(children, function (child) {
-      list.push(child);
-      list.push(
-        <View
-          style={{
-            width: sizes.base,
-            height: sizes.base,
-          }}
-        />
-      );
-    });
-    list.pop();
-    return list;
-  };
-  return (
-    <View style={{ flexDirection: row ? "row" : "column" }}>
-      {renderChildren()}
-    </View>
-  );
+export const Space = ({ children, loose }) => {
+  return React.Children.map(children, (c, index) => {
+    return index !== children.length - 1 && children.length > 1
+      ? [
+          c,
+          <View
+            style={
+              loose
+                ? {
+                    width: sizes.base * 2,
+                    height: sizes.base * 2,
+                  }
+                : {
+                    width: sizes.base,
+                    height: sizes.base,
+                  }
+            }
+          />,
+        ]
+      : c;
+  });
 };

@@ -16,14 +16,45 @@ import { Card, Row, ScreenView, Space } from "../components/Wrapper";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 
-export const HorizontalList = ({ children, title }) => {
+export const FullHorizontalList = ({ data, navigation }) => {
+  return (
+    <ScrollView
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      style={{ padding: sizes.base * 2 }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          paddingRight: 200,
+        }}
+      >
+        <Space loose>
+          {data.map((d) => (
+            <Card
+              key={d.key}
+              touchable
+              style={{ width: 320 }}
+              title={d.name}
+              onPress={() => navigation.navigate(d.key)}
+            />
+          ))}
+        </Space>
+      </View>
+    </ScrollView>
+  );
+};
+
+export const HorizontalList = ({ title, data }) => {
   return (
     <View>
       {title && (
         <Heading2 style={{ marginBottom: sizes.base }}>{title}</Heading2>
       )}
       <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-        {children}
+        {data.map((d) => (
+          <HorizontalListItem name={d.name} key={d.key} />
+        ))}
       </ScrollView>
     </View>
   );
