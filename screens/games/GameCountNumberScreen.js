@@ -156,7 +156,7 @@ const GameCountNumberScreen = () => {
   };
 
   const handleRightAnswer = () => {
-    playSoundFile("correct-answer");
+    playSoundFile("correctanswer");
     setQuestion("Đúng rồi!");
   };
 
