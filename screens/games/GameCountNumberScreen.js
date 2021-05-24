@@ -4,21 +4,26 @@ import { Button, Icon, Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import Sound from "react-native-sound";
+import { ImageButton } from "../../components/Button";
+import ImageManager from "../../utils/image";
+import { playSoundFile } from "../../utils/sound";
 
 const GameCountNumberScreen = () => {
   const [lifePoint, setLifePoint] = useState(3);
   const [question, setQuestion] = useState("Có mấy cái bánh?");
   const [isAnswered, setIsAnswered] = useState(false);
 
-  const mySound = new Sound("catrunning.mp3", Sound.MAIN_BUNDLE, (error) => {
-    if (error) {
-      console.log("Error loading sound: ", error);
-      return;
-    }
-  });
-
-  mySound.setVolume(0.9);
-  mySound.release();
+  // const NumberImage = {
+  //   one: require("../../assets/images/number/one.png"),
+  //   two: require("../../assets/images/number/two.png"),
+  //   three: require("../../assets/images/number/three.png"),
+  //   four: require("../../assets/images/number/four.png"),
+  //   five: require("../../assets/images/number/five.png"),
+  //   six: require("../../assets/images/number/six.png"),
+  //   seven: require("../../assets/images/number/seven.png"),
+  //   eight: require("../../assets/images/number/eight.png"),
+  //   nine: require("../../assets/images/number/nine.png"),
+  // };
 
   // random from 1 to 9
   const randomNum = Math.floor(Math.random() * 9) + 1;
@@ -26,19 +31,7 @@ const GameCountNumberScreen = () => {
 
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
-    setNumberOfItems(randomNum);
   }, []);
-
-  const PlayLocalSoundFile = () => {
-    Sound.setCategory("Playback");
-    mySound.play((success) => {
-      if (success) {
-        console.log("Sound playing");
-      } else {
-        console.log("Issue playing file");
-      }
-    });
-  };
 
   if (lifePoint <= 0) {
     console.log("Game over");
@@ -137,36 +130,38 @@ const GameCountNumberScreen = () => {
     return answer;
   };
 
-  const convertNumToText = (num) => {
+  const convertNumToImage = (num) => {
     switch (num) {
       case 1:
-        return "1 (Một)";
+        return ImageManager.number.one;
       case 2:
-        return "2 (Hai)";
+        return ImageManager.number.two;
       case 3:
-        return "3 (Ba)";
+        return ImageManager.number.three;
       case 4:
-        return "4 (Bốn)";
+        return ImageManager.number.four;
       case 5:
-        return "5 (Năm)";
+        return ImageManager.number.five;
       case 6:
-        return "6 (Sáu)";
+        return ImageManager.number.six;
       case 7:
-        return "7 (Bảy)";
+        return ImageManager.number.seven;
       case 8:
-        return "8 (Tám)";
+        return ImageManager.number.eight;
       case 9:
-        return "9 (Chín)";
+        return ImageManager.number.nine;
       default:
         break;
     }
   };
 
   const handleRightAnswer = () => {
+    playSoundFile("correct-answer");
     setQuestion("Đúng rồi!");
   };
 
   const handleWrongAnswer = () => {
+    playSoundFile("wrong");
     setQuestion("Sai rồi!");
 
     const newLifePoint = lifePoint - 1;
@@ -181,6 +176,8 @@ const GameCountNumberScreen = () => {
       handleWrongAnswer();
     }
     setIsAnswered(true);
+
+    setTimeout(resetValue, 3000);
   };
 
   const AnswerButton = () => {
@@ -188,34 +185,46 @@ const GameCountNumberScreen = () => {
     const answers = getAnswers();
 
     answers.map((answer) => {
-      const text = convertNumToText(answer);
+      const path = convertNumToImage(answer);
       buttons.push(
         <View style={{ width: "30%" }}>
-          <Button
-            title={text}
-            buttonStyle={styles.numberButton}
+          <ImageButton
+            style={{ marginBottom: 16 }}
             onPress={() => handleChooseAnswer(answer)}
-          ></Button>
+            source={path}
+          ></ImageButton>
         </View>
       );
     });
     return buttons;
   };
 
-  const AnswerText = () => {
-    const text = convertNumToText(numberOfItems);
-    return <Text h1={true}>{text}</Text>;
+  const AnswerImage = () => {
+    const imagePath = convertNumToImage(numberOfItems);
+    return (
+      <TouchableOpacity style={{ alignItems: "center" }}>
+        <Image
+          style={{
+            width: 150,
+            height: 150,
+            opacity: 1,
+          }}
+          source={imagePath}
+        />
+      </TouchableOpacity>
+    );
   };
 
   const AnswerView = () => {
     if (isAnswered) {
-      return AnswerText();
+      return AnswerImage();
     }
     return AnswerButton();
   };
 
   const resetValue = () => {
-    setNumberOfItems(randomNum);
+    const ranNum = Math.floor(Math.random() * 9) + 1;
+    setNumberOfItems(ranNum);
     setIsAnswered(false);
     setQuestion("Có mấy cái bánh?");
   };
@@ -232,18 +241,12 @@ const GameCountNumberScreen = () => {
       >
         <View style={{ flexDirection: "row" }}>{LifePoints()}</View>
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => PlayLocalSoundFile()}>
-            <Image
-              source={require("../../assets/icons/sushi.png")}
-              style={styles.imageButton}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => resetValue()}>
-            <Image
-              source={require("../../assets/icons/location.png")}
-              style={styles.imageButton}
-            />
-          </TouchableOpacity>
+          <ImageButton
+            small
+            style={{ marginRight: 16 }}
+            onPress={() => resetValue()}
+            source={require("../../assets/icons/play-button.png")}
+          ></ImageButton>
         </View>
       </View>
       <View style={{ flex: 4 }}>
