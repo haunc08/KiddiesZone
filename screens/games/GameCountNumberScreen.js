@@ -9,21 +9,9 @@ import ImageManager from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
 const GameCountNumberScreen = () => {
-  const [lifePoint, setLifePoint] = useState(3);
+  // const [lifePoint, setLifePoint] = useState(3);
   const [question, setQuestion] = useState("Có mấy cái bánh?");
   const [isAnswered, setIsAnswered] = useState(false);
-
-  // const NumberImage = {
-  //   one: require("../../assets/images/number/one.png"),
-  //   two: require("../../assets/images/number/two.png"),
-  //   three: require("../../assets/images/number/three.png"),
-  //   four: require("../../assets/images/number/four.png"),
-  //   five: require("../../assets/images/number/five.png"),
-  //   six: require("../../assets/images/number/six.png"),
-  //   seven: require("../../assets/images/number/seven.png"),
-  //   eight: require("../../assets/images/number/eight.png"),
-  //   nine: require("../../assets/images/number/nine.png"),
-  // };
 
   // random from 1 to 9
   const randomNum = Math.floor(Math.random() * 9) + 1;
@@ -33,23 +21,19 @@ const GameCountNumberScreen = () => {
     Orientation.lockToLandscapeLeft();
   }, []);
 
-  if (lifePoint <= 0) {
-    console.log("Game over");
-  }
-
-  const LifePoints = () => {
-    let lifePoints = [];
-    for (let i = 0; i < lifePoint; i++) {
-      lifePoints.push(
-        <Image
-          key={i}
-          source={require("../../assets/icons/salad.png")}
-          style={styles.imageIcon}
-        />
-      );
-    }
-    return lifePoints;
-  };
+  // const LifePoints = () => {
+  //   let lifePoints = [];
+  //   for (let i = 0; i < lifePoint; i++) {
+  //     lifePoints.push(
+  //       <Image
+  //         key={i}
+  //         source={require("../../assets/icons/salad.png")}
+  //         style={styles.imageIcon}
+  //       />
+  //     );
+  //   }
+  //   return lifePoints;
+  // };
 
   const getItemStyle = () => {
     if (numberOfItems <= 3) {
@@ -164,9 +148,9 @@ const GameCountNumberScreen = () => {
     playSoundFile("wrong");
     setQuestion("Sai rồi!");
 
-    const newLifePoint = lifePoint - 1;
-    setLifePoint(newLifePoint);
-    console.log("LP", lifePoint);
+    // const newLifePoint = lifePoint - 1;
+    // setLifePoint(newLifePoint);
+    // console.log("LP", lifePoint);
   };
 
   const handleChooseAnswer = (answer) => {
@@ -176,8 +160,6 @@ const GameCountNumberScreen = () => {
       handleWrongAnswer();
     }
     setIsAnswered(true);
-
-    setTimeout(resetValue, 3000);
   };
 
   const AnswerButton = () => {
@@ -239,7 +221,10 @@ const GameCountNumberScreen = () => {
           alignItems: "center",
         }}
       >
-        <View style={{ flexDirection: "row" }}>{LifePoints()}</View>
+        <View style={{ flexDirection: "row" }}></View>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={styles.title}>{question}</Text>
+        </View>
         <View style={{ flexDirection: "row" }}>
           <ImageButton
             small
@@ -250,9 +235,6 @@ const GameCountNumberScreen = () => {
         </View>
       </View>
       <View style={{ flex: 4 }}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={styles.title}>{question}</Text>
-        </View>
         <View
           style={{
             flexDirection: "row",
