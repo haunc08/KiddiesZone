@@ -13,7 +13,7 @@ import { View } from "react-native";
 import { NoScrollView } from "./components/Wrapper";
 import KidsZone from "./screens/main/KidsZone";
 import TestScreenHorizontal from "./screens/TestScreenHorizontal";
-import Sandbox from "./screens/games/SandBox";
+import Sandbox from "./screens/games/Sandbox";
 import TestViewShot from "./screens/TestViewShot";
 
 const Stack = createStackNavigator();
@@ -50,25 +50,26 @@ const DisplayedScreens = () => {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-        initialRouteName={"KidsZone"}
-      >
-        <Stack.Screen name="Home" component={Tabs} />
-        <Stack.Screen name="Restaurant" component={Restaurant} />
-        <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
-        <Stack.Screen
-          name="GameCountNumber"
-          component={GameCountNumberScreen}
-        />
-        <Stack.Screen name="kidszone" component={KidsZone} />
-        <Stack.Screen name="sandbox" component={Sandbox} />
-        <Stack.Screen name="counting" component={TestViewShot} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator
+    //     screenOptions={{
+    //       headerShown: false,
+    //     }}
+    //     initialRouteName={"KidsZone"}
+    //   >
+    //     <Stack.Screen name="Home" component={Tabs} />
+    //     <Stack.Screen name="Restaurant" component={Restaurant} />
+    //     <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
+    //     <Stack.Screen
+    //       name="GameCountNumber"
+    //       component={GameCountNumberScreen}
+    //     />
+    //     <Stack.Screen name="kidszone" component={KidsZone} />
+    //     <Stack.Screen name="sandbox" component={Sandbox} />
+    //     <Stack.Screen name="counting" component={TestViewShot} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <KidsZone />
 
     // <KidsZone />
   );
