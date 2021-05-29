@@ -140,12 +140,12 @@ const GameCountNumberScreen = () => {
   };
 
   const handleRightAnswer = () => {
-    playSoundFile("correctanswer");
+    playSoundFile("yayy");
     setQuestion("Đúng rồi!");
   };
 
   const handleWrongAnswer = () => {
-    playSoundFile("wrong");
+    playSoundFile("lose");
     setQuestion("Sai rồi!");
 
     // const newLifePoint = lifePoint - 1;

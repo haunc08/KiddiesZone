@@ -62,9 +62,13 @@ export const ImageButton = ({
   disable,
   small,
   title,
+  containerStyle,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{ alignItems: "center" }}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{ alignItems: "center", ...containerStyle }}
+    >
       <Image
         style={{
           width: small ? 45 : 60,

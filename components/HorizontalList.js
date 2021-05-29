@@ -16,13 +16,14 @@ import { Card, Row, ScreenView, Space } from "../components/Wrapper";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 
-export const FullHorizontalList = ({ data, navigation }) => {
+export const FullHorizontalList = ({ data, handlePress, width, children }) => {
   return (
     <ScrollView
       showsHorizontalScrollIndicator={false}
       horizontal
       style={{ padding: sizes.base * 2 }}
     >
+      {children}
       <View
         style={{
           flexDirection: "row",
@@ -34,9 +35,9 @@ export const FullHorizontalList = ({ data, navigation }) => {
             <Card
               key={d.key}
               touchable
-              style={{ width: 320 }}
+              style={{ width: width || 320 }}
               title={d.name}
-              onPress={() => navigation.navigate(d.key)}
+              onPress={() => handlePress(d.key)}
             />
           ))}
         </Space>

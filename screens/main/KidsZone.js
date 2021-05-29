@@ -18,29 +18,32 @@ export const KidsZone = ({ navigation }) => {
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
   }, []);
+  const handleChooseGame = (screenName) => {
+    navigation.navigate(screenName);
+  };
   const games = [
     {
-      key: "sandbox",
+      key: "Sandbox",
       name: "Vẽ trên cát",
     },
     {
-      key: "counting",
+      key: "Stories",
+      name: "Đọc truyện",
+    },
+    {
+      key: "GameCountNumberScreen",
       name: "Đếm số",
     },
     {
-      key: "spelling",
+      key: "Spelling",
       name: "Đánh vần",
-    },
-    {
-      key: "reading",
-      name: "Đọc truyện",
     },
   ];
   return (
     <NoScrollView style={{ padding: 0 }}>
       <StatusBar hidden />
       <KidsZoneNavbar />
-      <FullHorizontalList data={games} navigation={navigation} />
+      <FullHorizontalList data={games} handlePress={handleChooseGame} />
     </NoScrollView>
   );
 };

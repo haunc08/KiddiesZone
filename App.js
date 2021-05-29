@@ -15,6 +15,7 @@ import KidsZone from "./screens/main/KidsZone";
 import TestScreenHorizontal from "./screens/TestScreenHorizontal";
 import Sandbox from "./screens/games/Sandbox";
 import TestViewShot from "./screens/TestViewShot";
+import { Stories } from "./screens/games/Stories";
 
 const Stack = createStackNavigator();
 
@@ -50,26 +51,23 @@ const DisplayedScreens = () => {
 
 const App = () => {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //     screenOptions={{
-    //       headerShown: false,
-    //     }}
-    //     initialRouteName={"KidsZone"}
-    //   >
-    //     <Stack.Screen name="Home" component={Tabs} />
-    //     <Stack.Screen name="Restaurant" component={Restaurant} />
-    //     <Stack.Screen name="OrderDelivery" component={OrderDelivery} />
-    //     <Stack.Screen
-    //       name="GameCountNumber"
-    //       component={GameCountNumberScreen}
-    //     />
-    //     <Stack.Screen name="kidszone" component={KidsZone} />
-    //     <Stack.Screen name="sandbox" component={Sandbox} />
-    //     <Stack.Screen name="counting" component={TestViewShot} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    <KidsZone />
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName={"KidsZone"}
+      >
+        <Stack.Screen name="KidsZone" component={KidsZone} />
+        <Stack.Screen name="Sandbox" component={Sandbox} />
+        <Stack.Screen name="Stories" component={Stories} />
+        <Stack.Screen name="Story" component={Stories} />
+        <Stack.Screen
+          name="GameCountNumberScreen"
+          component={GameCountNumberScreen}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
 
     // <KidsZone />
   );

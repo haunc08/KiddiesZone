@@ -1,37 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
-import {
-  Card,
-  NoScrollView,
-  Row,
-  ScreenView,
-  Space,
-} from "../../components/Wrapper";
-import { Button, ImageButton } from "../../components/Button";
+import { Space } from "../../components/Wrapper";
+import { ImageButton } from "../../components/Button";
 import Orientation from "react-native-orientation-locker";
 import ViewShot from "react-native-view-shot";
 import CameraRoll from "@react-native-community/cameraroll";
 
 import {
-  Body,
-  Heading1,
-  Heading2,
-  Heading3,
-} from "../../components/Typography";
-import {
   View,
-  ScrollView,
   PermissionsAndroid,
   Platform,
-  Image,
   Alert,
   ImageBackground,
 } from "react-native";
-import { Avatar } from "react-native-elements";
 
 import { SketchCanvas } from "@terrylinla/react-native-sketch-canvas";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 async function hasAndroidPermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
@@ -72,15 +56,7 @@ export const Sandbox = ({ navigation }) => {
       savePicture(uri);
     });
   };
-  const confirmination = () =>
-    Alert.alert("Alert Title", "My Alert Msg", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      { text: "OK", onPress: () => console.log("OK Pressed") },
-    ]);
+
   const clear = () => {
     canvasRef.current.clear();
   };
@@ -100,10 +76,15 @@ export const Sandbox = ({ navigation }) => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
+        {
+          text: "OK",
+          onPress: () => {
+            navigation.goBack();
+            console.log("OK Pressed");
+          },
+        },
       ]
     );
-    // navigation.navigate("kidszone")
   };
   return (
     <View
@@ -148,7 +129,7 @@ export const Sandbox = ({ navigation }) => {
         <ImageButton
           small
           onPress={() => goHome()}
-          source={require("../../assets/icons/home.png")}
+          source={require("../../assets/icons/back.png")}
         />
       </View>
       <View
