@@ -13,7 +13,7 @@ import { View } from "react-native";
 import { NoScrollView } from "./components/Wrapper";
 import KidsZone from "./screens/main/KidsZone";
 import TestScreenHorizontal from "./screens/TestScreenHorizontal";
-import Sandbox from "./screens/games/Sandbox";
+import Sandbox from "./screens/games/SandBox";
 import TestViewShot from "./screens/TestViewShot";
 import { Stories } from "./screens/games/Stories";
 

@@ -1,3 +1,7 @@
+export const IconManager = {
+  back: require("../assets/icons/back.png"),
+};
+
 const ImageManager = {
   number: {
     one: require("../assets/images/number/one.png"),

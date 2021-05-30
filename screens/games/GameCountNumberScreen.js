@@ -5,10 +5,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import Sound from "react-native-sound";
 import { ImageButton } from "../../components/Button";
-import ImageManager from "../../utils/image";
+import ImageManager, { IconManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
-const GameCountNumberScreen = () => {
+const GameCountNumberScreen = ({ navigation }) => {
   // const [lifePoint, setLifePoint] = useState(3);
   const [question, setQuestion] = useState("Có mấy cái bánh?");
   const [isAnswered, setIsAnswered] = useState(false);
@@ -184,7 +184,10 @@ const GameCountNumberScreen = () => {
   const AnswerImage = () => {
     const imagePath = convertNumToImage(numberOfItems);
     return (
-      <TouchableOpacity style={{ alignItems: "center" }}>
+      <TouchableOpacity
+        style={{ alignItems: "center" }}
+        onPress={() => playSoundFile(`no${numberOfItems}`)}
+      >
         <Image
           style={{
             width: 150,
@@ -221,7 +224,13 @@ const GameCountNumberScreen = () => {
           alignItems: "center",
         }}
       >
-        <View style={{ flexDirection: "row" }}></View>
+        <View style={{ marginLeft: 16 }}>
+          <ImageButton
+            small
+            source={IconManager.back}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Text style={styles.title}>{question}</Text>
         </View>
