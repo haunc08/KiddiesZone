@@ -16,6 +16,7 @@ import TestScreenHorizontal from "./screens/TestScreenHorizontal";
 import Sandbox from "./screens/games/Sandbox";
 import TestViewShot from "./screens/TestViewShot";
 import { Stories } from "./screens/games/Stories";
+import Story1 from "./screens/stories/Story1";
 
 const Stack = createStackNavigator();
 
@@ -62,6 +63,7 @@ const App = () => {
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Stories" component={Stories} />
         <Stack.Screen name="Story" component={Stories} />
+        <Stack.Screen name="Story1" component={Story1} />
         <Stack.Screen
           name="GameCountNumberScreen"
           component={GameCountNumberScreen}

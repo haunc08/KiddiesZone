@@ -60,10 +60,33 @@ export const ImageButton = ({
   source,
   onPress,
   disable,
-  small,
   title,
   containerStyle,
+  width,
+  height,
 }) => {
+  let autoSize;
+  const image = Image.resolveAssetSource(source);
+  const ratio = image.width / image.height;
+
+  if (width && !height) {
+    autoSize = {
+      width: width,
+      height: width / ratio,
+    };
+  }
+  if (height && !width) {
+    autoSize = {
+      height: height,
+      width: height * ratio,
+    };
+  }
+  if (!height && !width) {
+    autoSize = {
+      width: 60,
+      height: 60,
+    };
+  }
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -71,8 +94,8 @@ export const ImageButton = ({
     >
       <Image
         style={{
-          width: small ? 45 : 60,
-          height: small ? 45 : 60,
+          ...autoSize,
+          resizeMode: "contain",
           ...style,
           opacity: disable ? 0.25 : 1,
         }}

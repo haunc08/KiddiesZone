@@ -127,8 +127,8 @@ export const Sandbox = ({ navigation }) => {
         }}
       >
         <ImageButton
-          small
-          onPress={() => goHome()}
+          width={45}
+          onPress={() => navigation.goBack()}
           source={require("../../assets/icons/back.png")}
         />
       </View>

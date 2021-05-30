@@ -16,7 +16,7 @@ import { Card, Row, ScreenView, Space } from "../components/Wrapper";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 
-export const FullHorizontalList = ({ data, handlePress, width, children }) => {
+export const FullHorizontalList = ({ data, onPress, width, children }) => {
   return (
     <ScrollView
       showsHorizontalScrollIndicator={false}
@@ -37,7 +37,7 @@ export const FullHorizontalList = ({ data, handlePress, width, children }) => {
               touchable
               style={{ width: width || 320 }}
               title={d.name}
-              onPress={() => handlePress(d.key)}
+              onPress={() => onPress(d.key)}
             />
           ))}
         </Space>

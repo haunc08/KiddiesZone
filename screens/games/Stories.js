@@ -24,7 +24,7 @@ export const Stories = ({ navigation }) => {
   const stories = [
     {
       key: "Story1",
-      name: "Truyện 1",
+      name: "Thỏ và rùa",
     },
     {
       key: "Story2",
@@ -38,10 +38,18 @@ export const Stories = ({ navigation }) => {
   const goHome = () => {
     navigation.goBack();
   };
+  const handleChooseStory = (screenRoute) => {
+    navigation.navigate(screenRoute);
+  };
+
   return (
     <NoScrollView style={{ padding: 0, flexDirection: "row" }}>
       <StatusBar hidden />
-      <FullHorizontalList data={stories} width={550}>
+      <FullHorizontalList
+        data={stories}
+        width={550}
+        onPress={handleChooseStory}
+      >
         <ImageButton
           containerStyle={{ alignSelf: "center", marginRight: sizes.base * 2 }}
           onPress={() => goHome()}
