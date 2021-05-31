@@ -35,7 +35,7 @@ export const KidsZone = ({ navigation }) => {
       name: "Đếm số",
     },
     {
-      key: "Spelling",
+      key: "GameAlphabet",
       name: "Đánh vần",
     },
   ];

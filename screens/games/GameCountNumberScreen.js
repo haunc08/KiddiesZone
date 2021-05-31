@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Image, View, StyleSheet } from "react-native";
-import { Button, Icon, Text } from "react-native-elements";
+import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
-import Sound from "react-native-sound";
 import { ImageButton } from "../../components/Button";
 import ImageManager, { IconManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
