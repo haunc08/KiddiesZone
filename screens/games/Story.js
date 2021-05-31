@@ -1,21 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, StatusBar, Text, ImageBackground } from "react-native";
 import { colors, sizes } from "../../constants";
-import {
-  Frame,
-  NoScrollView,
-  Space,
-  StoryFrame,
-} from "../../components/Wrapper";
+import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { ImageButton, StoryObject } from "../../components/Button";
-import StoryLayout from "../../components/StoryLayout";
 import { createSound } from "../../utils/sound";
 import { ImageManager, appIcon } from "../../utils/image";
 import { Heading1 } from "../../components/Typography";
 
 const gameImages = ImageManager.rabbitAndTurtle;
-const flong = sizes.long / 5;
-const fshort = sizes.short / 5;
 
 let media = {
   background: {
