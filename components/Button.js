@@ -1,7 +1,10 @@
 import React from "react";
+import { View } from "react-native";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
+import { Tooltip } from "react-native-elements/dist/tooltip/Tooltip";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
+import { autoSize } from "../utils/image";
 import { Heading3 } from "./Typography";
 
 export const Button = ({ children, type, onPress, style, small }) => {
@@ -60,48 +63,103 @@ export const ImageButton = ({
   source,
   onPress,
   disable,
+  block,
   title,
   containerStyle,
   width,
   height,
 }) => {
-  let autoSize;
-  const image = Image.resolveAssetSource(source);
-  const ratio = image.width / image.height;
-
-  if (width && !height) {
-    autoSize = {
-      width: width,
-      height: width / ratio,
-    };
-  }
-  if (height && !width) {
-    autoSize = {
-      height: height,
-      width: height * ratio,
-    };
-  }
-  if (!height && !width) {
-    autoSize = {
-      width: 60,
-      height: 60,
-    };
-  }
+  const size = autoSize(source, width, height);
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={block ? null : onPress}
       style={{ alignItems: "center", ...containerStyle }}
     >
       <Image
         style={{
-          ...autoSize,
+          ...size,
           resizeMode: "contain",
           ...style,
-          opacity: disable ? 0.25 : 1,
+          opacity: disable || block ? 0.25 : 1,
         }}
         source={source}
       />
-      {title ? <Heading3>{title}</Heading3> : null}
+      {title ? (
+        <Heading3 style={{ marginTop: sizes.base }} white>
+          {title}
+        </Heading3>
+      ) : null}
     </TouchableOpacity>
+  );
+};
+
+export const StoryObject = ({
+  media,
+  index,
+  width,
+  height,
+  top,
+  right,
+  left,
+  bottom,
+  background,
+}) => {
+  const { sprites, name, audio } = media;
+  const calcWidth = (flex) => {
+    return (sizes.long * flex) / 5;
+  };
+  const calcHeight = (flex) => {
+    return (sizes.short * flex) / 5;
+  };
+  let size;
+  if (sprites)
+    size = autoSize(sprites[index], calcWidth(width), calcHeight(height));
+  else {
+    size = { width: calcWidth(width), height: calcHeight(height) };
+  }
+  return (
+    <View
+      style={{
+        position: "absolute",
+      }}
+    >
+      <View
+        style={{
+          marginTop: top ? calcHeight(top) : 0,
+          marginBottom: bottom ? calcHeight(bottom) : 0,
+          marginRight: right ? calcWidth(right) : 0,
+          marginLeft: left ? calcWidth(left) : 0,
+        }}
+      >
+        <Tooltip
+          skipAndroidStatusBar={true}
+          backgroundColor="white"
+          popover={<Text>{name}</Text>}
+          width={100}
+          withOverlay={false}
+          onOpen={() => {
+            audio.play();
+          }}
+        >
+          {background && (
+            <View
+              style={{
+                width: size.width,
+                height: size.height,
+              }}
+            />
+          )}
+          {!background && (
+            <Image
+              style={{
+                ...size,
+                resizeMode: "contain",
+              }}
+              source={sprites[index]}
+            />
+          )}
+        </Tooltip>
+      </View>
+    </View>
   );
 };

@@ -23,7 +23,7 @@ import { FullHorizontalList } from "../../components/HorizontalList";
 export const Stories = ({ navigation }) => {
   const stories = [
     {
-      key: "Story1",
+      key: "Story",
       name: "Thỏ và rùa",
     },
     {

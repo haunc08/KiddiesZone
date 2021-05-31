@@ -1,5 +1,5 @@
 import { Dimensions } from "react-native";
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 
 export const colors = {
   // base colors
@@ -20,6 +20,7 @@ export const colors = {
   brown: "#6f4938",
 
   fadeblack: "rgba(30, 31, 32, 0.25)",
+  fadeblack50: "rgba(30, 31, 32, 0.5)",
   smoke: "whitesmoke",
   darkgray: "#898C95",
   transparent: "transparent",
@@ -39,6 +40,9 @@ export const sizes = {
   // app dimensions
   width,
   height,
+
+  long: width > height ? width : height,
+  short: width > height ? height : width,
 };
 
 export const fonts = {

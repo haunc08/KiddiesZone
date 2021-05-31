@@ -20,3 +20,16 @@ export const playSoundFile = (soundFileName) => {
   mySound.setVolume(1);
   mySound.release();
 };
+
+export const createSound = (name) => {
+  Sound.setCategory("Playback");
+
+  let mySound = new Sound(`${name}.mp3`, null, (error) => {
+    if (error) {
+      console.log("Error loading sound: ", error);
+      return;
+    }
+  });
+  mySound.release();
+  return mySound;
+};

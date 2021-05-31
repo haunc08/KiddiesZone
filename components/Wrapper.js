@@ -148,3 +148,20 @@ export const Space = ({ children, loose }) => {
       : c;
   });
 };
+
+export const Frame = ({ background, children }) => {
+  return (
+    <ImageBackground
+      style={{
+        position: "absolute",
+        height: sizes.short,
+        width: sizes.long,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      source={background}
+    >
+      {children}
+    </ImageBackground>
+  );
+};

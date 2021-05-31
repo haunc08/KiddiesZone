@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { colors, sizes } from "../../constants";
+import { colors, sizes, screen } from "../../constants";
 import { Space } from "../../components/Wrapper";
 import { ImageButton } from "../../components/Button";
 import Orientation from "react-native-orientation-locker";
@@ -93,8 +93,8 @@ export const Sandbox = ({ navigation }) => {
       <ViewShot
         style={{
           position: "absolute",
-          width: sizes.width,
-          height: sizes.height,
+          width: sizes.long,
+          height: sizes.short,
         }}
         ref={viewShotRef}
         options={{ format: "jpg", quality: 1 }}
@@ -103,16 +103,16 @@ export const Sandbox = ({ navigation }) => {
           source={require("../../assets/images/beach.jpg")}
           style={{
             position: "absolute",
-            width: sizes.width,
-            height: sizes.height,
+            width: sizes.long,
+            height: sizes.short,
           }}
         >
           <SketchCanvas
             ref={canvasRef}
             style={{
               position: "absolute",
-              width: sizes.width,
-              height: sizes.height,
+              width: sizes.long,
+              height: sizes.short,
             }}
             strokeColor={colors.brown}
             strokeWidth={stroke.width}
@@ -128,7 +128,7 @@ export const Sandbox = ({ navigation }) => {
       >
         <ImageButton
           width={45}
-          onPress={() => navigation.goBack()}
+          onPress={() => goHome()}
           source={require("../../assets/icons/back.png")}
         />
       </View>

@@ -1,4 +1,5 @@
-const ImageManager = {
+import { Image } from "react-native";
+export const ImageManager = {
   number: {
     one: require("../assets/images/number/one.png"),
     two: require("../assets/images/number/two.png"),
@@ -10,6 +11,67 @@ const ImageManager = {
     eight: require("../assets/images/number/eight.png"),
     nine: require("../assets/images/number/nine.png"),
   },
+  rabbitAndTurtle: {
+    forest: [
+      require("../assets/images/RabbitAndTurtle/forest0.jpg"),
+      require("../assets/images/RabbitAndTurtle/forest1.jpg"),
+      require("../assets/images/RabbitAndTurtle/forest2.jpg"),
+    ],
+    rabbit: [
+      require("../assets/images/RabbitAndTurtle/rabbit0.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit1.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit2.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit3.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit4.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit5.png"),
+      require("../assets/images/RabbitAndTurtle/rabbit6.png"),
+    ],
+    turtle: [
+      require("../assets/images/RabbitAndTurtle/turtle0.png"),
+      require("../assets/images/RabbitAndTurtle/turtle1.png"),
+      require("../assets/images/RabbitAndTurtle/turtle2.png"),
+      require("../assets/images/RabbitAndTurtle/turtle3.png"),
+      require("../assets/images/RabbitAndTurtle/turtle4.png"),
+      require("../assets/images/RabbitAndTurtle/turtle5.png"),
+      require("../assets/images/RabbitAndTurtle/turtle6.png"),
+      require("../assets/images/RabbitAndTurtle/turtle7.png"),
+      require("../assets/images/RabbitAndTurtle/turtle8.png"),
+    ],
+    snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
+  },
+};
+
+export const appIcon = {
+  home: require("../assets/icons/home.png"),
+  replay: require("../assets/icons/replay.png"),
+  back: require("../assets/icons/back.png"),
+  next: require("../assets/icons/next.png"),
+};
+
+// Usage: Scale the picture to fit the maxmium 'width' or 'height'.
+// Example: original picture: 1000*2000, props.width: 500 => Output: (500*1000)
+export const autoSize = (source, width, height) => {
+  const image = Image.resolveAssetSource(source);
+  const ratio = image.width / image.height;
+
+  if (width && !height) {
+    return {
+      width: width,
+      height: width / ratio,
+    };
+  }
+  if (height && !width) {
+    return {
+      height: height,
+      width: height * ratio,
+    };
+  }
+  if (!height && !width) {
+    return {
+      width: 60,
+      height: 60,
+    };
+  }
 };
 
 export default ImageManager;
