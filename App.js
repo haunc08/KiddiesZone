@@ -17,6 +17,7 @@ import Sandbox from "./screens/games/Sandbox";
 import TestViewShot from "./screens/TestViewShot";
 import { Stories } from "./screens/games/Stories";
 import Story from "./screens/games/Story";
+import Movies from "./screens/games/Movies";
 
 const Stack = createStackNavigator();
 
@@ -68,6 +69,7 @@ const App = () => {
           component={GameCountNumberScreen}
         />
         <Stack.Screen name="Story" component={Story} />
+        <Stack.Screen name="Movies" component={Movies} />
       </Stack.Navigator>
     </NavigationContainer>
 

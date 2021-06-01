@@ -39,6 +39,7 @@ export const ImageManager = {
     ],
     snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
   },
+  movies: require("../assets/images/movies/movie.png"),
 };
 
 export const appIcon = {
@@ -46,10 +47,16 @@ export const appIcon = {
   replay: require("../assets/icons/replay.png"),
   back: require("../assets/icons/back.png"),
   next: require("../assets/icons/next.png"),
+  whitestar: require("../assets/icons/whitestar.png"),
+  history: require("../assets/icons/history.png"),
+  movies: {
+    previousgold: require("../assets/icons/movies/previousgold.png"),
+    nextgold: require("../assets/icons/movies/nextgold.png"),
+  },
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.
-// Example: original picture: 1000*2000, props.width: 500 => Output: (500*1000)
+// Example: original picture: 1000*2000, width: 500, height: null  => Output: (500*1000)
 export const autoSize = (source, width, height) => {
   const image = Image.resolveAssetSource(source);
   const ratio = image.width / image.height;

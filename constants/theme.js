@@ -43,6 +43,11 @@ export const sizes = {
 
   long: width > height ? width : height,
   short: width > height ? height : width,
+
+  fulllandscape: {
+    width: width > height ? width : height,
+    height: width > height ? height : width,
+  },
 };
 
 export const fonts = {
