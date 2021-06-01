@@ -73,15 +73,21 @@ export const Movies = ({ navigation }) => {
     setIndex(0);
   }, [filter]);
 
-  const onStateChange = useCallback((state) => {
-    if (state === "ended") {
-      setPlaying(false);
-      const temp = data.findIndex(
-        (movie) => movie.url === currentList[index].url
-      );
-      data[temp].watched = true;
-    }
-  }, []);
+  const onStateChange = useCallback(
+    (state) => {
+      if (state === "ended") {
+        setPlaying(false);
+      }
+      if (state === "playing") {
+        const temp = data.findIndex(
+          (movie) => movie.url === currentList[index].url
+        );
+        console.log("playing", data[temp]);
+        if (data[temp].watched === false) data[temp].watched = true;
+      }
+    },
+    [index]
+  );
 
   const togglePlaying = useCallback(() => {
     setPlaying((prev) => !prev);
