@@ -5,6 +5,7 @@ import SignInScreen from "./authentication/SignInScreen";
 import SignUpScreen from "./authentication/SignUpScreen";
 import TestScreen from "./TestScreen";
 import GameCountNumberScreen from "./games/GameCountNumberScreen";
+import GameAlphabet from "./games/GameAlphabet";
 
 export {
   Home,
@@ -14,4 +15,5 @@ export {
   SignUpScreen,
   TestScreen,
   GameCountNumberScreen,
+  GameAlphabet,
 };

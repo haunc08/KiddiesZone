@@ -3,18 +3,13 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { Restaurant, OrderDelivery, GameCountNumberScreen } from "./screens";
+import { GameAlphabet, GameCountNumberScreen } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
-import { Heading1 } from "./components/Typography";
-import { View } from "react-native";
-import { NoScrollView } from "./components/Wrapper";
 import KidsZone from "./screens/main/KidsZone";
-import TestScreenHorizontal from "./screens/TestScreenHorizontal";
 import Sandbox from "./screens/games/Sandbox";
-import TestViewShot from "./screens/TestViewShot";
 import { Stories } from "./screens/games/Stories";
 import Story from "./screens/games/Story";
 import Movies from "./screens/games/Movies";
@@ -70,6 +65,7 @@ const App = () => {
         />
         <Stack.Screen name="Story" component={Story} />
         <Stack.Screen name="Movies" component={Movies} />
+        <Stack.Screen name="GameAlphabet" component={GameAlphabet} />
       </Stack.Navigator>
     </NavigationContainer>
 

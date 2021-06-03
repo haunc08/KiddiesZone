@@ -27,10 +27,6 @@ export const KidsZone = ({ navigation }) => {
       name: "Xem hoạt hình",
     },
     {
-      key: "Spelling",
-      name: "Đánh vần",
-    },
-    {
       key: "Sandbox",
       name: "Vẽ trên cát",
     },
@@ -41,6 +37,10 @@ export const KidsZone = ({ navigation }) => {
     {
       key: "GameCountNumberScreen",
       name: "Đếm số",
+    },
+    {
+      key: "GameAlphabet",
+      name: "Đánh vần",
     },
   ];
   return (

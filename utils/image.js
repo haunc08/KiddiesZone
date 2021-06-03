@@ -1,4 +1,19 @@
 import { Image } from "react-native";
+
+export const IconManager = {
+  back: require("../assets/icons/back.png"),
+  playButton: require("../assets/icons/play-button.png"),
+  home: require("../assets/icons/home.png"),
+  replay: require("../assets/icons/replay.png"),
+  next: require("../assets/icons/next.png"),
+  whitestar: require("../assets/icons/whitestar.png"),
+  history: require("../assets/icons/history.png"),
+  movies: {
+    previousgold: require("../assets/icons/movies/previousgold.png"),
+    nextgold: require("../assets/icons/movies/nextgold.png"),
+  },
+};
+
 export const ImageManager = {
   number: {
     one: require("../assets/images/number/one.png"),
@@ -10,6 +25,15 @@ export const ImageManager = {
     seven: require("../assets/images/number/seven.png"),
     eight: require("../assets/images/number/eight.png"),
     nine: require("../assets/images/number/nine.png"),
+  },
+  alphabet: {
+    a: require("../assets/images/alphabet/a.png"),
+    letterA: require("../assets/images/alphabet/letterA.png"),
+    aw: require("../assets/images/alphabet/aw.png"),
+    letterAW: require("../assets/images/alphabet/letterAW.png"),
+    aa: require("../assets/images/alphabet/aa.png"),
+    letterAA: require("../assets/images/alphabet/letterAA.png"),
+    grid: require("../assets/images/alphabet/grid.jpg"),
   },
   rabbitAndTurtle: {
     forest: [
@@ -42,19 +66,6 @@ export const ImageManager = {
   movies: require("../assets/images/movies/movie.png"),
 };
 
-export const appIcon = {
-  home: require("../assets/icons/home.png"),
-  replay: require("../assets/icons/replay.png"),
-  back: require("../assets/icons/back.png"),
-  next: require("../assets/icons/next.png"),
-  whitestar: require("../assets/icons/whitestar.png"),
-  history: require("../assets/icons/history.png"),
-  movies: {
-    previousgold: require("../assets/icons/movies/previousgold.png"),
-    nextgold: require("../assets/icons/movies/nextgold.png"),
-  },
-};
-
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.
 // Example: original picture: 1000*2000, width: 500, height: null  => Output: (500*1000)
 export const autoSize = (source, width, height) => {
@@ -80,5 +91,3 @@ export const autoSize = (source, width, height) => {
     };
   }
 };
-
-export default ImageManager;
