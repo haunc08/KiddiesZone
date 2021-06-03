@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { ImageBackground } from "react-native";
 import { Image } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import { ImageButton } from "../../components/Button";
-import ImageManager, { IconManager, getImage } from "../../utils/image";
+import { colors, sizes } from "../../constants";
+import {
+  IconManager,
+  getImage,
+  ImageManager,
+  autoSize,
+} from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
 const GameAlphabet = ({ navigation }) => {
@@ -161,7 +168,10 @@ const GameAlphabet = ({ navigation }) => {
   };
 
   return (
-    <View style={{ backgroundColor: "#34A853", width: "100%", height: "100%" }}>
+    <ImageBackground
+      style={{ backgroundColor: "white", width: "100%", height: "100%" }}
+      source={ImageManager.alphabet.grid}
+    >
       <View
         style={{
           flex: 1,
@@ -206,7 +216,16 @@ const GameAlphabet = ({ navigation }) => {
           >
             <Image
               source={getAlphabetImage(chosenLetterIndex)}
-              style={styles.alphabetImage}
+              style={{
+                ...styles.alphabetImage,
+                resizeMode: "contain",
+                height: autoSize(
+                  getAlphabetImage(chosenLetterIndex),
+
+                  null,
+                  sizes.short / 1.5
+                ).height,
+              }}
             />
           </View>
           <View
@@ -221,7 +240,7 @@ const GameAlphabet = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -246,8 +265,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   alphabetImage: {
-    width: "60%",
-    height: "90%",
+    // width: "60%",
+    // height: "90%",
+    marginTop: -32,
     marginLeft: 16,
   },
   // mediumCountingItem: {

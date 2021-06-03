@@ -4,7 +4,7 @@ import { colors, sizes } from "../../constants";
 import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
-import { ImageManager, appIcon, autoSize } from "../../utils/image";
+import { ImageManager, IconManager, autoSize } from "../../utils/image";
 import { Heading1 } from "../../components/Typography";
 import Carousel from "react-native-snap-carousel";
 import YoutubePlayer from "react-native-youtube-iframe";
@@ -130,13 +130,13 @@ export const Movies = ({ navigation }) => {
             width={45}
             onPress={() => setFilter("new")}
             disable={filter !== "new"}
-            source={appIcon.whitestar}
+            source={IconManager.whitestar}
           />
           <ImageButton
             width={45}
             onPress={() => setFilter("watched")}
             disable={filter !== "watched"}
-            source={appIcon.history}
+            source={IconManager.history}
           />
         </Space>
       </View>
@@ -156,14 +156,14 @@ export const Movies = ({ navigation }) => {
               width={45}
               block={index <= 0}
               onPress={() => setIndex(index - 1)}
-              source={appIcon.movies.previousgold}
+              source={IconManager.movies.previousgold}
             />
             <Heading1 white>{`${index + 1}/${currentList.length}`}</Heading1>
             <ImageButton
               width={45}
               block={index >= currentList.length - 1}
               onPress={() => setIndex(index + 1)}
-              source={appIcon.movies.nextgold}
+              source={IconManager.movies.nextgold}
             />
           </Space>
         </View>
@@ -181,7 +181,7 @@ export const Movies = ({ navigation }) => {
         <ImageButton
           width={45}
           onPress={() => goHome()}
-          source={appIcon.home}
+          source={IconManager.home}
         />
       </View>
 

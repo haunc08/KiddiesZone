@@ -93,6 +93,11 @@ export const ImageButton = ({
   );
 };
 
+// media: [source1, source2, source]
+// index: [1]
+// width (1/5 cua chieu ngang/rong cua buc hinh)
+// height  (1/5 cua chieu ngang/rong cua buc hinh)
+// top, right, left, bottom (dich sang ben ... n lan 1/5 cua chieu ngang/rong cua buc hinh)
 export const StoryObject = ({
   media,
   index,

@@ -4,7 +4,7 @@ import { colors, sizes } from "../../constants";
 import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
-import { ImageManager, appIcon } from "../../utils/image";
+import { ImageManager, IconManager } from "../../utils/image";
 import { Heading1 } from "../../components/Typography";
 
 const gameImages = ImageManager.rabbitAndTurtle;
@@ -379,7 +379,7 @@ export const Story = ({ navigation }) => {
     return (
       <Frame>
         <ImageButton
-          source={appIcon.next}
+          source={IconManager.next}
           title="Bắt đầu"
           onPress={() => handleStart()}
         />
@@ -439,24 +439,24 @@ export const Story = ({ navigation }) => {
             <ImageButton
               height={45}
               onPress={() => goBack()}
-              source={appIcon.home}
+              source={IconManager.home}
             />
             <ImageButton
               height={45}
               onPress={() => handleReplay()}
-              source={appIcon.replay}
+              source={IconManager.replay}
             />
             <ImageButton
               block={page < 1}
               height={45}
               onPress={() => handlePrevious()}
-              source={appIcon.back}
+              source={IconManager.back}
             />
             <ImageButton
               block={page >= pages}
               height={45}
               onPress={() => handleNext()}
-              source={appIcon.next}
+              source={IconManager.next}
             />
             <Heading1 white>{page + 1}</Heading1>
           </Space>
