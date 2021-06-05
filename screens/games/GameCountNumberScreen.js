@@ -4,7 +4,7 @@ import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import { ImageButton } from "../../components/Button";
-import ImageManager, { IconManager } from "../../utils/image";
+import { IconManager, ImageManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
 const GameCountNumberScreen = ({ navigation }) => {

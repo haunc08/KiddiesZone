@@ -136,25 +136,12 @@ export const StoryObject = ({
           marginLeft: left ? calcWidth(left) : 0,
         }}
       >
-        <Tooltip
-          skipAndroidStatusBar={true}
-          backgroundColor="white"
-          popover={<Text>{name}</Text>}
-          width={100}
-          withOverlay={false}
-          onOpen={() => {
-            audio.play();
-          }}
-        >
-          {background && (
-            <View
-              style={{
-                width: size.width,
-                height: size.height,
-              }}
-            />
-          )}
-          {!background && (
+        {!name ? (
+          <TouchableOpacity
+            onPress={() => {
+              audio.play();
+            }}
+          >
             <Image
               style={{
                 ...size,
@@ -162,8 +149,37 @@ export const StoryObject = ({
               }}
               source={sprites[index]}
             />
-          )}
-        </Tooltip>
+          </TouchableOpacity>
+        ) : (
+          <Tooltip
+            skipAndroidStatusBar={true}
+            backgroundColor="white"
+            popover={<Text>{name}</Text>}
+            width={100}
+            withOverlay={false}
+            onOpen={() => {
+              audio.play();
+            }}
+          >
+            {background && (
+              <View
+                style={{
+                  width: size.width,
+                  height: size.height,
+                }}
+              />
+            )}
+            {!background && (
+              <Image
+                style={{
+                  ...size,
+                  resizeMode: "contain",
+                }}
+                source={sprites[index]}
+              />
+            )}
+          </Tooltip>
+        )}
       </View>
     </View>
   );

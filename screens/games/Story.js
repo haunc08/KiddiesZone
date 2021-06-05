@@ -58,7 +58,13 @@ const frames = [
           top={4}
           right={3.5}
         />
-        <StoryObject media={media.turtle} index={3} height={2} top={1} />
+        <StoryObject
+          media={media.turtle}
+          index={3}
+          height={2}
+          top={1}
+          disableTooltip
+        />
       </Frame>
     ),
   },
