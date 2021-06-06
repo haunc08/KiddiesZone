@@ -65,8 +65,33 @@ export const ImageManager = {
   },
   movies: require("../assets/images/movies/movie.png"),
   shapes: {
-    background: require("../assets/images/shapes/background.png"),
-    foreground: require("../assets/images/shapes/foreground.png"),
+    beltback: require("../assets/images/shapes/beltback.png"),
+    beltfront: require("../assets/images/shapes/beltfront.png"),
+    floor: require("../assets/images/shapes/floor.jpg"),
+    roundShape: require("../assets/images/shapes/roundshape.png"),
+    squareShape: require("../assets/images/shapes/squareshape.png"),
+    triangleShape: require("../assets/images/shapes/triangleshape.png"),
+    round: [
+      require("../assets/images/shapes/round/basketball.png"),
+      require("../assets/images/shapes/round/clock.png"),
+      require("../assets/images/shapes/round/pizza.png"),
+      require("../assets/images/shapes/round/sun.png"),
+      require("../assets/images/shapes/round/world.png"),
+    ],
+    square: [
+      require("../assets/images/shapes/square/cracker.png"),
+      require("../assets/images/shapes/square/dice.png"),
+      require("../assets/images/shapes/square/present.png"),
+      require("../assets/images/shapes/square/rubik.png"),
+      require("../assets/images/shapes/square/window.png"),
+    ],
+    triangle: [
+      require("../assets/images/shapes/triangle/nonla.png"),
+      require("../assets/images/shapes/triangle/pyramid.png"),
+      require("../assets/images/shapes/triangle/ruler.png"),
+      require("../assets/images/shapes/triangle/warning.png"),
+      require("../assets/images/shapes/triangle/watermelon.png"),
+    ],
   },
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { Tooltip } from "react-native-elements/dist/tooltip/Tooltip";
 
@@ -181,6 +181,77 @@ export const StoryObject = ({
           </Tooltip>
         )}
       </View>
+    </View>
+  );
+};
+
+// neu can dung transy animated thi tu them vo
+export const GameObject = ({
+  image,
+  width,
+  height,
+  transX,
+  transY,
+  onPress,
+  disable,
+}) => {
+  transX = transX || 0;
+  transY = transY || 0;
+  const calcWidth = (flex) => {
+    return (sizes.long * flex) / 5;
+  };
+  const calcHeight = (flex) => {
+    return (sizes.short * flex) / 5;
+  };
+  let size;
+  if (image) size = autoSize(image, calcWidth(width), calcHeight(height));
+  else {
+    size = { width: calcWidth(width), height: calcHeight(height) };
+  }
+  return (
+    <View
+      style={{
+        position: "absolute",
+      }}
+    >
+      <Animated.View
+        style={{
+          transform: [
+            {
+              translateX:
+                typeof transX === "object"
+                  ? transX.interpolate({
+                      inputRange: [-5, 5],
+                      outputRange: [-sizes.long, sizes.long],
+                    })
+                  : calcWidth(transX),
+            },
+            {
+              translateY: calcHeight(transY),
+            },
+          ],
+        }}
+      >
+        {disable ? (
+          <Image
+            style={{
+              ...size,
+              resizeMode: "contain",
+            }}
+            source={image}
+          />
+        ) : (
+          <TouchableOpacity onPress={() => onPress()}>
+            <Image
+              style={{
+                ...size,
+                resizeMode: "contain",
+              }}
+              source={image}
+            />
+          </TouchableOpacity>
+        )}
+      </Animated.View>
     </View>
   );
 };
