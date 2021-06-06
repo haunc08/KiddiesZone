@@ -12,19 +12,34 @@ export const IconManager = {
     previousgold: require("../assets/icons/movies/previousgold.png"),
     nextgold: require("../assets/icons/movies/nextgold.png"),
   },
+  add: require("../assets/icons/add.png"),
+  substract: require("../assets/icons/substract.png"),
+  gameItem: {
+    donut: require("../assets/icons/donut.png"),
+    fries: require("../assets/icons/fries.png"),
+    hamburger: require("../assets/icons/hamburger.png"),
+    hotdog: require("../assets/icons/hotdog.png"),
+    noodle: require("../assets/icons/noodle.png"),
+    pizza: require("../assets/icons/pizza.png"),
+    ricebowl: require("../assets/icons/rice-bowl.png"),
+    salad: require("../assets/icons/salad.png"),
+    star: require("../assets/icons/star.png"),
+    sushi: require("../assets/icons/sushi.png"),
+  },
 };
 
 export const ImageManager = {
   number: {
-    one: require("../assets/images/number/one.png"),
-    two: require("../assets/images/number/two.png"),
-    three: require("../assets/images/number/three.png"),
-    four: require("../assets/images/number/four.png"),
-    five: require("../assets/images/number/five.png"),
-    six: require("../assets/images/number/six.png"),
-    seven: require("../assets/images/number/seven.png"),
-    eight: require("../assets/images/number/eight.png"),
-    nine: require("../assets/images/number/nine.png"),
+    1: require("../assets/images/number/one.png"),
+    2: require("../assets/images/number/two.png"),
+    3: require("../assets/images/number/three.png"),
+    4: require("../assets/images/number/four.png"),
+    5: require("../assets/images/number/five.png"),
+    6: require("../assets/images/number/six.png"),
+    7: require("../assets/images/number/seven.png"),
+    8: require("../assets/images/number/eight.png"),
+    9: require("../assets/images/number/nine.png"),
+    0: require("../assets/images/number/0.png"),
   },
   alphabet: {
     a: require("../assets/images/alphabet/a.png"),
@@ -142,4 +157,9 @@ export const autoSize = (source, width, height) => {
       height: 60,
     };
   }
+};
+
+export const getRandomGameItem = () => {
+  var keys = Object.keys(IconManager.gameItem);
+  return IconManager.gameItem[keys[(keys.length * Math.random()) << 0]];
 };
