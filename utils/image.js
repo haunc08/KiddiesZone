@@ -64,6 +64,10 @@ export const ImageManager = {
     snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
   },
   movies: require("../assets/images/movies/movie.png"),
+  shapes: {
+    background: require("../assets/images/shapes/background.png"),
+    foreground: require("../assets/images/shapes/foreground.png"),
+  },
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

@@ -13,6 +13,7 @@ import Sandbox from "./screens/games/Sandbox";
 import { Stories } from "./screens/games/Stories";
 import Story from "./screens/games/Story";
 import Movies from "./screens/games/Movies";
+import Shapes from "./screens/games/Shapes";
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,7 @@ const App = () => {
       >
         <Stack.Screen name="KidsZone" component={KidsZone} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
+        <Stack.Screen name="Shapes" component={Shapes} />
         <Stack.Screen name="Stories" component={Stories} />
         <Stack.Screen
           name="GameCountNumberScreen"
