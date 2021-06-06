@@ -14,78 +14,157 @@ import { GameObject, ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
 import { ImageManager, IconManager, autoSize } from "../../utils/image";
 
+let currentIndex;
+
+const data = [
+  ImageManager.shapes.round,
+  ImageManager.shapes.square,
+  ImageManager.shapes.triangle,
+];
+
 export const Shapes = () => {
-  const data = [
-    ImageManager.shapes.round,
-    ImageManager.shapes.square,
-    ImageManager.shapes.triangle,
-  ];
-  function createItem() {
+  const createItem = () => {
     return {
       shape: Math.floor(Math.random() * 3),
       index: Math.floor(Math.random() * 5),
-      correct: false,
     };
-  }
+  };
   const startPosition = 2.9;
   const stopPosition = -2.9;
-  const duration = 3000;
+  const duration = 9000;
+  const anim0 = useRef(new Animated.Value(startPosition)).current;
   const anim1 = useRef(new Animated.Value(startPosition)).current;
   const anim2 = useRef(new Animated.Value(startPosition)).current;
-  const anim3 = useRef(new Animated.Value(startPosition)).current;
+  const [item0, setItem0] = useState(createItem());
   const [item1, setItem1] = useState(createItem());
   const [item2, setItem2] = useState(createItem());
-  const [item3, setItem3] = useState(createItem());
+  const [correct0, setCorrect0] = useState(false);
+  const [correct1, setCorrect1] = useState(false);
+  const [correct2, setCorrect2] = useState(false);
+  const [end0, setEnd0] = useState(false);
+  const [end1, setEnd1] = useState(false);
+  const [end2, setEnd2] = useState(false);
 
-  const play1 = () => {
-    anim1.setValue(startPosition);
-
-    Animated.timing(anim1, {
+  const getCorrect = (no) => {
+    switch (no) {
+      case 0:
+        return correct0;
+      case 1:
+        return correct1;
+      case 2:
+        return correct2;
+    }
+  };
+  const play0 = () => {
+    anim0.setValue(startPosition);
+    Animated.timing(anim0, {
       toValue: stopPosition,
       duration: duration,
       useNativeDriver: true,
       easing: Easing.linear,
-    }).start(() => {
-      play1();
-      setItem1(createItem());
+    }).start((event) => {
+      if (event.finished) {
+        setEnd0(true);
+        setItem0(createItem());
+        setCorrect0(false);
+        play0();
+      }
     });
   };
-  const play2 = () => {
-    anim2.setValue(startPosition);
-    Animated.timing(anim2, {
+
+  useEffect(() => {
+    if (end0 === true)
+      if (getCorrect(0) === false) {
+        currentIndex = (currentIndex + 1) % 3;
+      }
+  }, [end0]);
+
+  const play1 = () => {
+    anim1.setValue(startPosition);
+    Animated.timing(anim1, {
       // delay: duration / 3,
       toValue: stopPosition,
       duration: duration,
       useNativeDriver: true,
       easing: Easing.linear,
-    }).start(() => {
-      play2();
-      setItem2(createItem());
+    }).start((event) => {
+      if (event.finished) {
+        if (correct1 === false) {
+          currentIndex = (currentIndex + 1) % 3;
+        }
+        setEnd1(true);
+        setCorrect1(false);
+        play1();
+        setItem1(createItem());
+      }
     });
   };
 
-  const play3 = () => {
-    anim3.setValue(startPosition);
+  useEffect(() => {
+    if (end1 === true)
+      if (getCorrect(1) === false) {
+        currentIndex = (currentIndex + 1) % 3;
+      }
+  }, [end1]);
 
-    Animated.timing(anim3, {
+  const play2 = () => {
+    anim2.setValue(startPosition);
+
+    Animated.timing(anim2, {
       // delay: (duration / 3) * 2,
       toValue: stopPosition,
       duration: duration,
       useNativeDriver: true,
       easing: Easing.linear,
-    }).start(() => {
-      play3();
-      setItem3(createItem());
+    }).start((event) => {
+      if (event.finished) {
+        if (correct2 === false) {
+          currentIndex = (currentIndex + 1) % 3;
+        }
+        setEnd2(true);
+        setCorrect2(false);
+        play2();
+        setItem2(createItem());
+      }
     });
   };
 
   useEffect(() => {
-    play1();
-    setTimeout(play2, duration / 3);
-    setTimeout(play3, (duration / 3) * 2);
+    if (end2 === true)
+      if (getCorrect(2) === false) {
+        currentIndex = (currentIndex + 1) % 3;
+      }
+  }, [end2]);
+
+  useEffect(() => {
+    play0();
+    setTimeout(play1, duration / 3);
+    setTimeout(play2, (duration / 3) * 2);
+    currentIndex = 0;
   }, []);
 
-  function handleSelect(shape) {}
+  function handleSelect(shape) {
+    switch (currentIndex) {
+      case 0:
+        if (item0.shape === shape && correct0 === false) {
+          setCorrect0(true);
+          currentIndex = (currentIndex + 1) % 3;
+        }
+        break;
+      case 1:
+        if (item1.shape === shape && correct1 === false) {
+          setCorrect1(true);
+          currentIndex = (currentIndex + 1) % 3;
+        }
+        break;
+      case 2:
+        if (item2.shape === shape && correct2 === false) {
+          setCorrect2(true);
+          currentIndex = (currentIndex + 1) % 3;
+        }
+        break;
+    }
+  }
 
   return (
     <NoScrollView
@@ -126,12 +205,20 @@ export const Shapes = () => {
           disable
         />
         <GameObject
+          image={data[item0.shape][item0.index]}
+          height={0.9}
+          transY={-0.96}
+          transX={anim0}
+          disable
+          correct={correct0}
+        />
+        <GameObject
           image={data[item1.shape][item1.index]}
           height={0.9}
           transY={-0.96}
           transX={anim1}
           disable
-          correct={item1.correct}
+          correct={correct1}
         />
         <GameObject
           image={data[item2.shape][item2.index]}
@@ -139,15 +226,7 @@ export const Shapes = () => {
           transY={-0.96}
           transX={anim2}
           disable
-          correct={item2.correct}
-        />
-        <GameObject
-          image={data[item3.shape][item3.index]}
-          height={0.9}
-          transY={-0.96}
-          transX={anim3}
-          disable
-          correct={item3.correct}
+          correct={correct2}
         />
         <GameObject
           image={ImageManager.shapes.beltfront}
