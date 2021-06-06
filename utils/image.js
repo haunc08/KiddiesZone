@@ -12,6 +12,8 @@ export const IconManager = {
     previousgold: require("../assets/icons/movies/previousgold.png"),
     nextgold: require("../assets/icons/movies/nextgold.png"),
   },
+  correct: require("../assets/icons/correct.png"),
+  incorrect: require("../assets/icons/incorrect.png"),
 };
 
 export const ImageManager = {

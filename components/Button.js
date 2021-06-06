@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { Tooltip } from "react-native-elements/dist/tooltip/Tooltip";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
-import { autoSize } from "../utils/image";
+import { autoSize, IconManager, ImageManager } from "../utils/image";
 import { Heading3 } from "./Typography";
 
 export const Button = ({ children, type, onPress, style, small }) => {
@@ -194,6 +194,7 @@ export const GameObject = ({
   transY,
   onPress,
   disable,
+  correct,
 }) => {
   transX = transX || 0;
   transY = transY || 0;
@@ -238,7 +239,7 @@ export const GameObject = ({
               ...size,
               resizeMode: "contain",
             }}
-            source={image}
+            source={correct ? IconManager.correct : image}
           />
         ) : (
           <TouchableOpacity onPress={() => onPress()}>
@@ -247,7 +248,7 @@ export const GameObject = ({
                 ...size,
                 resizeMode: "contain",
               }}
-              source={image}
+              source={correct ? IconManager.correct : image}
             />
           </TouchableOpacity>
         )}

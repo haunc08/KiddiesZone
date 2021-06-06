@@ -28,101 +28,68 @@ export const Shapes = () => {
     return {
       shape: Math.floor(Math.random() * 3),
       index: Math.floor(Math.random() * 5),
-      clear: false,
+      correct: false,
     };
   }
   const startPosition = 2.9;
   const stopPosition = -2.9;
-  const duration = 3000;
-  const anim = new Animated.Value(startPosition);
-  // const anim2 = new Animated.Value(startPosition);
-  const [item, setItem] = useState(createItem());
-  // const [item2, setItem2] = useState(createItem());
-  // const [item3, setItem3] = useState(createItem());
-  // const [loop1, setLoop1] = useState(0);
-  // const [loop2, setLoop2] = useState(0);
-  // const [loop3, setLoop3] = useState(0);
-  // let index = 0;
+  const duration = 12000;
+  const anim1 = useRef(new Animated.Value(startPosition)).current;
+  const anim2 = useRef(new Animated.Value(startPosition)).current;
+  const anim3 = useRef(new Animated.Value(startPosition)).current;
+  const [item1, setItem1] = useState(createItem());
+  const [item2, setItem2] = useState(createItem());
+  const [item3, setItem3] = useState(createItem());
 
-  // const changeIndex1 = () => {
-  //   setIndex1(1);
-  // };
+  const play1 = () => {
+    anim1.setValue(startPosition);
 
-  // const changeIndex2 = () => {
-  //   setIndex2(1);
-  // };
-
-  const play = () => {
-    // setLoop1(1 - loop1);
     Animated.timing(anim1, {
       toValue: stopPosition,
       duration: duration,
       useNativeDriver: true,
       easing: Easing.linear,
     }).start(() => {
-      anim1.setValue(startPosition);
-
-      // changeIndex1();
-      // setItem1(createItem());
+      play1();
+      setItem1(createItem());
     });
   };
-
   const play2 = () => {
+    anim2.setValue(startPosition);
     Animated.timing(anim2, {
+      // delay: duration / 3,
       toValue: stopPosition,
       duration: duration,
       useNativeDriver: true,
       easing: Easing.linear,
-      delay: duration / 2,
     }).start(() => {
-      index = 2;
-      anim2.setValue(startPosition);
       play2();
-      setLoop2(1 - loop2);
-
-      // anim2.setValue(startPosition);
-      // changeIndex2();
-      // setItem2(createItem());
+      setItem2(createItem());
     });
   };
-  // const play3 = () => {
-  //   Animated.timing(anim3, {
-  //     toValue: stopPosition,
-  //     duration: duration,
-  //     useNativeDriver: true,
-  //     easing: Easing.linear,
-  //     delay: (duration / 3) * 2,
-  //   }).start(() => {
-  //     anim3.setValue(startPosition);
-  //     setItem3(createItem());
-  //   });
-  //   setLoop3(1 - loop3);
-  // };
+
+  const play3 = () => {
+    anim3.setValue(startPosition);
+
+    Animated.timing(anim3, {
+      // delay: (duration / 3) * 2,
+      toValue: stopPosition,
+      duration: duration,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start(() => {
+      play3();
+      setItem3(createItem());
+    });
+  };
 
   useEffect(() => {
     play1();
-    play2();
+    setTimeout(play2, duration / 3);
+    setTimeout(play3, (duration / 3) * 2);
   }, []);
-  // useEffect(() => {
-  //   play1();
-  // }, [loop1]);
-  // useEffect(() => {
-  //   play2();
-  // }, [loop2]);
-  // useEffect(() => {
-  //   play3();
-  // }, [loop3]);
 
-  // useEffect(() => {
-  //   play1();
-  // }, [index1]);
-
-  // useEffect(() => {
-  //   play2();
-  // }, [index2]);
-  // useEffect(() => {
-  //   play3();
-  // }, [item3]);
+  function handleSelect(shape) {}
 
   return (
     <NoScrollView
@@ -136,19 +103,25 @@ export const Shapes = () => {
           transY={1.6}
           transX={-1}
           onPress={() => {
-            // setIndex(1);
+            handleSelect(0);
           }}
         />
         <GameObject
           image={ImageManager.shapes.squareShape}
           height={1.1}
           transY={1.6}
+          onPress={() => {
+            handleSelect(1);
+          }}
         />
         <GameObject
           image={ImageManager.shapes.triangleShape}
           height={1.1}
           transY={1.6}
           transX={1}
+          onPress={() => {
+            handleSelect(2);
+          }}
         />
         <GameObject
           image={ImageManager.shapes.beltback}
@@ -157,27 +130,34 @@ export const Shapes = () => {
           disable
         />
         <GameObject
-          image={data[item.shape][item.shape]}
+          image={data[item1.shape][item1.index]}
           height={0.9}
           transY={-0.96}
-          transX={anim}
+          transX={anim1}
+          disable
+          correct={item1.correct}
         />
-        {/* <GameObject
-          image={data[item2.shape][index]}
+        <GameObject
+          image={data[item2.shape][item2.index]}
           height={0.9}
           transY={-0.96}
           transX={anim2}
-        /> */}
-        {/* <GameObject
+          disable
+          correct={item2.correct}
+        />
+        <GameObject
           image={data[item3.shape][item3.index]}
           height={0.9}
           transY={-0.96}
-          transX={anim3} 
-        /> */}
+          transX={anim3}
+          disable
+          correct={item3.correct}
+        />
         <GameObject
           image={ImageManager.shapes.beltfront}
           width={5}
           transY={-0.9}
+          disable
         />
       </Frame>
     </NoScrollView>
