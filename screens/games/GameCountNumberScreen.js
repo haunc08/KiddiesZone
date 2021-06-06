@@ -113,31 +113,6 @@ const GameCountNumberScreen = ({ navigation }) => {
     return answer;
   };
 
-  const convertNumToImage = (num) => {
-    switch (num) {
-      case 1:
-        return ImageManager.number.one;
-      case 2:
-        return ImageManager.number.two;
-      case 3:
-        return ImageManager.number.three;
-      case 4:
-        return ImageManager.number.four;
-      case 5:
-        return ImageManager.number.five;
-      case 6:
-        return ImageManager.number.six;
-      case 7:
-        return ImageManager.number.seven;
-      case 8:
-        return ImageManager.number.eight;
-      case 9:
-        return ImageManager.number.nine;
-      default:
-        break;
-    }
-  };
-
   const handleRightAnswer = () => {
     playSoundFile("yayy");
     setQuestion("Đúng rồi!");
@@ -166,7 +141,7 @@ const GameCountNumberScreen = ({ navigation }) => {
     const answers = getAnswers();
 
     answers.map((answer) => {
-      const path = convertNumToImage(answer);
+      const path = ImageManager.number[`${answer}`];
       buttons.push(
         <View style={{ width: "30%" }}>
           <ImageButton
@@ -181,7 +156,7 @@ const GameCountNumberScreen = ({ navigation }) => {
   };
 
   const AnswerImage = () => {
-    const imagePath = convertNumToImage(numberOfItems);
+    const imagePath = ImageManager.number[`${numberOfItems}`];
     return (
       <TouchableOpacity
         style={{ alignItems: "center" }}
@@ -214,61 +189,79 @@ const GameCountNumberScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ backgroundColor: "#34A853", width: "100%", height: "100%" }}>
+    <View
+      style={{
+        backgroundColor: "#34A853",
+        width: "100%",
+        height: "100%",
+        flexDirection: "row",
+        display: "flex",
+      }}
+    >
+      <View style={{ flex: 10 }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View style={{ marginLeft: 16 }}>
+            <ImageButton
+              small
+              source={IconManager.back}
+              onPress={() => navigation.goBack()}
+            />
+          </View>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <Text style={styles.title}>{question}</Text>
+          </View>
+        </View>
+        <View style={{ flex: 4 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 4,
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {CountingItems()}
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {AnswerView()}
+            </View>
+          </View>
+        </View>
+      </View>
       <View
         style={{
           flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "center",
         }}
       >
-        <View style={{ marginLeft: 16 }}>
-          <ImageButton
-            small
-            source={IconManager.back}
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={styles.title}>{question}</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
+        <View>
           <ImageButton
             small
             style={{ marginRight: 16 }}
             onPress={() => resetValue()}
             source={require("../../assets/icons/play-button.png")}
           ></ImageButton>
-        </View>
-      </View>
-      <View style={{ flex: 4 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 4,
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {CountingItems()}
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {AnswerView()}
-          </View>
         </View>
       </View>
     </View>

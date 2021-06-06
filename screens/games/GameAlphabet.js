@@ -23,32 +23,32 @@ const GameAlphabet = ({ navigation }) => {
     "a",
     "aw",
     "aa",
-    // "b",
-    // "c",
-    // "d",
-    // "dd",
-    // "e",
-    // "ee",
-    // "g",
-    // "h",
-    // "i",
-    // "k",
-    // "l",
-    // "m",
-    // "n",
-    // "o",
-    // "oo",
-    // "ow",
-    // "p",
-    // "q",
-    // "r",
-    // "s",
-    // "t",
-    // "u",
-    // "uw",
-    // "v",
-    // "x",
-    // "y",
+    "b",
+    "c",
+    "d",
+    "dd",
+    "e",
+    "ee",
+    "g",
+    "h",
+    "i",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "oo",
+    "ow",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "uw",
+    "v",
+    "x",
+    "y",
   ];
   const uppercaseLetters = lowercaseLetters.map((letter) =>
     letter.toUpperCase()
@@ -136,11 +136,19 @@ const GameAlphabet = ({ navigation }) => {
   const AnswerImage = () => {
     const imagePath = getAlphabet(chosenLetterIndex);
     return (
-      <TouchableOpacity style={{ alignItems: "center" }} onPress={() => {}}>
+      <TouchableOpacity
+        style={{ alignItems: "center", marginTop: -32 }}
+        onPress={() => playSoundFile(`${lowercaseLetters[chosenLetterIndex]}`)}
+      >
         <Image
           style={{
-            width: 150,
-            height: 150,
+            resizeMode: "contain",
+            // width: 150,
+            width: autoSize(
+              getAlphabet(chosenLetterIndex),
+              sizes.long / 3,
+              null
+            ).width,
             opacity: 1,
           }}
           source={imagePath}

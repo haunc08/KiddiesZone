@@ -3,17 +3,21 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { GameAlphabet, GameCountNumberScreen } from "./screens";
+import {
+  KidsZone,
+  GameAlphabet,
+  GameCalculate,
+  GameCountNumberScreen,
+  Sandbox,
+  Stories,
+  Story,
+  Movies,
+  Shapes,
+} from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
-import KidsZone from "./screens/main/KidsZone";
-import Sandbox from "./screens/games/Sandbox";
-import { Stories } from "./screens/games/Stories";
-import Story from "./screens/games/Story";
-import Movies from "./screens/games/Movies";
-import Shapes from "./screens/games/Shapes";
 
 const Stack = createStackNavigator();
 
@@ -68,6 +72,11 @@ const App = () => {
         <Stack.Screen name="Story" component={Story} />
         <Stack.Screen name="Movies" component={Movies} />
         <Stack.Screen name="GameAlphabet" component={GameAlphabet} />
+        <Stack.Screen
+          name="GameAdd"
+          component={GameCalculate}
+          initialParams={{ gameType: "Add" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
 
