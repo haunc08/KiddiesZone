@@ -13,10 +13,6 @@ import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { GameObject, ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
 import { ImageManager, IconManager, autoSize } from "../../utils/image";
-import { Heading1 } from "../../components/Typography";
-import Carousel from "react-native-snap-carousel";
-import YoutubePlayer from "react-native-youtube-iframe";
-import Orientation from "react-native-orientation-locker";
 
 export const Shapes = () => {
   const data = [
@@ -33,7 +29,7 @@ export const Shapes = () => {
   }
   const startPosition = 2.9;
   const stopPosition = -2.9;
-  const duration = 12000;
+  const duration = 3000;
   const anim1 = useRef(new Animated.Value(startPosition)).current;
   const anim2 = useRef(new Animated.Value(startPosition)).current;
   const anim3 = useRef(new Animated.Value(startPosition)).current;

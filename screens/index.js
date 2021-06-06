@@ -12,6 +12,7 @@ import Movies from "./games/Movies";
 import Sandbox from "./games/Sandbox";
 import { Stories } from "./games/Stories";
 import Story from "./games/Story";
+import Shapes from "./games/Shapes";
 
 export {
   Home,
@@ -28,4 +29,5 @@ export {
   Sandbox,
   Stories,
   Story,
+  Shapes,
 };
