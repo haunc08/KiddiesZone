@@ -126,7 +126,7 @@ export const Row = ({ children, style }) => {
   );
 };
 
-export const Space = ({ children, loose }) => {
+export const Space = ({ children, loose, tight }) => {
   return React.Children.map(children, (c, index) => {
     return index !== children.length - 1 && children.length > 1
       ? [
@@ -137,6 +137,11 @@ export const Space = ({ children, loose }) => {
                 ? {
                     width: sizes.base * 2,
                     height: sizes.base * 2,
+                  }
+                : tight
+                ? {
+                    width: sizes.base / 2,
+                    height: sizes.base / 2,
                   }
                 : {
                     width: sizes.base,
