@@ -14,6 +14,7 @@ import { GameObject, ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
 import { ImageManager, IconManager, autoSize } from "../../utils/image";
 import { Hearts } from "../../components/Indicator";
+import { Heading1, Heading3 } from "../../components/Typography";
 
 const data = [
   ImageManager.shapes.round,
@@ -44,8 +45,9 @@ export const Shapes = ({ navigation }) => {
   const item1ref = useRef();
   const [item2, setItem2] = useState(createItem());
   const item2ref = useRef();
-  const [lives, setLives] = useState(3);
   const currentItem = useRef(0);
+  const [points, setPoints] = useState(0);
+  const [lives, setLives] = useState(3);
 
   const increaseCurrentItem = () => {
     currentItem.current = (currentItem.current + 1) % 3;
@@ -126,6 +128,7 @@ export const Shapes = ({ navigation }) => {
           setItem0((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            setPoints(points + 1);
             return temp;
           });
         } else setLives(lives - 1);
@@ -135,6 +138,7 @@ export const Shapes = ({ navigation }) => {
           setItem1((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            setPoints(points + 1);
             return temp;
           });
         } else setLives(lives - 1);
@@ -145,6 +149,7 @@ export const Shapes = ({ navigation }) => {
           setItem2((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            setPoints(points + 1);
             return temp;
           });
         } else setLives(lives - 1);
@@ -162,7 +167,7 @@ export const Shapes = ({ navigation }) => {
         }}
         imgSource={ImageManager.shapes.floor}
       >
-        <Hearts lives={lives} />
+        <Hearts lives={lives} points={points} />
         <View
           style={{
             flexDirection: "row-reverse",
@@ -254,12 +259,13 @@ export const Shapes = ({ navigation }) => {
       <Frame>
         <ImageButton
           source={IconManager.replay}
-          title="Thua rồi, thử lại nào"
+          title="Điểm của bạn"
           onPress={() => {
             navigation.goBack();
             navigation.navigate("Shapes");
           }}
         />
+        <Heading1 white>{points}</Heading1>
       </Frame>
     </NoScrollView>
   );

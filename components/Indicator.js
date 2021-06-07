@@ -4,9 +4,10 @@ import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { sizes } from "../constants";
 import { autoSize, IconManager, ImageManager } from "../utils/image";
 import { ImageButton } from "./Button";
+import { Heading1, Heading2 } from "./Typography";
 import { Space } from "./Wrapper";
 
-export const Hearts = ({ lives }) => {
+export const Hearts = ({ lives, points }) => {
   const size = autoSize(IconManager.correct, null, 50);
 
   return (
@@ -17,7 +18,7 @@ export const Hearts = ({ lives }) => {
         zIndex: 32,
       }}
     >
-      <Space tight>
+      <Space tight center>
         <Image
           style={{
             ...size,
@@ -39,6 +40,9 @@ export const Hearts = ({ lives }) => {
           }}
           source={lives > 2 ? IconManager.heart : IconManager.heartempty}
         />
+        <Heading1 white style={{ marginLeft: sizes.base }}>
+          {points}
+        </Heading1>
       </Space>
     </View>
   );
