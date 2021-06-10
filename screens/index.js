@@ -13,6 +13,7 @@ import Sandbox from "./games/Sandbox";
 import { Stories } from "./games/Stories";
 import Story from "./games/Story";
 import Shapes from "./games/Shapes";
+import TrashGame from "./games/TrashGame";
 
 export {
   Home,
@@ -30,4 +31,5 @@ export {
   Stories,
   Story,
   Shapes,
+  TrashGame,
 };

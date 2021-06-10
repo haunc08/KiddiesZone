@@ -162,6 +162,7 @@ export const ImageManager = {
       require("../assets/images/shapes/triangle/watermelon.png"),
     ],
   },
+  ground: require("../assets/images/ground.jpg"),
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

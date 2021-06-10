@@ -50,6 +50,10 @@ export const KidsZone = ({ navigation }) => {
       key: "GameAdd",
       name: "Phép cộng",
     },
+    {
+      key: "TrashGame",
+      name: "Dọn rác",
+    },
   ];
   return (
     <NoScrollView style={{ padding: 0 }}>

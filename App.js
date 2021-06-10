@@ -13,6 +13,7 @@ import {
   Story,
   Movies,
   Shapes,
+  TrashGame,
 } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
@@ -77,6 +78,7 @@ const App = () => {
           component={GameCalculate}
           initialParams={{ gameType: "Add" }}
         />
+        <Stack.Screen name="TrashGame" component={TrashGame} />
       </Stack.Navigator>
     </NavigationContainer>
 
