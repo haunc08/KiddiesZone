@@ -30,6 +30,10 @@ export const IconManager = {
   },
   heart: require("../assets/icons/heart.png"),
   heartempty: require("../assets/icons/heartempty.png"),
+  instruments: {
+    drum: require("../assets/icons/instruments/drum.png"),
+    piano: require("../assets/icons/instruments/piano.png"),
+  },
 };
 
 export const ImageManager = {
@@ -133,6 +137,16 @@ export const ImageManager = {
       require("../assets/images/RabbitAndTurtle/turtle8.png"),
     ],
     snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
+  },
+  instruments: {
+    pianobackground: require("../assets/images/instruments/pianobackground.png"),
+    drumbackground: require("../assets/images/instruments/drumbackground.png"),
+    clap: require("../assets/images/instruments/clap.png"),
+    cymbal: require("../assets/images/instruments/cymbal.png"),
+    snare: require("../assets/images/instruments/snare.png"),
+    kick: require("../assets/images/instruments/kick.png"),
+    hihat: require("../assets/images/instruments/hihat.png"),
+    maraca: require("../assets/images/instruments/maraca.png"),
   },
   movies: require("../assets/images/movies/movie.png"),
   shapes: {

@@ -15,10 +15,10 @@ export const playSoundFile = (soundFileName) => {
       } else {
         console.log("playback failed due to audio decoding errors");
       }
+      mySound.release();
     });
   });
   mySound.setVolume(1);
-  mySound.release();
 };
 
 export const createSound = (name) => {

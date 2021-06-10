@@ -72,15 +72,16 @@ export const ImageButton = ({
   const size = autoSize(source, width, height);
   return (
     <TouchableOpacity
-      onPress={block ? null : onPress}
+      disabled={block}
+      onPress={onPress}
       style={{ alignItems: "center", ...containerStyle }}
     >
       <Image
         style={{
           ...size,
           resizeMode: "contain",
-          ...style,
           opacity: disable || block ? 0.25 : 1,
+          ...style,
         }}
         source={source}
       />

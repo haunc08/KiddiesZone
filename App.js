@@ -13,6 +13,7 @@ import {
   Story,
   Movies,
   Shapes,
+  Instruments,
 } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
@@ -62,6 +63,7 @@ const App = () => {
         initialRouteName={"KidsZone"}
       >
         <Stack.Screen name="KidsZone" component={KidsZone} />
+        <Stack.Screen name="Instruments" component={Instruments} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Shapes" component={Shapes} />
         <Stack.Screen name="Stories" component={Stories} />
