@@ -9,7 +9,7 @@ import { Heading1 } from "../../components/Typography";
 
 const gameImages = ImageManager.rabbitAndTurtle;
 
-const pages = 12;
+const pages = 11;
 
 export const Story = ({ navigation }) => {
   let script = useRef(null);
@@ -372,7 +372,8 @@ export const Story = ({ navigation }) => {
 
   const handleStart = () => {
     console.log("handle start");
-    backgroundMusic.current = createSound(`story`, -1);
+    backgroundMusic.current = createSound(media.background.audio, -1);
+    backgroundMusic.current.setVolume(0.25);
     setPage(page + 1);
 
     // media.background.audio.play();

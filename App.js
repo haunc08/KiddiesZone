@@ -14,6 +14,7 @@ import {
   Movies,
   Shapes,
   Instruments,
+  Story2,
 } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
@@ -72,6 +73,7 @@ const App = () => {
           component={GameCountNumberScreen}
         />
         <Stack.Screen name="Story" component={Story} />
+        <Stack.Screen name="Story2" component={Story2} />
         <Stack.Screen name="Movies" component={Movies} />
         <Stack.Screen name="GameAlphabet" component={GameAlphabet} />
         <Stack.Screen
