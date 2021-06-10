@@ -28,6 +28,8 @@ export const IconManager = {
     star: require("../assets/icons/star.png"),
     sushi: require("../assets/icons/sushi.png"),
   },
+  heart: require("../assets/icons/heart.png"),
+  heartempty: require("../assets/icons/heartempty.png"),
 };
 
 export const ImageManager = {

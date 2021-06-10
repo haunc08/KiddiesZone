@@ -126,23 +126,27 @@ export const Row = ({ children, style }) => {
   );
 };
 
-export const Space = ({ children, loose }) => {
+export const Space = ({ children, loose, tight, center }) => {
+  const spaceStyle = loose
+    ? {
+        width: sizes.base * 2,
+        height: sizes.base * 2,
+      }
+    : tight
+    ? {
+        width: sizes.base / 2,
+        height: sizes.base / 2,
+      }
+    : {
+        width: sizes.base,
+        height: sizes.base,
+      };
   return React.Children.map(children, (c, index) => {
     return index !== children.length - 1 && children.length > 1
       ? [
           c,
           <View
-            style={
-              loose
-                ? {
-                    width: sizes.base * 2,
-                    height: sizes.base * 2,
-                  }
-                : {
-                    width: sizes.base,
-                    height: sizes.base,
-                  }
-            }
+            style={{ ...spaceStyle, alignItems: center ? "center" : null }}
           />,
         ]
       : c;
