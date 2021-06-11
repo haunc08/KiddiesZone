@@ -15,6 +15,7 @@ import Story from "./games/Story";
 import Story2 from "./games/Story2";
 import Shapes from "./games/Shapes";
 import Instruments from "./games/Instruments";
+import TrashGame from "./games/TrashGame";
 
 export {
   Home,
@@ -34,4 +35,5 @@ export {
   Shapes,
   Instruments,
   Story2,
+  TrashGame,
 };
