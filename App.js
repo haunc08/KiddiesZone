@@ -16,6 +16,8 @@ import {
   Instruments,
   Story2,
   TrashGame,
+  ParentPasswordScreen,
+  CreatePasswordScreen,
 } from "./screens";
 import Tabs from "./navigation/tabs";
 import { firebase, firebaseConfig } from "./database";
@@ -62,9 +64,17 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={"KidsZone"}
+        initialRouteName={"CreatePasswordScreen"}
       >
         <Stack.Screen name="KidsZone" component={KidsZone} />
+        <Stack.Screen
+          name="ParentPasswordScreen"
+          component={ParentPasswordScreen}
+        />
+        <Stack.Screen
+          name="CreatePasswordScreen"
+          component={CreatePasswordScreen}
+        />
         <Stack.Screen name="Instruments" component={Instruments} />
         <Stack.Screen name="Sandbox" component={Sandbox} />
         <Stack.Screen name="Shapes" component={Shapes} />

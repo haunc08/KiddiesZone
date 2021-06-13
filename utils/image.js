@@ -197,6 +197,11 @@ export const ImageManager = {
     ],
   },
   ground: require("../assets/images/ground.jpg"),
+  passwordParent: {
+    background: require("../assets/images/passwordparent/background.jpg"),
+    animals: require("../assets/images/passwordparent/animals.png"),
+    test: require("../assets/images/passwordparent/test.png"),
+  },
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.
