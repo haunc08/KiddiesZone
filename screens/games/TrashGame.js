@@ -21,18 +21,18 @@ const calcMarginHorizontal = (flex) => {
   return (sizes.long * flex) / 5;
 };
 
-const Trash = ({ trashKey, onPress, onChangeStateLanding }) => {
-  const randomHorizontal = Math.random() * 4.5;
-  const trashLeft = calcMarginHorizontal(randomHorizontal);
-
+const Trash = ({
+  trashKey,
+  onPress,
+  onChangeStateLanding,
+  left,
+  stopBottom,
+}) => {
+  console.log(trashKey, "rerender");
   const initialBottom = 4;
   const bottomAnim = useRef(
     new Animated.Value(calcMarginVertical(initialBottom))
   ).current;
-
-  const minPos = 0;
-  const maxPos = 2;
-  const stopBottom = Math.random() * (maxPos - minPos) + minPos;
 
   let isLanding = false;
 
@@ -47,14 +47,17 @@ const Trash = ({ trashKey, onPress, onChangeStateLanding }) => {
       duration: 3000,
       easing: Easing.linear,
     }).start(() => {
+      // console.log(bottomAnim);
       isLanding = true;
       onChangeStateLanding(isLanding);
     });
   };
+  console.log(trashKey, left, stopBottom);
+  console.log("botani ", bottomAnim._value);
 
   return (
     <Animated.View
-      style={{ position: "absolute", bottom: bottomAnim, left: trashLeft }}
+      style={{ position: "absolute", bottom: bottomAnim, left: left }}
     >
       <ImageButton
         small
@@ -77,7 +80,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 
   const [count, setCount] = useState(0);
 
-  const limitLandingItems = 10;
+  const limitLandingItems = 2;
 
   // const trashItemsRef = useRef();
   // trashItemsRef.current = trashItems;
@@ -119,6 +122,13 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
   const createItems = () => {
     setCount(count + 1);
 
+    const randomHorizontal = Math.random() * 4.5;
+    const trashLeft = calcMarginHorizontal(randomHorizontal);
+
+    const minPos = 0;
+    const maxPos = 2;
+    const stopBottom = Math.random() * (maxPos - minPos) + minPos;
+
     const newTrashItem = {
       component: (
         <Trash
@@ -127,6 +137,8 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
           onChangeStateLanding={(isLanding) =>
             handleChangeStateLanding(isLanding)
           }
+          left={trashLeft}
+          stopBottom={stopBottom}
         />
       ),
       key: count,

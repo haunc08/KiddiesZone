@@ -7,7 +7,7 @@ const trashItemsReducer = (trashItems = [], action) => {
     case CLEAN_TRASH:
       return trashItems.filter((item) => item.key !== action.key);
     default:
-      return trashItems;
+      return [];
   }
 };
 
