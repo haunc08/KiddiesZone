@@ -3,9 +3,14 @@ import { Alert } from "react-native";
 import { View } from "react-native";
 import { Text } from "react-native-elements";
 import Animated, { Easing } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
 import { ImageButton } from "../../components/Button";
 import { Frame } from "../../components/Wrapper";
 import { sizes } from "../../constants";
+import {
+  cleanTrashItem,
+  createTrashItem,
+} from "../../redux/actions/trashItems";
 import { IconManager, ImageManager } from "../../utils/image";
 
 const calcMarginVertical = (flex) => {
@@ -66,13 +71,16 @@ const Trash = ({ trashKey, onPress, onChangeStateLanding }) => {
 };
 
 const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
-  const [trashItems, setTrashItems] = useState([]);
+  const dispatch = useDispatch();
+  // const [trashItems, setTrashItems] = useState([]);
+  const trashItems = useSelector((state) => state.trashItems);
+
   const [count, setCount] = useState(0);
 
   const limitLandingItems = 10;
 
-  const trashItemsRef = useRef();
-  trashItemsRef.current = trashItems;
+  // const trashItemsRef = useRef();
+  // trashItemsRef.current = trashItems;
 
   const countLandingRef = useRef();
   countLandingRef.current = countLandingItems;
@@ -82,7 +90,8 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
       Alert.alert("Thong bao", "Game over!");
       return;
     }
-    if (countLandingItems < limitLandingItems - 3) {
+
+    if (countLandingItems < limitLandingItems) {
       setTimeout(() => {
         createItems();
       }, 1000);
@@ -90,15 +99,18 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
   }, [trashItems]);
 
   const cleanTrash = (index) => {
-    const newTrashItems = trashItemsRef.current.filter(
-      (item) => item.key != index
-    );
+    // const newTrashItems = trashItemsRef.current.filter(
+    //   (item) => item.key != index
+    // );
+    // console.log(newTrashItems);
 
-    setTrashItems(newTrashItems);
+    dispatch(cleanTrashItem(index));
   };
 
   const handleChangeStateLanding = (isLanding) => {
     if (countLandingItems < limitLandingItems) {
+      // why 0 0 0 0 1 2 ... ???
+      // console.log(countLandingItems);
       if (isLanding) setCountLandingItems(countLandingRef.current + 1);
       else setCountLandingItems(countLandingRef.current - 1);
     }
@@ -120,7 +132,8 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
       key: count,
     };
 
-    setTrashItems([...trashItems, newTrashItem]);
+    dispatch(createTrashItem(newTrashItem));
+    // setTrashItems([...trashItems, newTrashItem]);
   };
 
   return (
