@@ -46,28 +46,6 @@ const DisplayedScreens = () => {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-          initialRouteName={"Home"}
-        >
-          <Stack.Screen name="Home" component={Tabs} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
-  return (
-    <NavigationContainer>
-      <AuthenticationNavigator />
-    </NavigationContainer>
-  );
-};
-
-const App = () => {
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator
           name="ok"
           screenOptions={{
             headerShown: false,
@@ -103,6 +81,19 @@ const App = () => {
           <Stack.Screen name="TrashGame" component={TrashGame} />
         </Stack.Navigator>
       </NavigationContainer>
+    );
+  }
+  return (
+    <NavigationContainer>
+      <AuthenticationNavigator />
+    </NavigationContainer>
+  );
+};
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <DisplayedScreens />
     </Provider>
     // <KidsZone />
   );

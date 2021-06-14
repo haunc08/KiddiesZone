@@ -1,32 +1,127 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { colors, sizes } from "../../constants";
-import {
-  Card,
-  NoScrollView,
-  Row,
-  ScreenView,
-  Space,
-} from "../../components/Wrapper";
+import { sizes } from "../../constants";
+import { Card, NoScrollView, Row } from "../../components/Wrapper";
 import { TextInput } from "../../components/TextInput";
 import { Button } from "../../components/Button";
 import { Body } from "../../components/Typography";
+import { Alert, View } from "react-native";
+
+// firebase
+import * as firebase from "firebase";
+import { ActivityIndicator } from "react-native";
 
 const SignUpScreen = ({ navigation }) => {
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (errorMessage !== "") {
+      Alert.alert("Thông báo", errorMessage);
+    }
+  }, [errorMessage]);
+
+  const reset = () => {
+    setDisplayName("");
+    setEmail("");
+    setPassword("");
+    setIsLoading(false);
+  };
+
+  const registerUser = () => {
+    if (email === "" || password === "") {
+      setErrorMessage("Không thể để trống email hoặc password!");
+      Alert.alert("Thông báo", errorMessage, [
+        { text: "OK", onPress: () => setErrorMessage("") },
+      ]);
+    } else {
+      setIsLoading(true);
+
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          const { uid } = firebase.auth().currentUser;
+
+          res.user
+            .updateProfile({
+              displayName: displayName,
+            })
+            .then(() => {
+              // firebase
+              //   .database()
+              //   .ref("users/" + firebase.auth().currentUser.uid + "/profile")
+              //   .set({ name: firebase.auth().currentUser.displayName });
+              // addDefaultDatabase(uid);
+            });
+          console.log("User registered successfully!");
+
+          reset();
+          navigation.navigate("SignIn");
+        })
+        .catch((error) => {
+          // set isLoading to false b/c if not, SignUpScreen will return Loading screen and stay there
+          setIsLoading(false);
+
+          //console.log(error);
+          if (error.code === "auth/email-already-in-use") {
+            setErrorMessage("Tài khoản đã được sử dụng.");
+          } else if (error.code === "auth/invalid-email") {
+            setErrorMessage("Email không hợp lệ!");
+          } else if (error.code === "auth/weak-password") {
+            setErrorMessage(
+              "Mật khẩu không hợp lệ, tối thiểu phải có 6 ký tự!"
+            );
+          }
+          Alert.alert("Thông báo", errorMessage, [
+            { text: "OK", onPress: () => setErrorMessage("") },
+          ]);
+        });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator size="large" color="#9E9E9E" />
+      </View>
+    );
+  }
+
   return (
     <NoScrollView>
       <Card title="Đăng ký">
-        <TextInput />
-        <TextInput />
-        <TextInput />
+        <TextInput
+          label="Họ tên"
+          placeholder="Họ tên"
+          onChangeText={(val) => setDisplayName(val)}
+        />
+        <TextInput
+          label="Email"
+          placeholder="Email"
+          onChangeText={(val) => setEmail(val)}
+        />
+        <TextInput
+          label="Mật khẩu"
+          placeholder="••••••"
+          onChangeText={(val) => setPassword(val)}
+          secureTextEntry={true}
+        />
         <Row style={{ marginTop: sizes.base }}>
           <Button
             style={{ flex: 0.5, marginRight: sizes.base / 2 }}
             type="secondary"
+            onPress={() => navigation.navigate("SignIn")}
           >
             Trở về
           </Button>
-          <Button style={{ flex: 0.5, marginLeft: sizes.base / 2 }}>
+          <Button
+            style={{ flex: 0.5, marginLeft: sizes.base / 2 }}
+            onPress={() => registerUser()}
+          >
             Xác nhận
           </Button>
         </Row>
