@@ -1,4 +1,4 @@
-import { CREATE_TRASH, CLEAN_TRASH } from "../actionTypes";
+import { CREATE_TRASH, CLEAN_TRASH, CLEAR_TRASH } from "../actionTypes";
 
 const trashItemsReducer = (trashItems = [], action) => {
   switch (action.type) {
@@ -6,8 +6,10 @@ const trashItemsReducer = (trashItems = [], action) => {
       return [...trashItems, action.payload];
     case CLEAN_TRASH:
       return trashItems.filter((item) => item.key !== action.key);
-    default:
+    case CLEAR_TRASH:
       return [];
+    default:
+      return trashItems;
   }
 };
 

@@ -9,6 +9,7 @@ import { Frame } from "../../components/Wrapper";
 import { sizes } from "../../constants";
 import {
   cleanTrashItem,
+  clearAllTrashItems,
   createTrashItem,
 } from "../../redux/actions/trashItems";
 import { IconManager, ImageManager } from "../../utils/image";
@@ -28,7 +29,6 @@ const Trash = ({
   left,
   stopBottom,
 }) => {
-  console.log(trashKey, "rerender");
   const initialBottom = 4;
   const bottomAnim = useRef(
     new Animated.Value(calcMarginVertical(initialBottom))
@@ -52,8 +52,6 @@ const Trash = ({
       onChangeStateLanding(isLanding);
     });
   };
-  console.log(trashKey, left, stopBottom);
-  console.log("botani ", bottomAnim._value);
 
   return (
     <Animated.View
@@ -94,12 +92,16 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
       return;
     }
 
-    if (countLandingItems < limitLandingItems) {
-      setTimeout(() => {
-        createItems();
-      }, 1000);
-    }
+    const interval = setInterval(() => {
+      console.log(countLandingItems);
+      if (countLandingItems < limitLandingItems) createItems();
+      else return;
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [trashItems]);
+
+  useEffect(() => {}, []);
 
   const cleanTrash = (index) => {
     // const newTrashItems = trashItemsRef.current.filter(
@@ -132,6 +134,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
     const newTrashItem = {
       component: (
         <Trash
+          key={count}
           trashKey={count}
           onPress={(trashKey) => cleanTrash(trashKey)}
           onChangeStateLanding={(isLanding) =>
@@ -158,6 +161,8 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 const TrashGame = ({ navigation }) => {
   const [countLandingItems, setCountLandingItems] = useState(0);
 
+  const dispatch = useDispatch();
+
   return (
     <Frame background={ImageManager.ground}>
       <View
@@ -171,7 +176,10 @@ const TrashGame = ({ navigation }) => {
         <ImageButton
           small
           source={IconManager.back}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack();
+            dispatch(clearAllTrashItems());
+          }}
         />
       </View>
       <View
