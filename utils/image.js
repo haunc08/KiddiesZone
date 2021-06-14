@@ -34,6 +34,7 @@ export const IconManager = {
     drum: require("../assets/icons/instruments/drum.png"),
     piano: require("../assets/icons/instruments/piano.png"),
   },
+  equal: require("../assets/icons/equal.png"),
 };
 
 export const ImageManager = {

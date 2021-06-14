@@ -3,6 +3,7 @@ import { Button, Image, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { ImageButton } from "../../components/Button";
+import { colors } from "../../constants";
 import {
   autoSize,
   getRandomGameItem,
@@ -13,6 +14,8 @@ import { playSoundFile } from "../../utils/sound";
 
 const GameCalculate = ({ route, navigation }) => {
   const { gameType } = route.params;
+
+  const [mode, setMode] = useState("easy");
 
   const [question, setQuestion] = useState("Phép tính này ra bao nhiêu?");
   const [xItems, setXItems] = useState(0);
@@ -108,6 +111,34 @@ const GameCalculate = ({ route, navigation }) => {
     setQuestion("Phép tính này ra bao nhiêu?");
   };
 
+  const Number = ({ numberOfItems }) => {
+    const numbers = numberOfItems.toString().split("");
+
+    return (
+      <View style={{ flex: 5, alignItems: "center" }}>
+        <TouchableOpacity
+          style={{ alignItems: "center", flexDirection: "row" }}
+          onPress={() => playSoundFile(`no${numberOfItems}`)}
+        >
+          {numbers.map((number) => {
+            const numPath = ImageManager.number[`${number}`];
+            return (
+              <Image
+                style={{
+                  resizeMode: "contain",
+                  width: autoSize(numPath, 100, null).width,
+                  height: autoSize(numPath, 100, null).height,
+                  marginHorizontal: -16,
+                }}
+                source={numPath}
+              />
+            );
+          })}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   const CountingItems = ({ numberOfItems }) => {
     let items = [];
     let itemStyle = getItemStyle(numberOfItems);
@@ -173,24 +204,43 @@ const GameCalculate = ({ route, navigation }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
           width: "100%",
           height: "100%",
           padding: 16,
         }}
       >
-        <CountingItems numberOfItems={xItems} />
+        {mode === "easy" ? (
+          <CountingItems numberOfItems={xItems} />
+        ) : (
+          <Number numberOfItems={xItems} />
+        )}
         <Image
           source={signPath}
           style={{
             flex: 1,
             resizeMode: "contain",
-            width: autoSize(signPath, 45, null).width,
+            width: autoSize(signPath, 60, null).width,
+            height: autoSize(signPath, 60, null).height,
             marginHorizontal: 16,
           }}
         />
-        <CountingItems numberOfItems={yItems} />
+        {mode === "easy" ? (
+          <CountingItems numberOfItems={yItems} />
+        ) : (
+          <Number numberOfItems={yItems} />
+        )}
+        <Image
+          source={IconManager.equal}
+          style={{
+            flex: 1,
+            resizeMode: "contain",
+            width: autoSize(signPath, 60, null).width,
+            height: autoSize(signPath, 60, null).height,
+            marginHorizontal: 16,
+          }}
+        />
       </View>
     );
   };
@@ -236,6 +286,7 @@ const GameCalculate = ({ route, navigation }) => {
               style={{
                 resizeMode: "contain",
                 width: autoSize(numPath, 100, null).width,
+                height: autoSize(numPath, 100, null).height,
                 marginHorizontal: -16,
               }}
               source={numPath}
@@ -281,6 +332,32 @@ const GameCalculate = ({ route, navigation }) => {
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={styles.title}>{question}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{
+                marginRight: 16,
+                width: 80,
+                alignItems: "center",
+                borderRadius: 12,
+                backgroundColor: mode === "easy" ? colors.green : "green",
+              }}
+              onPress={() => setMode("easy")}
+            >
+              <Text style={{ fontSize: 24, fontWeight: "400" }}>Dễ</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                marginRight: 16,
+                width: 80,
+                alignItems: "center",
+                borderRadius: 12,
+                backgroundColor: mode === "hard" ? colors.green : "green",
+              }}
+              onPress={() => setMode("hard")}
+            >
+              <Text style={{ fontSize: 24, fontWeight: "400" }}>Khó</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ flex: 4 }}>
@@ -371,5 +448,10 @@ const styles = StyleSheet.create({
   numberButton: {
     //width: "50%",
     marginBottom: 16,
+  },
+  modeButton: {
+    marginRight: 16,
+    width: 80,
+    alignItems: "center",
   },
 });
