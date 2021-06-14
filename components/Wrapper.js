@@ -42,7 +42,7 @@ export const ScreenView = ({ children, bgColor, horizontal }) => {
 
 export const NoScrollView = ({ children, bgColor, imgSource, style }) => {
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {imgSource ? (
         <ImageBackground
           source={imgSource}
@@ -69,7 +69,7 @@ export const NoScrollView = ({ children, bgColor, imgSource, style }) => {
           {children}
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

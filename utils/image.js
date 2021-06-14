@@ -30,6 +30,10 @@ export const IconManager = {
   },
   heart: require("../assets/icons/heart.png"),
   heartempty: require("../assets/icons/heartempty.png"),
+  instruments: {
+    drum: require("../assets/icons/instruments/drum.png"),
+    piano: require("../assets/icons/instruments/piano.png"),
+  },
 };
 
 export const ImageManager = {
@@ -134,6 +138,34 @@ export const ImageManager = {
     ],
     snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
   },
+  threeHamers: {
+    story: [
+      require("../assets/images/riu/riu1.jpg"),
+      require("../assets/images/riu/riu2.jpg"),
+      require("../assets/images/riu/riu3.jpg"),
+      require("../assets/images/riu/riu4.jpg"),
+      require("../assets/images/riu/riu5.jpg"),
+      require("../assets/images/riu/riu6.jpg"),
+      require("../assets/images/riu/riu7.jpg"),
+      require("../assets/images/riu/riu8.jpg"),
+      require("../assets/images/riu/riu9.jpg"),
+      require("../assets/images/riu/riu10.jpg"),
+      require("../assets/images/riu/riu11.jpg"),
+      require("../assets/images/riu/riu12.jpg"),
+      require("../assets/images/riu/riu13.jpg"),
+      require("../assets/images/riu/riu14.jpg"),
+    ],
+  },
+  instruments: {
+    pianobackground: require("../assets/images/instruments/pianobackground.png"),
+    drumbackground: require("../assets/images/instruments/drumbackground.png"),
+    clap: require("../assets/images/instruments/clap.png"),
+    cymbal: require("../assets/images/instruments/cymbal.png"),
+    snare: require("../assets/images/instruments/snare.png"),
+    kick: require("../assets/images/instruments/kick.png"),
+    hihat: require("../assets/images/instruments/hihat.png"),
+    maraca: require("../assets/images/instruments/maraca.png"),
+  },
   movies: require("../assets/images/movies/movie.png"),
   shapes: {
     beltback: require("../assets/images/shapes/beltback.png"),
@@ -165,6 +197,11 @@ export const ImageManager = {
     ],
   },
   ground: require("../assets/images/ground.jpg"),
+  passwordParent: {
+    background: require("../assets/images/passwordparent/background.jpg"),
+    animals: require("../assets/images/passwordparent/animals.png"),
+    test: require("../assets/images/passwordparent/test.png"),
+  },
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

@@ -23,6 +23,10 @@ export const KidsZone = ({ navigation }) => {
   };
   const games = [
     {
+      key: "Instruments",
+      name: "Âm nhạc",
+    },
+    {
       key: "Shapes",
       name: "Hình khối",
     },

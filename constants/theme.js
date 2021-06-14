@@ -19,8 +19,13 @@ export const colors = {
   red: "#ee4238",
   brown: "#6f4938",
 
+  white80: "rgba(255, 255, 255, 0.8)",
+  white50: "rgba(255, 255, 255, 0.5)",
+  white12: "rgba(255, 255, 255, 0.12)",
   fadeblack: "rgba(30, 31, 32, 0.25)",
   fadeblack50: "rgba(30, 31, 32, 0.5)",
+  black38: "rgba(30, 31, 32, 0.38)",
+  black12: "rgba(30, 31, 32, 0.12)",
   smoke: "whitesmoke",
   darkgray: "#898C95",
   transparent: "transparent",

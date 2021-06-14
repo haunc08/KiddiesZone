@@ -28,7 +28,7 @@ export const Stories = ({ navigation }) => {
     },
     {
       key: "Story2",
-      name: "Truyện 2",
+      name: "Ba chiếc rìu",
     },
     {
       key: "Story3",

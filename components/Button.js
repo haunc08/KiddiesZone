@@ -5,6 +5,7 @@ import { Tooltip } from "react-native-elements/dist/tooltip/Tooltip";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { autoSize, IconManager, ImageManager } from "../utils/image";
+import { playSoundFile } from "../utils/sound";
 import { Heading3 } from "./Typography";
 
 export const Button = ({ children, type, onPress, style, small }) => {
@@ -72,15 +73,16 @@ export const ImageButton = ({
   const size = autoSize(source, width, height);
   return (
     <TouchableOpacity
-      onPress={block ? null : onPress}
+      disabled={block}
+      onPress={onPress}
       style={{ alignItems: "center", ...containerStyle }}
     >
       <Image
         style={{
           ...size,
           resizeMode: "contain",
-          ...style,
           opacity: disable || block ? 0.25 : 1,
+          ...style,
         }}
         source={source}
       />
@@ -139,7 +141,7 @@ export const StoryObject = ({
         {!name ? (
           <TouchableOpacity
             onPress={() => {
-              audio.play();
+              playSoundFile(audio);
             }}
           >
             <Image
@@ -158,7 +160,7 @@ export const StoryObject = ({
             width={100}
             withOverlay={false}
             onOpen={() => {
-              audio.play();
+              playSoundFile(audio);
             }}
           >
             {background && (

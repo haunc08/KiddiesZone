@@ -12,8 +12,12 @@ import Movies from "./games/Movies";
 import Sandbox from "./games/Sandbox";
 import { Stories } from "./games/Stories";
 import Story from "./games/Story";
+import Story2 from "./games/Story2";
 import Shapes from "./games/Shapes";
+import Instruments from "./games/Instruments";
 import TrashGame from "./games/TrashGame";
+import ParentPasswordScreen from "./main/ParentPasswordScreen";
+import CreatePasswordScreen from "./main/CreatePasswordScreen";
 
 export {
   Home,
@@ -31,5 +35,9 @@ export {
   Stories,
   Story,
   Shapes,
+  Instruments,
+  Story2,
   TrashGame,
+  ParentPasswordScreen,
+  CreatePasswordScreen,
 };
