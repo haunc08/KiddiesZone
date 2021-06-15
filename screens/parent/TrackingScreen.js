@@ -67,6 +67,51 @@ const history = [
     height: "1m20",
     weight: "35kg",
   },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
+  {
+    date: "15/06/2021",
+    height: "1m20",
+    weight: "35kg",
+  },
 ];
 export const TrackingScreen = ({ navigation }) => {
   const carouselChild = useRef();
@@ -324,6 +369,7 @@ export const TrackingScreen = ({ navigation }) => {
             data={history}
             renderItem={historyItem}
             keyExtractor={(item) => item.id}
+            style={{ height: 250 }}
           />
           <ImageButton
             color={colors.white}
