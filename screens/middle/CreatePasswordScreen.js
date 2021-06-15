@@ -80,7 +80,6 @@ export const CreatePasswordScreen = ({ navigation }) => {
     );
   };
   const field = (filled) => {
-    console.log("password", password);
     return (
       <View
         style={{

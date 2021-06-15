@@ -64,9 +64,9 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={"CreatePasswordScreen"}
+        initialRouteName={"ParentScreen"}
       >
-        <Stack.Screen name="KidsZone" component={KidsZone} />
+        <Stack.Screen name="ParentScreen" component={Tabs} />
         <Stack.Screen
           name="ParentPasswordScreen"
           component={ParentPasswordScreen}

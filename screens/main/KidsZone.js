@@ -62,7 +62,7 @@ export const KidsZone = ({ navigation }) => {
   return (
     <NoScrollView style={{ padding: 0 }}>
       <StatusBar hidden />
-      <KidsZoneNavbar />
+      <KidsZoneNavbar navigation={navigation} />
       <FullHorizontalList data={games} onPress={handleChooseGame} />
     </NoScrollView>
   );

@@ -2,6 +2,7 @@ import { Image } from "react-native";
 
 export const IconManager = {
   back: require("../assets/icons/back.png"),
+  backline: require("../assets/icons/backline.png"),
   playButton: require("../assets/icons/play-button.png"),
   home: require("../assets/icons/home.png"),
   replay: require("../assets/icons/replay.png"),
@@ -34,6 +35,21 @@ export const IconManager = {
     drum: require("../assets/icons/instruments/drum.png"),
     piano: require("../assets/icons/instruments/piano.png"),
   },
+  games: require("../assets/icons/games.png"),
+  feed: require("../assets/icons/feed.png"),
+  male: require("../assets/icons/male.png"),
+  female: require("../assets/icons/female.png"),
+  height: require("../assets/icons/height.png"),
+  weight: require("../assets/icons/weight.png"),
+  bmi: {
+    underweight: require("../assets/icons/bmi/0.png"),
+    normal: require("../assets/icons/bmi/1.png"),
+    overweight: require("../assets/icons/bmi/2.png"),
+    obese: require("../assets/icons/bmi/3.png"),
+  },
+  edit: require("../assets/icons/edit.png"),
+  newentry: require("../assets/icons/newentry.png"),
+  roundadd: require("../assets/icons/roundadd.png"),
 };
 
 export const ImageManager = {

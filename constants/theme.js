@@ -3,7 +3,7 @@ const { width, height } = Dimensions.get("screen");
 
 export const colors = {
   // base colors
-  primary: "#7a81ff",
+  primary: "#0d8bf8",
   darkprimary: "#4c249e",
 
   // colors
@@ -12,13 +12,14 @@ export const colors = {
   purple: "#7a81ff",
   orange: "#ff9724",
   yellow: "#fec700",
-  pink: "#ff2452",
+  pink: "#ff3d66",
   blue: "#0d8bf8",
   green: "#45cc51",
   cyan: "#00cfce",
   red: "#ee4238",
   brown: "#6f4938",
 
+  white98: "rgba(255, 255, 255, 0.98)",
   white80: "rgba(255, 255, 255, 0.8)",
   white50: "rgba(255, 255, 255, 0.5)",
   white12: "rgba(255, 255, 255, 0.12)",
@@ -37,9 +38,9 @@ export const sizes = {
   nav: 56,
 
   // font sizes
-  h1: 30,
-  h2: 22,
-  h3: 16,
+  h1: 36,
+  h2: 24,
+  h3: 20,
   body: 16,
 
   // app dimensions

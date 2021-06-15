@@ -69,6 +69,7 @@ export const ImageButton = ({
   containerStyle,
   width,
   height,
+  color,
 }) => {
   const size = autoSize(source, width, height);
   return (
@@ -77,15 +78,28 @@ export const ImageButton = ({
       onPress={onPress}
       style={{ alignItems: "center", ...containerStyle }}
     >
-      <Image
-        style={{
-          ...size,
-          resizeMode: "contain",
-          opacity: disable || block ? 0.25 : 1,
-          ...style,
-        }}
-        source={source}
-      />
+      {color ? (
+        <Image
+          style={{
+            ...size,
+            resizeMode: "contain",
+            opacity: disable || block ? 0.25 : 1,
+            tintColor: color,
+            ...style,
+          }}
+          source={source}
+        />
+      ) : (
+        <Image
+          style={{
+            ...size,
+            resizeMode: "contain",
+            opacity: disable || block ? 0.25 : 1,
+            ...style,
+          }}
+          source={source}
+        />
+      )}
       {title ? (
         <Heading3 style={{ marginTop: sizes.base }} white>
           {title}
@@ -93,6 +107,44 @@ export const ImageButton = ({
       ) : null}
     </TouchableOpacity>
   );
+};
+
+export const AutoIcon = ({
+  style,
+  source,
+  disable,
+  width,
+  height,
+  white,
+  color,
+}) => {
+  const size = autoSize(source, width, height);
+  if (white || color) {
+    return (
+      <Image
+        style={{
+          ...size,
+          resizeMode: "contain",
+          opacity: disable ? 0.25 : 1,
+          tintColor: white ? "white" : color,
+          ...style,
+        }}
+        source={source}
+      />
+    );
+  } else {
+    return (
+      <Image
+        style={{
+          ...size,
+          resizeMode: "contain",
+          opacity: disable ? 0.25 : 1,
+          ...style,
+        }}
+        source={source}
+      />
+    );
+  }
 };
 
 // media: [source1, source2, source]

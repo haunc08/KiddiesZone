@@ -7,7 +7,7 @@ import { Button, ImageButton } from "./Button";
 import { Body } from "./Typography";
 import { Space } from "./Wrapper";
 
-export const KidsZoneNavbar = () => {
+export const KidsZoneNavbar = ({ navigation }) => {
   return (
     <View
       style={{
@@ -29,7 +29,9 @@ export const KidsZoneNavbar = () => {
           <Body white>Ngô Công Hậu</Body>
         </Space>
       </View>
-      <Button small>Cho phụ huynh</Button>
+      <Button small onPress={() => navigation.navigate("ParentPasswordScreen")}>
+        Cho phụ huynh
+      </Button>
     </View>
   );
 };

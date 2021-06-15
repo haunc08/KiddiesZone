@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,12 +8,84 @@ import {
 } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
-import { Heading2 } from "./Typography";
+import { hexToRgba } from "../utils/color";
+import { IconManager } from "../utils/image";
+import { Button, ImageButton } from "./Button";
+import { Heading1, Heading2, Heading3 } from "./Typography";
 
-export const ScreenView = ({ children, bgColor, horizontal }) => {
+const headerHeight = 50;
+
+export const ScreenView = ({
+  children,
+  bgColor,
+  horizontal,
+  isMainScreen,
+  navigation,
+  title,
+}) => {
+  const [showHeader, setShowHeader] = useState(false);
+  const handleScroll = (e) => {
+    if (e.nativeEvent.contentOffset.y > headerHeight) {
+      setShowHeader(true);
+      return;
+    }
+    if (e.nativeEvent.contentOffset.y < headerHeight) {
+      setShowHeader(false);
+    }
+  };
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      {(!isMainScreen || showHeader) && (
+        <View
+          style={{
+            backgroundColor: colors.white98,
+            alignSelf: "stretch",
+            width: sizes.short,
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: sizes.base,
+            paddingHorizontal: sizes.base * 1.5,
+            elevation: sizes.base * 2,
+            position: "absolute",
+            zIndex: 2,
+            flexDirection: "row",
+            height: headerHeight,
+          }}
+        >
+          {!isMainScreen && (
+            <ImageButton
+              onPress={() => {
+                navigation.goBack();
+              }}
+              source={IconManager.backline}
+              height={sizes.h3}
+            />
+          )}
+          <View
+            style={{
+              position: "absolute",
+              width: sizes.short,
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Heading3>{title}</Heading3>
+          </View>
+        </View>
+      )}
+      {isMainScreen && !showHeader && (
+        <View
+          style={{
+            height: headerHeight,
+            width: sizes.short,
+            backgroundColor: colors.smoke,
+            zIndex: 2,
+            position: "absolute",
+          }}
+        />
+      )}
       <ScrollView
+        onScroll={handleScroll}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal={horizontal}
@@ -33,10 +105,21 @@ export const ScreenView = ({ children, bgColor, horizontal }) => {
               : { padding: sizes.base, paddingBottom: 100 }
           }
         >
+          <View
+            style={{
+              marginTop: headerHeight - sizes.base * 1.25,
+              alignSelf: "stretch",
+              justifyContent: "space-between",
+              marginBottom: sizes.base * 1.5,
+            }}
+          >
+            {/* <ImageButton /> */}
+            {isMainScreen && <Heading1>{title}</Heading1>}
+          </View>
           {children}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -83,19 +166,24 @@ export const Card = ({
 }) => {
   const containerStyle = {
     backgroundColor: bgColor || "white",
-    padding: sizes.base,
-    paddingBottom: sizes.base * 2,
+    padding: sizes.base * 2,
     borderWidth: 0,
     borderRadius: sizes.base,
     alignItems: "stretch",
-    elevation: sizes.base,
+    elevation: sizes.base / 4,
     shadowOpacity: 0,
     ...style,
   };
   return touchable ? (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       {title && (
-        <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
+        <Heading2
+          style={{
+            alignSelf: "center",
+            marginBottom: sizes.base * 1.25,
+            color: bgColor ? "white" : colors.black,
+          }}
+        >
           {title}
         </Heading2>
       )}
@@ -104,7 +192,13 @@ export const Card = ({
   ) : (
     <View style={containerStyle}>
       {title && (
-        <Heading2 style={{ alignSelf: "center", marginBottom: sizes.base }}>
+        <Heading2
+          style={{
+            alignSelf: "center",
+            marginBottom: sizes.base * 1.25,
+            color: bgColor ? "white" : colors.black,
+          }}
+        >
           {title}
         </Heading2>
       )}
@@ -118,6 +212,7 @@ export const Row = ({ children, style }) => {
     <View
       style={{
         flexDirection: "row",
+        alignItems: "center",
         ...style,
       }}
     >
@@ -167,5 +262,24 @@ export const Frame = ({ background, children }) => {
     >
       {children}
     </ImageBackground>
+  );
+};
+
+export const Impress = ({ color, children }) => {
+  return (
+    <View
+      style={{
+        backgroundColor: color,
+        borderRadius: 999,
+        padding: sizes.base,
+        paddingHorizontal: sizes.base * 2,
+        borderWidth: 8,
+        borderColor: hexToRgba(color, 0.12),
+        marginBottom: sizes.base / 2,
+        alignItems: "center",
+      }}
+    >
+      {children}
+    </View>
   );
 };

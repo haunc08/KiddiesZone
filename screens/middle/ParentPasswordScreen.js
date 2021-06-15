@@ -35,8 +35,12 @@ export const ParentPasswordScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (password.length >= 4) {
-      if (password !== testPassword) wrong.current = true;
-      setPassword("");
+      if (password !== testPassword) {
+        wrong.current = true;
+        setPassword("");
+      } else {
+        navigation.navigate();
+      }
     }
   }, [password]);
   const button = (num) => {
@@ -117,7 +121,7 @@ export const ParentPasswordScreen = ({ navigation }) => {
       >
         <ImageButton
           width={45}
-          onPress={() => goHome()}
+          onPress={() => navigation.goBack()}
           source={require("../../assets/icons/back.png")}
         />
       </View>

@@ -16,8 +16,8 @@ import Story2 from "./games/Story2";
 import Shapes from "./games/Shapes";
 import Instruments from "./games/Instruments";
 import TrashGame from "./games/TrashGame";
-import ParentPasswordScreen from "./main/ParentPasswordScreen";
-import CreatePasswordScreen from "./main/CreatePasswordScreen";
+import ParentPasswordScreen from "./middle/ParentPasswordScreen";
+import CreatePasswordScreen from "./middle/CreatePasswordScreen";
 
 export {
   Home,

@@ -8,8 +8,9 @@ import Svg, { Path } from "react-native-svg";
 import { isIphoneX } from "react-native-iphone-x-helper";
 
 import { Home, SignInScreen, TestScreen, SignUpScreen } from "../screens";
-
+import * as ParentScreens from "../screens/parent";
 import { colors, icons } from "../constants";
+import { IconManager } from "../utils/image";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,7 @@ const TabBarCustomButton = ({ accessibilityState, children, onPress }) => {
             width: 50,
             height: 50,
             borderRadius: 25,
-            backgroundColor: colors.darkprimary,
+            backgroundColor: colors.primary,
           }}
           onPress={onPress}
         >
@@ -74,7 +75,7 @@ const CustomTabBar = (props) => {
             left: 0,
             right: 0,
             height: 0,
-            backgroundColor: colors.darkprimary,
+            backgroundColor: colors.primary,
           }}
         ></View>
         <BottomTabBar {...props.props} />
@@ -93,7 +94,7 @@ const Tabs = () => {
         style: {
           position: "absolute",
           left: 0,
-          bottom: 10,
+          bottom: -39,
           right: 0,
           borderTopWidth: 0,
           backgroundColor: "transparent",
@@ -103,17 +104,17 @@ const Tabs = () => {
       tabBar={(props) => <CustomTabBar props={props} />}
     >
       <Tab.Screen
-        name="Home"
-        component={TestScreen}
+        name="Feed"
+        component={ParentScreens.FeedScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={icons.cutlery}
+              source={IconManager.feed}
               resizeMode="contain"
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.darkprimary,
+                tintColor: focused ? colors.white : colors.primary,
               }}
             />
           ),
@@ -122,17 +123,17 @@ const Tabs = () => {
       />
 
       <Tab.Screen
-        name="Search"
-        component={SignInScreen}
+        name="Games"
+        component={ParentScreens.GameCatalogueScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={icons.search}
+              source={IconManager.games}
               resizeMode="contain"
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.darkprimary,
+                tintColor: focused ? colors.white : colors.primary,
               }}
             />
           ),
@@ -141,8 +142,8 @@ const Tabs = () => {
       />
 
       <Tab.Screen
-        name="Like"
-        component={SignUpScreen}
+        name="Tracking"
+        component={ParentScreens.TrackingScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
@@ -151,7 +152,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.darkprimary,
+                tintColor: focused ? colors.white : colors.primary,
               }}
             />
           ),
@@ -161,7 +162,7 @@ const Tabs = () => {
 
       <Tab.Screen
         name="User"
-        component={Home}
+        component={ParentScreens.UserScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
@@ -170,7 +171,7 @@ const Tabs = () => {
               style={{
                 width: 25,
                 height: 25,
-                tintColor: focused ? colors.white : colors.darkprimary,
+                tintColor: focused ? colors.white : colors.primary,
               }}
             />
           ),
