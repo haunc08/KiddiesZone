@@ -53,6 +53,7 @@ const DisplayedScreens = () => {
           initialRouteName={"KidsZone"}
         >
           <Stack.Screen name="KidsZone" component={KidsZone} />
+          <Stack.Screen name="Tabs" component={Tabs} />
           <Stack.Screen
             name="ParentPasswordScreen"
             component={ParentPasswordScreen}

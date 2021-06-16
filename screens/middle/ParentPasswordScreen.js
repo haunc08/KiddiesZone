@@ -39,7 +39,7 @@ export const ParentPasswordScreen = ({ navigation }) => {
         wrong.current = true;
         setPassword("");
       } else {
-        navigation.navigate();
+        navigation.navigate("Tabs");
       }
     }
   }, [password]);

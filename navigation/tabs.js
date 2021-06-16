@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 import {
   createBottomTabNavigator,
@@ -11,6 +11,7 @@ import { Home, SignInScreen, TestScreen, SignUpScreen } from "../screens";
 import * as ParentScreens from "../screens/parent";
 import { colors, icons } from "../constants";
 import { IconManager } from "../utils/image";
+import Orientation from "react-native-orientation-locker";
 
 const Tab = createBottomTabNavigator();
 
@@ -87,6 +88,9 @@ const CustomTabBar = (props) => {
 };
 
 const Tabs = () => {
+  useEffect(() => {
+    Orientation.lockToPortrait();
+  }, []);
   return (
     <Tab.Navigator
       tabBarOptions={{
