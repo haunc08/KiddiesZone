@@ -22,6 +22,7 @@ export const ScreenView = ({
   isMainScreen,
   navigation,
   title,
+  style,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const handleScroll = (e) => {
@@ -102,7 +103,7 @@ export const ScreenView = ({
                   paddingRight: 100,
                   flexDirection: "row",
                 }
-              : { padding: sizes.base, paddingBottom: 100 }
+              : { padding: sizes.base, paddingBottom: 100, ...style }
           }
         >
           <View
@@ -277,6 +278,27 @@ export const Impress = ({ color, children }) => {
         borderColor: hexToRgba(color, 0.12),
         marginBottom: sizes.base / 2,
         alignItems: "center",
+      }}
+    >
+      {children}
+    </View>
+  );
+};
+
+export const RoundImpress = ({ children, size, color }) => {
+  if (!size) size = 5;
+  if (!color) color = colors.white;
+  return (
+    <View
+      style={{
+        backgroundColor: color,
+        borderRadius: 999,
+        height: sizes.h1 + sizes.base * size,
+        width: sizes.h1 + sizes.base * size,
+        borderWidth: (sizes.base * 0.75 * size) / 5,
+        borderColor: hexToRgba(color, 0.12),
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       {children}

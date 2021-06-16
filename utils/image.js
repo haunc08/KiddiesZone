@@ -62,6 +62,11 @@ export const IconManager = {
     plasticBag: require("../assets/icons/trashes/plastic-bag.png"),
     plasticBags: require("../assets/icons/trashes/plastic-bags.png"),
   },
+  avatar: require("../assets/icons/avatar.png"),
+  info: require("../assets/icons/info.png"),
+  password: require("../assets/icons/password.png"),
+  pincode: require("../assets/icons/pincode.png"),
+  logout: require("../assets/icons/logout.png"),
 };
 
 export const ImageManager = {
