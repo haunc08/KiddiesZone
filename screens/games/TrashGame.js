@@ -9,6 +9,7 @@ import { Frame } from "../../components/Wrapper";
 import { sizes } from "../../constants";
 import {
   cleanTrashItem,
+  clearAllTrashItems,
   createTrashItem,
 } from "../../redux/actions/trashItems";
 import { IconManager, ImageManager } from "../../utils/image";
@@ -27,9 +28,9 @@ const Trash = ({
   onChangeStateLanding,
   left,
   stopBottom,
+  image,
 }) => {
-  console.log(trashKey, "rerender");
-  const initialBottom = 4;
+  const initialBottom = 5;
   const bottomAnim = useRef(
     new Animated.Value(calcMarginVertical(initialBottom))
   ).current;
@@ -44,7 +45,7 @@ const Trash = ({
     bottomAnim.setValue(calcMarginVertical(initialBottom));
     Animated.timing(bottomAnim, {
       toValue: calcMarginVertical(stopBottom),
-      duration: 3000,
+      duration: 2000,
       easing: Easing.linear,
     }).start(() => {
       // console.log(bottomAnim);
@@ -52,8 +53,6 @@ const Trash = ({
       onChangeStateLanding(isLanding);
     });
   };
-  console.log(trashKey, left, stopBottom);
-  console.log("botani ", bottomAnim._value);
 
   return (
     <Animated.View
@@ -61,7 +60,7 @@ const Trash = ({
     >
       <ImageButton
         small
-        source={ImageManager.alphabet.a}
+        source={image}
         onPress={() => {
           onPress(trashKey);
 
@@ -80,7 +79,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 
   const [count, setCount] = useState(0);
 
-  const limitLandingItems = 2;
+  const limitLandingItems = 10;
 
   // const trashItemsRef = useRef();
   // trashItemsRef.current = trashItems;
@@ -94,12 +93,16 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
       return;
     }
 
-    if (countLandingItems < limitLandingItems) {
-      setTimeout(() => {
-        createItems();
-      }, 1000);
-    }
+    const interval = setInterval(() => {
+      console.log(countLandingItems);
+      if (countLandingItems < limitLandingItems) createItems();
+      else return;
+    }, 500);
+
+    return () => clearInterval(interval);
   }, [trashItems]);
+
+  useEffect(() => {}, []);
 
   const cleanTrash = (index) => {
     // const newTrashItems = trashItemsRef.current.filter(
@@ -119,8 +122,14 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
     }
   };
 
+  const getRandomTrashIcon = () => {
+    var keys = Object.keys(IconManager.trash);
+    return IconManager.trash[keys[(keys.length * Math.random()) << 0]];
+  };
+
   const createItems = () => {
     setCount(count + 1);
+    const imagePath = getRandomTrashIcon();
 
     const randomHorizontal = Math.random() * 4.5;
     const trashLeft = calcMarginHorizontal(randomHorizontal);
@@ -132,6 +141,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
     const newTrashItem = {
       component: (
         <Trash
+          key={count}
           trashKey={count}
           onPress={(trashKey) => cleanTrash(trashKey)}
           onChangeStateLanding={(isLanding) =>
@@ -139,6 +149,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
           }
           left={trashLeft}
           stopBottom={stopBottom}
+          image={imagePath}
         />
       ),
       key: count,
@@ -158,6 +169,8 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 const TrashGame = ({ navigation }) => {
   const [countLandingItems, setCountLandingItems] = useState(0);
 
+  const dispatch = useDispatch();
+
   return (
     <Frame background={ImageManager.ground}>
       <View
@@ -171,7 +184,10 @@ const TrashGame = ({ navigation }) => {
         <ImageButton
           small
           source={IconManager.back}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack();
+            dispatch(clearAllTrashItems());
+          }}
         />
       </View>
       <View
