@@ -7,6 +7,7 @@ import {
   Row,
   ScreenView,
   Space,
+  RoundImpress,
 } from "../../components/Wrapper";
 import { TextInput } from "../../components/TextInput";
 import { AutoIcon, Button, ImageButton } from "../../components/Button";
@@ -193,20 +194,9 @@ export const TrackingScreen = ({ navigation }) => {
             }}
           />
           <Space>
-            <View
-              style={{
-                backgroundColor: colors.white,
-                borderRadius: 999,
-                height: sizes.h1 + sizes.base * 5,
-                width: sizes.h1 + sizes.base * 5,
-                borderWidth: sizes.base * 0.75,
-                borderColor: colors.white12,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            <RoundImpress>
               <Heading1>{item.age}</Heading1>
-            </View>
+            </RoundImpress>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Space tight>
                 <AutoIcon

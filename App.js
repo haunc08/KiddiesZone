@@ -50,7 +50,7 @@ const DisplayedScreens = () => {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={"KidsZone"}
+          initialRouteName={"Tabs"}
         >
           <Stack.Screen name="KidsZone" component={KidsZone} />
           <Stack.Screen name="Tabs" component={Tabs} />
