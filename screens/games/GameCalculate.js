@@ -21,6 +21,7 @@ const GameCalculate = ({ route, navigation }) => {
   const [xItems, setXItems] = useState(0);
   const [yItems, setYItems] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [imagePath, setImagePath] = useState();
 
   useEffect(() => {
     const randomX = Math.floor(Math.random() * 10) + 1;
@@ -28,6 +29,9 @@ const GameCalculate = ({ route, navigation }) => {
 
     const randomY = Math.floor(Math.random() * 10) + 1;
     setYItems(randomY);
+
+    const path = getRandomGameItem();
+    setImagePath(path);
   }, []);
 
   const getItemStyle = (number) => {
@@ -109,6 +113,9 @@ const GameCalculate = ({ route, navigation }) => {
 
     setIsAnswered(false);
     setQuestion("Phép tính này ra bao nhiêu?");
+
+    const path = getRandomGameItem();
+    setImagePath(path);
   };
 
   const Number = ({ numberOfItems }) => {
@@ -139,7 +146,7 @@ const GameCalculate = ({ route, navigation }) => {
     );
   };
 
-  const CountingItems = ({ numberOfItems }) => {
+  const CountingItems = ({ numberOfItems, imagePath }) => {
     let items = [];
     let itemStyle = getItemStyle(numberOfItems);
 
@@ -156,7 +163,7 @@ const GameCalculate = ({ route, navigation }) => {
           itemRow.push(
             <Image
               key={i * itemInRow + j}
-              source={itemPath}
+              source={imagePath}
               style={itemStyle}
             />
           );
@@ -177,7 +184,11 @@ const GameCalculate = ({ route, navigation }) => {
     let itemRow = [];
     for (let j = 0; j < remainItems; j++) {
       itemRow.push(
-        <Image key={numberOfRows * 3 + j} source={itemPath} style={itemStyle} />
+        <Image
+          key={numberOfRows * 3 + j}
+          source={imagePath}
+          style={itemStyle}
+        />
       );
     }
     items.push(
@@ -196,7 +207,7 @@ const GameCalculate = ({ route, navigation }) => {
       </View>
     );
   };
-  const CalculationView = () => {
+  const CalculationView = ({ imagePath }) => {
     const signPath = getCalculatingSign();
 
     return (
@@ -212,7 +223,7 @@ const GameCalculate = ({ route, navigation }) => {
         }}
       >
         {mode === "easy" ? (
-          <CountingItems numberOfItems={xItems} />
+          <CountingItems numberOfItems={xItems} imagePath={imagePath} />
         ) : (
           <Number numberOfItems={xItems} />
         )}
@@ -227,7 +238,7 @@ const GameCalculate = ({ route, navigation }) => {
           }}
         />
         {mode === "easy" ? (
-          <CountingItems numberOfItems={yItems} />
+          <CountingItems numberOfItems={yItems} imagePath={imagePath} />
         ) : (
           <Number numberOfItems={yItems} />
         )}
@@ -251,7 +262,7 @@ const GameCalculate = ({ route, navigation }) => {
 
     answers.map((answer) => {
       const numbers = answer.toString().split("");
-      console.log("nums", numbers);
+
       buttons.push(
         <TouchableOpacity
           style={{
@@ -375,7 +386,8 @@ const GameCalculate = ({ route, navigation }) => {
                 justifyContent: "center",
               }}
             >
-              {CalculationView()}
+              {/* {CalculationView()} */}
+              <CalculationView imagePath={imagePath} />
             </View>
             <View
               style={{
