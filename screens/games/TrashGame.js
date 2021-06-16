@@ -28,8 +28,9 @@ const Trash = ({
   onChangeStateLanding,
   left,
   stopBottom,
+  image,
 }) => {
-  const initialBottom = 4;
+  const initialBottom = 5;
   const bottomAnim = useRef(
     new Animated.Value(calcMarginVertical(initialBottom))
   ).current;
@@ -44,7 +45,7 @@ const Trash = ({
     bottomAnim.setValue(calcMarginVertical(initialBottom));
     Animated.timing(bottomAnim, {
       toValue: calcMarginVertical(stopBottom),
-      duration: 3000,
+      duration: 2000,
       easing: Easing.linear,
     }).start(() => {
       // console.log(bottomAnim);
@@ -59,7 +60,7 @@ const Trash = ({
     >
       <ImageButton
         small
-        source={ImageManager.alphabet.a}
+        source={image}
         onPress={() => {
           onPress(trashKey);
 
@@ -78,7 +79,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 
   const [count, setCount] = useState(0);
 
-  const limitLandingItems = 2;
+  const limitLandingItems = 10;
 
   // const trashItemsRef = useRef();
   // trashItemsRef.current = trashItems;
@@ -96,7 +97,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
       console.log(countLandingItems);
       if (countLandingItems < limitLandingItems) createItems();
       else return;
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(interval);
   }, [trashItems]);
@@ -121,8 +122,14 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
     }
   };
 
+  const getRandomTrashIcon = () => {
+    var keys = Object.keys(IconManager.trash);
+    return IconManager.trash[keys[(keys.length * Math.random()) << 0]];
+  };
+
   const createItems = () => {
     setCount(count + 1);
+    const imagePath = getRandomTrashIcon();
 
     const randomHorizontal = Math.random() * 4.5;
     const trashLeft = calcMarginHorizontal(randomHorizontal);
@@ -142,6 +149,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
           }
           left={trashLeft}
           stopBottom={stopBottom}
+          image={imagePath}
         />
       ),
       key: count,

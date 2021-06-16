@@ -35,6 +35,17 @@ export const IconManager = {
     piano: require("../assets/icons/instruments/piano.png"),
   },
   equal: require("../assets/icons/equal.png"),
+  trash: {
+    bananaPeel: require("../assets/icons/trashes/banana-peel.png"),
+    bottle: require("../assets/icons/trashes/bottle.png"),
+    can: require("../assets/icons/trashes/can.png"),
+    can1: require("../assets/icons/trashes/can1.png"),
+    can2: require("../assets/icons/trashes/can2.png"),
+    cigaretteButt: require("../assets/icons/trashes/cigarette-butt.png"),
+    greenPepper: require("../assets/icons/trashes/green-pepper.png"),
+    plasticBag: require("../assets/icons/trashes/plastic-bag.png"),
+    plasticBags: require("../assets/icons/trashes/plastic-bags.png"),
+  },
 };
 
 export const ImageManager = {
