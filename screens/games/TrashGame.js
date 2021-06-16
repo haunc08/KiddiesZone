@@ -1,9 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Alert } from "react-native";
 import { View } from "react-native";
+import { Text } from "react-native-elements";
 import Animated, { Easing } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
 import { ImageButton } from "../../components/Button";
 import { Frame } from "../../components/Wrapper";
 import { sizes } from "../../constants";
+import {
+  cleanTrashItem,
+  createTrashItem,
+} from "../../redux/actions/trashItems";
 import { IconManager, ImageManager } from "../../utils/image";
 
 const calcMarginVertical = (flex) => {
@@ -14,20 +21,20 @@ const calcMarginHorizontal = (flex) => {
   return (sizes.long * flex) / 5;
 };
 
-const Trash = ({ onPress }) => {
-  const [isCleaned, setIsCleaned] = useState(false);
-
-  const randomHorizontal = Math.random() * 4.5;
-  const trashLeft = calcMarginHorizontal(randomHorizontal);
-
+const Trash = ({
+  trashKey,
+  onPress,
+  onChangeStateLanding,
+  left,
+  stopBottom,
+}) => {
+  console.log(trashKey, "rerender");
   const initialBottom = 4;
   const bottomAnim = useRef(
     new Animated.Value(calcMarginVertical(initialBottom))
   ).current;
 
-  const minPos = 0;
-  const maxPos = 2;
-  const stopBottom = Math.random() * (maxPos - minPos) + minPos;
+  let isLanding = false;
 
   useEffect(() => {
     animate();
@@ -39,36 +46,118 @@ const Trash = ({ onPress }) => {
       toValue: calcMarginVertical(stopBottom),
       duration: 3000,
       easing: Easing.linear,
-    }).start();
+    }).start(() => {
+      // console.log(bottomAnim);
+      isLanding = true;
+      onChangeStateLanding(isLanding);
+    });
   };
+  console.log(trashKey, left, stopBottom);
+  console.log("botani ", bottomAnim._value);
 
   return (
     <Animated.View
-      style={{ position: "absolute", bottom: bottomAnim, left: trashLeft }}
+      style={{ position: "absolute", bottom: bottomAnim, left: left }}
     >
-      <ImageButton small source={ImageManager.alphabet.a} onPress={onPress} />
+      <ImageButton
+        small
+        source={ImageManager.alphabet.a}
+        onPress={() => {
+          onPress(trashKey);
+
+          isLanding = false;
+          onChangeStateLanding(isLanding);
+        }}
+      />
     </Animated.View>
   );
 };
 
-const TrashRain = ({ numberOfItems }) => {
-  const [trashItems, setTrashItems] = useState([]);
+const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
+  const dispatch = useDispatch();
+  // const [trashItems, setTrashItems] = useState([]);
+  const trashItems = useSelector((state) => state.trashItems);
 
-  let items = [];
+  const [count, setCount] = useState(0);
 
-  const createItems = () => {
-    for (let i = 0; i < numberOfItems; i++) {
-      items.push(<Trash />);
+  const limitLandingItems = 2;
+
+  // const trashItemsRef = useRef();
+  // trashItemsRef.current = trashItems;
+
+  const countLandingRef = useRef();
+  countLandingRef.current = countLandingItems;
+
+  useEffect(() => {
+    if (countLandingItems == limitLandingItems) {
+      Alert.alert("Thong bao", "Game over!");
+      return;
     }
-    return items;
+
+    if (countLandingItems < limitLandingItems) {
+      setTimeout(() => {
+        createItems();
+      }, 1000);
+    }
+  }, [trashItems]);
+
+  const cleanTrash = (index) => {
+    // const newTrashItems = trashItemsRef.current.filter(
+    //   (item) => item.key != index
+    // );
+    // console.log(newTrashItems);
+
+    dispatch(cleanTrashItem(index));
   };
 
-  createItems();
+  const handleChangeStateLanding = (isLanding) => {
+    if (countLandingItems < limitLandingItems) {
+      // why 0 0 0 0 1 2 ... ???
+      // console.log(countLandingItems);
+      if (isLanding) setCountLandingItems(countLandingRef.current + 1);
+      else setCountLandingItems(countLandingRef.current - 1);
+    }
+  };
 
-  return <View style={{ width: "100%", height: "100%" }}>{items}</View>;
+  const createItems = () => {
+    setCount(count + 1);
+
+    const randomHorizontal = Math.random() * 4.5;
+    const trashLeft = calcMarginHorizontal(randomHorizontal);
+
+    const minPos = 0;
+    const maxPos = 2;
+    const stopBottom = Math.random() * (maxPos - minPos) + minPos;
+
+    const newTrashItem = {
+      component: (
+        <Trash
+          trashKey={count}
+          onPress={(trashKey) => cleanTrash(trashKey)}
+          onChangeStateLanding={(isLanding) =>
+            handleChangeStateLanding(isLanding)
+          }
+          left={trashLeft}
+          stopBottom={stopBottom}
+        />
+      ),
+      key: count,
+    };
+
+    dispatch(createTrashItem(newTrashItem));
+    // setTrashItems([...trashItems, newTrashItem]);
+  };
+
+  return (
+    <View style={{ width: "100%", height: "100%" }}>
+      {trashItems.map((item) => item.component)}
+    </View>
+  );
 };
 
 const TrashGame = ({ navigation }) => {
+  const [countLandingItems, setCountLandingItems] = useState(0);
+
   return (
     <Frame background={ImageManager.ground}>
       <View
@@ -85,8 +174,23 @@ const TrashGame = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
       </View>
+      <View
+        style={{
+          position: "absolute",
+          top: calcMarginVertical(0),
+          right: calcMarginHorizontal(0),
+          marginRight: 16,
+        }}
+      >
+        <Text
+          style={{ fontSize: 48, fontWeight: "bold" }}
+        >{`${countLandingItems}/10`}</Text>
+      </View>
       {/* {TrashRain()} */}
-      <TrashRain numberOfItems={5} />
+      <TrashRain
+        countLandingItems={countLandingItems}
+        setCountLandingItems={setCountLandingItems}
+      />
     </Frame>
   );
 };

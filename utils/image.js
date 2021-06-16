@@ -50,6 +50,7 @@ export const IconManager = {
   edit: require("../assets/icons/edit.png"),
   newentry: require("../assets/icons/newentry.png"),
   roundadd: require("../assets/icons/roundadd.png"),
+  equal: require("../assets/icons/equal.png"),
 };
 
 export const ImageManager = {

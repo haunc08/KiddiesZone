@@ -1,15 +1,16 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { icons, images, sizes, colors, fonts } from "../constants";
-import { Icon, Input } from "react-native-elements";
-import { Card } from "./Wrapper";
+import { sizes, colors } from "../constants";
+import { Input } from "react-native-elements";
 
 export const TextInput = (props) => {
+  const { label, placeholder } = props;
+
   return (
     <Input
-      label="Text Input"
-      placeholder="Placeholder"
+      label={label}
+      placeholder={placeholder}
       leftIcon={{ type: "material", name: "mail", color: colors.black }}
       labelStyle={{ color: colors.black }}
       leftIconContainerStyle={{ marginRight: sizes.base / 2 }}
