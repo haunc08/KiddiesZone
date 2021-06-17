@@ -21,7 +21,7 @@ import {
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { hexToRgba } from "../../utils/color";
 import { Icon, Divider } from "react-native-elements";
-// import * as firebase from "firebase";
+
 import auth from "@react-native-firebase/auth";
 
 export const ChildItem = ({ age, name }) => {

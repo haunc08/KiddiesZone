@@ -11,7 +11,8 @@ import { Alert, View, ActivityIndicator } from "react-native";
 // import { firebase } from "../../database";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import { collectionName } from "../../utils/collection";
+
+import { CollectionName } from "../../utils/enum";
 
 const SignUpScreen = ({ navigation }) => {
   const [displayName, setDisplayName] = useState("");
@@ -58,7 +59,7 @@ const SignUpScreen = ({ navigation }) => {
               //   .set({ name: firebase.auth().currentUser.displayName });
               // addDefaultDatabase(uid);
               firestore()
-                .collection(collectionName.USERS)
+                .collection(CollectionName.USERS)
                 .doc(uid)
                 .set({ name: displayName })
                 .then(() => console.log("Add firestore successfully"))
