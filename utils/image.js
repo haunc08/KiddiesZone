@@ -235,6 +235,8 @@ export const ImageManager = {
     animals: require("../assets/images/passwordparent/animals.png"),
     test: require("../assets/images/passwordparent/test.png"),
   },
+  gokid: require("../assets/images/gokid.jpg"),
+  gokidpng: require("../assets/images/gokid.png"),
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

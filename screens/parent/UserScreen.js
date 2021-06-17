@@ -22,7 +22,7 @@ import { ScrollView, View, TouchableOpacity } from "react-native";
 import { hexToRgba } from "../../utils/color";
 import { Icon, Divider } from "react-native-elements";
 
-export const ChildItem = ({ age, name }) => {
+export const ChildItem = ({ age, name, color }) => {
   return (
     <TouchableOpacity
       style={{
@@ -31,7 +31,7 @@ export const ChildItem = ({ age, name }) => {
         paddingRight: sizes.base,
       }}
     >
-      <RoundImpress color={colors.primary} size={3}>
+      <RoundImpress color={color || colors.primary} size={3}>
         <Heading2 white>{age}</Heading2>
       </RoundImpress>
       <Body style={{ marginTop: sizes.base / 2, fontWeight: "bold" }}>

@@ -24,14 +24,7 @@ import { IconManager } from "../../utils/image";
 import { Divider } from "react-native-elements/dist/divider/Divider";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { hexToRgba } from "../../utils/color";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 
 const dummyArray = ["item1", "item2", "item3"];
 

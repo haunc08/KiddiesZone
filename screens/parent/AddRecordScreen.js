@@ -16,6 +16,7 @@ import { LargeChildInfo } from "./TrackingScreen";
 import { Divider } from "react-native-elements/dist/divider/Divider";
 import { IconManager } from "../../utils/image";
 import { Heading3 } from "../../components/Typography";
+import { hexToRgba } from "../../utils/color";
 
 const children = [
   {
@@ -52,14 +53,20 @@ export const White12Icon = ({ iconSource, title }) => {
   );
 };
 
-export const FlatInput = ({ onChangeText, value, keyboardType, style }) => {
+export const FlatInput = ({
+  onChangeText,
+  value,
+  keyboardType,
+  style,
+  color,
+}) => {
   return (
     <TextInput
       style={{
-        backgroundColor: colors.white12,
+        backgroundColor: hexToRgba(color, 0.12) || colors.white12,
         paddingHorizontal: sizes.base * 1.25,
         borderRadius: sizes.base,
-        color: "white",
+        color: color || "white",
         fontSize: sizes.body,
         alignSelf: "stretch",
         marginBottom: sizes.base,

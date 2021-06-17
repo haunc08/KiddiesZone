@@ -170,6 +170,8 @@ export const Card = ({
   style,
   touchable,
   onPress,
+  imgSource,
+  height,
 }) => {
   const containerStyle = {
     backgroundColor: bgColor || "white",
@@ -179,6 +181,7 @@ export const Card = ({
     alignItems: "stretch",
     elevation: sizes.base / 4,
     shadowOpacity: 0,
+    height: height || "auto",
     ...style,
   };
   return touchable ? (
@@ -196,7 +199,7 @@ export const Card = ({
       )}
       {children}
     </TouchableOpacity>
-  ) : (
+  ) : !imgSource ? (
     <View style={containerStyle}>
       {title && (
         <Heading2
@@ -211,6 +214,21 @@ export const Card = ({
       )}
       {children}
     </View>
+  ) : (
+    <ImageBackground style={containerStyle} source={imgSource}>
+      {title && (
+        <Heading2
+          style={{
+            alignSelf: "center",
+            marginBottom: sizes.base * 1.25,
+            color: bgColor ? "white" : colors.black,
+          }}
+        >
+          {title}
+        </Heading2>
+      )}
+      {children}
+    </ImageBackground>
   );
 };
 
@@ -273,6 +291,7 @@ export const Frame = ({ background, children }) => {
 };
 
 export const Impress = ({ color, children }) => {
+  if (!color) color = colors.primary;
   return (
     <View
       style={{
