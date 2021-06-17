@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1074253162576",
+    "project_id": "kiddies-zone",
+    "storage_bucket": "kiddies-zone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074253162576:android:90a8942825e3ec78588955",
+        "android_client_info": {
+          "package_name": "com.fooddeliveryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074253162576-se7h5f716f75tqektqge38uq916vit0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMUEq5IMX0XK1a2jHqAqWJnMalZedispo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074253162576-se7h5f716f75tqektqge38uq916vit0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

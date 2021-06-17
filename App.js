@@ -20,7 +20,8 @@ import {
   CreatePasswordScreen,
 } from "./screens";
 import Tabs from "./navigation/tabs";
-import { firebase, firebaseConfig } from "./database";
+// import { firebase, firebaseConfig } from "./database";
+import auth from "@react-native-firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
 
@@ -35,14 +36,14 @@ const store = createStore(allReducers);
 
 const Stack = createStackNavigator();
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app();
-}
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// } else {
+//   firebase.app();
+// }
 
 const DisplayedScreens = () => {
-  const [user, loading, error] = useAuthState(firebase.auth());
+  const [user, loading, error] = useAuthState(auth());
 
   if (user) {
     return (
