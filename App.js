@@ -31,6 +31,7 @@ import { createStore } from "redux";
 import allReducers from "./redux/reducers";
 import AddRecordScreen from "./screens/parent/AddRecordScreen";
 import AddChildScreen from "./screens/parent/AddChildScreen";
+import ParentNavigator from "./navigation/ParentNavigator";
 
 const store = createStore(allReducers);
 
@@ -55,18 +56,8 @@ const DisplayedScreens = () => {
           }}
           initialRouteName={"Tabs"}
         >
+          <Stack.Screen name="ParentNavigator" component={ParentNavigator} />
           <Stack.Screen name="KidsZone" component={KidsZone} />
-          <Stack.Screen name="Tabs" component={Tabs} />
-          <Stack.Screen name="AddRecordScreen" component={AddRecordScreen} />
-          <Stack.Screen name="AddChildScreen" component={AddChildScreen} />
-          <Stack.Screen
-            name="ParentPasswordScreen"
-            component={ParentPasswordScreen}
-          />
-          <Stack.Screen
-            name="CreatePasswordScreen"
-            component={CreatePasswordScreen}
-          />
           <Stack.Screen name="Instruments" component={Instruments} />
           <Stack.Screen name="Sandbox" component={Sandbox} />
           <Stack.Screen name="Shapes" component={Shapes} />

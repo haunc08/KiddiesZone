@@ -8,19 +8,12 @@ import {
   Space,
   RoundImpress,
 } from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
-import { AutoIcon, Button } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
+import { AutoIcon } from "../../components/Button";
 import { IconManager } from "../../utils/image";
-import {
-  Heading2,
-  Body,
-  Heading3,
-  Heading1,
-} from "../../components/Typography";
+import { Heading2, Body, Heading3 } from "../../components/Typography";
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { hexToRgba } from "../../utils/color";
-import { Icon, Divider } from "react-native-elements";
+import { Divider } from "react-native-elements";
 
 import auth from "@react-native-firebase/auth";
 export const ChildItem = ({ age, name, color, onPress }) => {
@@ -100,6 +93,7 @@ export const UserScreen = ({ navigation }) => {
   const handlePressAddChild = () => {
     navigation.navigate("AddChildScreen");
   };
+
   const signOut = () => {
     auth()
       .signOut()

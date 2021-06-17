@@ -258,6 +258,8 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const calcBMI = () => {
+    if (!healthRecords[0]) return 0;
+
     const record = healthRecords[0];
     const height = (record?.height / 100).toFixed(2);
     return (record?.weight / (height * height)).toFixed(2);
@@ -318,7 +320,7 @@ const TrackingScreen = ({ navigation }) => {
                   source={IconManager.height}
                   height={sizes.h2 - 6}
                 />
-                <Body white>{`${latestRecord?.height}cm`}</Body>
+                <Body white>{`${latestRecord?.height ?? 0}cm`}</Body>
               </Space>
               <Space tight>
                 <AutoIcon
@@ -326,7 +328,7 @@ const TrackingScreen = ({ navigation }) => {
                   source={IconManager.weight}
                   height={sizes.h2 - 6}
                 />
-                <Body white>{`${latestRecord?.weight}kg`}</Body>
+                <Body white>{`${latestRecord?.weight ?? 0}kg`}</Body>
               </Space>
             </Space>
           </View>
@@ -421,7 +423,7 @@ const TrackingScreen = ({ navigation }) => {
       setScheme(colors.pink);
     }
   };
-
+  console.log(healthRecords);
   return (
     <ScreenView isMainScreen title="Sức khỏe" navigation={navigation}>
       {children[0] ? (
