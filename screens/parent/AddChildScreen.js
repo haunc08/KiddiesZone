@@ -1,37 +1,40 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { colors, sizes } from "../../constants";
-import {
-  Card,
-  ColoredDivider,
-  Round,
-  Row,
-  ScreenView,
-  Space,
-} from "../../components/Wrapper";
-import { AutoIcon, Button, WhiteButton } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
-import { StatusBar, View, TextInput, KeyboardAvoidingView } from "react-native";
-import { LargeChildInfo } from "./TrackingScreen";
-import { Divider } from "react-native-elements/dist/divider/Divider";
+import { Row, ScreenView, Space } from "../../components/Wrapper";
+import { AutoIcon, WhiteButton } from "../../components/Button";
+import { Alert, View } from "react-native";
 import { IconManager } from "../../utils/image";
-import { Heading3 } from "../../components/Typography";
 import { hexToRgba } from "../../utils/color";
 import { White12Icon, FlatInput } from "./AddRecordScreen";
 import { Body } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DatePicker from "react-native-date-picker";
+import { CollectionName, Gender } from "../../utils/enum";
 
-const GenderSelect = () => {
-  const [selected, setSelected] = useState(0);
+import firestore from "@react-native-firebase/firestore";
+import { UserContext } from "../../App";
+
+const GenderSelect = ({ selectedGender, setSelectedGender }) => {
+  const getBackgroundColor = (gender) => {
+    return selectedGender === gender ? "white" : hexToRgba(colors.white, 0.12);
+  };
+
+  const getIconColor = (gender) => {
+    return selectedGender === gender ? colors.primary : colors.white;
+  };
+
+  const getBodyColor = (gender) => {
+    return selectedGender === gender ? colors.primary : colors.white;
+  };
+
   return (
     <Row>
       <Space>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setSelectedGender(Gender.MALE)}>
           <View
             style={{
-              backgroundColor:
-                selected === 0 ? "white" : hexToRgba(colors.white, 0.12),
+              backgroundColor: getBackgroundColor(Gender.MALE),
               paddingHorizontal: sizes.base * 1.25,
               borderRadius: sizes.base,
               fontSize: sizes.body,
@@ -45,12 +48,12 @@ const GenderSelect = () => {
               <Space tight>
                 <AutoIcon
                   source={IconManager.male}
-                  color={selected === 0 ? colors.primary : colors.white}
+                  color={getIconColor(Gender.MALE)}
                   height={16}
                 />
                 <Body
                   style={{
-                    color: selected === 0 ? colors.primary : colors.white,
+                    color: getBodyColor(Gender.MALE),
                   }}
                 >
                   Nam
@@ -59,11 +62,10 @@ const GenderSelect = () => {
             </Row>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setSelectedGender(Gender.FEMALE)}>
           <View
             style={{
-              backgroundColor:
-                selected === 1 ? "white" : hexToRgba(colors.white, 0.12),
+              backgroundColor: getBackgroundColor(Gender.FEMALE),
 
               paddingHorizontal: sizes.base * 1.25,
               borderRadius: sizes.base,
@@ -78,12 +80,12 @@ const GenderSelect = () => {
               <Space tight>
                 <AutoIcon
                   source={IconManager.male}
-                  color={selected === 1 ? colors.primary : colors.white}
+                  color={getIconColor(Gender.FEMALE)}
                   height={16}
                 />
                 <Body
                   style={{
-                    color: selected === 1 ? colors.primary : colors.white,
+                    color: getBodyColor(Gender.FEMALE),
                   }}
                 >
                   Nữ
@@ -98,12 +100,59 @@ const GenderSelect = () => {
 };
 
 export const AddRecordScreen = ({ navigation }) => {
-  const [height, opChangeHeight] = useState(null);
-  const [weight, onChangeWeight] = useState(null);
+  const user = useContext(UserContext);
+
+  const [childName, setChildName] = useState("");
+  const [selectedGender, setSelectedGender] = useState(Gender.MALE);
   const [date, setDate] = useState(new Date());
+
+  const [height, onChangeHeight] = useState(null);
+  const [weight, onChangeWeight] = useState(null);
+
+  const addChild = () => {
+    if (!childName || !childName.trim()) {
+      Alert.alert("Thông báo", "Chưa nhập họ tên của bé.");
+      return false;
+    }
+
+    if (date > Date.now()) {
+      Alert.alert("Thông báo", "Không thể chọn ngày trong tương lai.");
+      return false;
+    }
+
+    const newChild = {
+      name: childName,
+      birthday: date,
+      gender: selectedGender,
+    };
+
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .collection(CollectionName.CHILDREN)
+      .add(newChild)
+      .then((child) => {
+        console.log("Add a new child successfully");
+
+        // neu user ko nhap height, weight thi xu ly ntn?
+        const healthRecord = {
+          height: height ?? 0,
+          weight: weight ?? 0,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        };
+
+        child
+          .collection(CollectionName.HEALTH_RECORDS)
+          .add(healthRecord)
+          .then(() => console.log("Add a new health record successfully"))
+          .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
+  };
+
   const handleSubmit = () => {
-    console.log(height);
-    navigation.goBack();
+    // if added child successfully -> addChild is null/undefined, go back user screen
+    addChild() ?? navigation.goBack();
   };
 
   return (
@@ -119,11 +168,14 @@ export const AddRecordScreen = ({ navigation }) => {
         <White12Icon iconSource={IconManager.name} title="Họ và tên" />
         <FlatInput
           style={{ marginHorizontal: sizes.base * 2 }}
-          onChangeText={opChangeHeight}
+          onChangeText={setChildName}
           value={height}
         />
         <White12Icon iconSource={IconManager.gender} title="Giới tính" />
-        <GenderSelect />
+        <GenderSelect
+          selectedGender={selectedGender}
+          setSelectedGender={setSelectedGender}
+        />
         <White12Icon iconSource={IconManager.cake} title="Ngày sinh" />
         <DatePicker
           date={date}
@@ -136,7 +188,7 @@ export const AddRecordScreen = ({ navigation }) => {
         <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
         <FlatInput
           style={{ marginHorizontal: sizes.base * 6 }}
-          onChangeText={opChangeHeight}
+          onChangeText={onChangeHeight}
           value={height}
           keyboardType="numeric"
         />
