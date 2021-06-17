@@ -60,3 +60,6 @@ buck-out/
 
 package-lock.json
 yarn.lock
+
+*.hprof
+java_pid13352.hprof
