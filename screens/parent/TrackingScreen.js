@@ -114,11 +114,30 @@ const history = [
     weight: "35kg",
   },
 ];
+
+export const LargeChildInfo = ({ item }) => {
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <Space tight>
+        <AutoIcon
+          white
+          source={IconManager[item.gender]}
+          height={sizes.h2 - 4}
+        />
+        <Heading2 white>{item.name}</Heading2>
+      </Space>
+    </View>
+  );
+};
+
 export const TrackingScreen = ({ navigation }) => {
   const carouselChild = useRef();
   const carouselHeight = useRef();
   const carouselWeight = useRef();
   const [scheme, setScheme] = useState(colors.blue);
+  const handleAddRecord = () => {
+    navigation.navigate("AddRecordScreen");
+  };
   const historyItem = ({ item }) => {
     return (
       <View
@@ -167,6 +186,7 @@ export const TrackingScreen = ({ navigation }) => {
       </View>
     );
   };
+
   const childCard = ({ item, index }) => {
     return (
       <View
@@ -184,6 +204,7 @@ export const TrackingScreen = ({ navigation }) => {
           }}
         >
           <ImageButton
+            onPress={() => handleAddRecord()}
             color={colors.white}
             source={IconManager.roundadd}
             height={46}
@@ -197,37 +218,34 @@ export const TrackingScreen = ({ navigation }) => {
             <RoundImpress>
               <Heading1>{item.age}</Heading1>
             </RoundImpress>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <LargeChildInfo item={item} />
+          </Space>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: sizes.base,
+            }}
+          >
+            <Space loose>
               <Space tight>
                 <AutoIcon
                   white
-                  source={IconManager[item.gender]}
-                  height={sizes.h2 - 4}
+                  source={IconManager.height}
+                  height={sizes.h2 - 6}
                 />
-                <Heading2 white>{item.name}</Heading2>
+                <Body white>{`${item.height}cm`}</Body>
               </Space>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Space loose>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.height}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body white>{`${item.height}cm`}</Body>
-                </Space>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.weight}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body white>{`${item.weight}kg`}</Body>
-                </Space>
+              <Space tight>
+                <AutoIcon
+                  white
+                  source={IconManager.weight}
+                  height={sizes.h2 - 6}
+                />
+                <Body white>{`${item.weight}kg`}</Body>
               </Space>
-            </View>
-          </Space>
+            </Space>
+          </View>
         </View>
       </View>
     );
@@ -362,6 +380,7 @@ export const TrackingScreen = ({ navigation }) => {
             style={{ height: 250 }}
           />
           <ImageButton
+            onPress={() => handleAddRecord()}
             color={colors.white}
             source={IconManager.roundadd}
             height={46}

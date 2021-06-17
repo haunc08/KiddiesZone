@@ -6,7 +6,7 @@ import { Tooltip } from "react-native-elements/dist/tooltip/Tooltip";
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { autoSize, IconManager, ImageManager } from "../utils/image";
 import { playSoundFile } from "../utils/sound";
-import { Heading3 } from "./Typography";
+import { Body, Heading3 } from "./Typography";
 
 export const Button = ({ children, type, onPress, style, small }) => {
   var matchType;
@@ -308,5 +308,25 @@ export const GameObject = ({
         )}
       </Animated.View>
     </View>
+  );
+};
+
+export const WhiteButton = ({ onPress, color, children }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        borderRadius: 999,
+        backgroundColor: colors.white,
+        padding: sizes.base,
+        paddingHorizontal: sizes.base * 2,
+      }}
+    >
+      <Heading3
+        style={{ color: color || colors.primary, fontSize: sizes.body }}
+      >
+        {children}
+      </Heading3>
+    </TouchableOpacity>
   );
 };

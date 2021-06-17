@@ -12,8 +12,12 @@ import * as ParentScreens from "../screens/parent";
 import { colors, icons } from "../constants";
 import { IconManager } from "../utils/image";
 import Orientation from "react-native-orientation-locker";
+import AddRecordScreen from "../screens/parent/AddRecordScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const TabBarCustomButton = ({ accessibilityState, children, onPress }) => {
   var isSelected = accessibilityState.selected;
@@ -87,7 +91,7 @@ const CustomTabBar = (props) => {
   }
 };
 
-const Tabs = () => {
+const Tabs = ({ navigation }) => {
   useEffect(() => {
     Orientation.lockToPortrait();
   }, []);
