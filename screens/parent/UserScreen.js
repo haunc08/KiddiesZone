@@ -22,7 +22,7 @@ import { ScrollView, View, TouchableOpacity } from "react-native";
 import { hexToRgba } from "../../utils/color";
 import { Icon, Divider } from "react-native-elements";
 
-export const ChildItem = ({ age, name, color }) => {
+export const ChildItem = ({ age, name, color, onPress }) => {
   return (
     <TouchableOpacity
       style={{
@@ -30,6 +30,7 @@ export const ChildItem = ({ age, name, color }) => {
         width: sizes.h1 + sizes.base * 4,
         paddingRight: sizes.base,
       }}
+      onPress={() => onPress}
     >
       <RoundImpress color={color || colors.primary} size={3}>
         <Heading2 white>{age}</Heading2>
@@ -41,7 +42,7 @@ export const ChildItem = ({ age, name, color }) => {
   );
 };
 
-export const ChildAddButton = () => {
+export const ChildAddButton = ({ onPress }) => {
   return (
     <TouchableOpacity
       style={{
@@ -49,6 +50,7 @@ export const ChildAddButton = () => {
         width: sizes.h1 + sizes.base * 4,
         paddingRight: sizes.base,
       }}
+      onPress={onPress}
     >
       <RoundImpress color={colors.primary} size={3}>
         <Body
@@ -93,7 +95,10 @@ const SettingRow = ({ onPress, iconSource, text, color }) => {
   );
 };
 
-export const UserScreen = () => {
+export const UserScreen = ({ navigation }) => {
+  const handlePressAddChild = () => {
+    navigation.navigate("AddChildScreen");
+  };
   return (
     <ScreenView title="Người dùng" isMainScreen>
       <Space>
@@ -110,7 +115,7 @@ export const UserScreen = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <ChildItem name="Hậu" age="5" />
               <ChildItem name="Tiến" age="3" />
-              <ChildAddButton />
+              <ChildAddButton onPress={handlePressAddChild} />
             </ScrollView>
           </Space>
         </Card>

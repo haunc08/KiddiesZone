@@ -60,13 +60,14 @@ export const FlatInput = ({
   style,
   color,
 }) => {
+  if (!color) color = colors.white;
   return (
     <TextInput
       style={{
-        backgroundColor: hexToRgba(color, 0.12) || colors.white12,
+        backgroundColor: hexToRgba(color, 0.12),
         paddingHorizontal: sizes.base * 1.25,
         borderRadius: sizes.base,
-        color: color || "white",
+        color: color,
         fontSize: sizes.body,
         alignSelf: "stretch",
         marginBottom: sizes.base,

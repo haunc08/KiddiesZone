@@ -67,6 +67,9 @@ export const IconManager = {
   password: require("../assets/icons/password.png"),
   pincode: require("../assets/icons/pincode.png"),
   logout: require("../assets/icons/logout.png"),
+  name: require("../assets/icons/name.png"),
+  gender: require("../assets/icons/gender.png"),
+  cake: require("../assets/icons/cake.png"),
 };
 
 export const ImageManager = {
