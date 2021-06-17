@@ -60,7 +60,7 @@ export const PostScreen = ({ route, navigation }) => {
   };
   return (
     <ScreenView
-      title="Bài viết"
+      title="Chế độ đọc"
       navigation={navigation}
       style={{ padding: 0, height: sizes.height, paddingBottom: 0 }}
       absoluteChildren={Heart()}
