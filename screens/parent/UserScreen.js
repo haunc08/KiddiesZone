@@ -129,7 +129,13 @@ export const UserScreen = ({ navigation }) => {
         </Card>
         <Card title="Cài đặt">
           <Space>
-            <SettingRow iconSource={IconManager.pincode} text="Đổi mã pin" />
+            <SettingRow
+              iconSource={IconManager.pincode}
+              text="Đổi mã pin"
+              onPress={() => {
+                navigation.navigate("CreatePasswordScreen");
+              }}
+            />
             <SettingRow iconSource={IconManager.info} text="Đổi tên" />
             <SettingRow iconSource={IconManager.password} text="Đổi mật khẩu" />
             <SettingRow

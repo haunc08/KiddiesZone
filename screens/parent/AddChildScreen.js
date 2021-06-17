@@ -107,43 +107,48 @@ export const AddRecordScreen = ({ navigation }) => {
   };
 
   return (
-    <ScreenView navigation={navigation} title="Thêm con">
-      <Card bgColor={colors.primary} style={{ alignItems: "center" }}>
-        <Space>
-          <White12Icon iconSource={IconManager.name} title="Họ và tên" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 0 }}
-            onChangeText={opChangeHeight}
-            value={height}
-          />
-          <White12Icon iconSource={IconManager.gender} title="Giới tính" />
-          <GenderSelect />
-          <White12Icon iconSource={IconManager.cake} title="Ngày sinh" />
-          <DatePicker
-            date={date}
-            onDateChange={setDate}
-            androidVariant="iosClone"
-            fadeToColor="none"
-            textColor="white"
-            mode="date"
-          />
-          <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={opChangeHeight}
-            value={height}
-            keyboardType="numeric"
-          />
-          <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={onChangeWeight}
-            value={weight}
-            keyboardType="numeric"
-          />
-          <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
-        </Space>
-      </Card>
+    <ScreenView
+      navigation={navigation}
+      title="Thêm con"
+      style={{ alignItems: "center" }}
+      bgColor={colors.primary}
+      headerColor={colors.primary}
+    >
+      <View style={{ height: sizes.base }} />
+      <Space>
+        <White12Icon iconSource={IconManager.name} title="Họ và tên" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 2 }}
+          onChangeText={opChangeHeight}
+          value={height}
+        />
+        <White12Icon iconSource={IconManager.gender} title="Giới tính" />
+        <GenderSelect />
+        <White12Icon iconSource={IconManager.cake} title="Ngày sinh" />
+        <DatePicker
+          date={date}
+          onDateChange={setDate}
+          androidVariant="iosClone"
+          fadeToColor="none"
+          textColor="white"
+          mode="date"
+        />
+        <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 6 }}
+          onChangeText={opChangeHeight}
+          value={height}
+          keyboardType="numeric"
+        />
+        <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 6 }}
+          onChangeText={onChangeWeight}
+          value={weight}
+          keyboardType="numeric"
+        />
+        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+      </Space>
     </ScreenView>
   );
 };

@@ -25,6 +25,7 @@ export const ScreenView = ({
   navigation,
   title,
   style,
+  headerColor,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const handleScroll = (e) => {
@@ -44,14 +45,16 @@ export const ScreenView = ({
         {(!isMainScreen || showHeader) && (
           <View
             style={{
-              backgroundColor: colors.white98,
+              backgroundColor: headerColor
+                ? hexToRgba(headerColor, 0.95)
+                : colors.white98,
               alignSelf: "stretch",
               width: sizes.short,
               justifyContent: "space-between",
               alignItems: "center",
               padding: sizes.base,
               paddingHorizontal: sizes.base * 1.5,
-              elevation: sizes.base * 2,
+              elevation: headerColor ? 0 : sizes.base * 2,
               position: "absolute",
               zIndex: 2,
               flexDirection: "row",
@@ -65,6 +68,7 @@ export const ScreenView = ({
                 }}
                 source={IconManager.backline}
                 height={sizes.h3}
+                color={headerColor ? colors.white : colors.black}
               />
             )}
             <View
@@ -75,7 +79,11 @@ export const ScreenView = ({
                 flexDirection: "row",
               }}
             >
-              <Heading3>{title}</Heading3>
+              <Heading3
+                style={{ color: headerColor ? colors.white : colors.black }}
+              >
+                {title}
+              </Heading3>
             </View>
           </View>
         )}

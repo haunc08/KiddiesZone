@@ -89,28 +89,36 @@ export const AddRecordScreen = ({ navigation }) => {
     navigation.goBack();
   };
   return (
-    <ScreenView navigation={navigation} title="Cập nhật thể trạng">
-      <Card bgColor={colors.primary} style={{ alignItems: "center" }}>
-        <Space>
-          <LargeChildInfo item={children[0]} />
-          <ColoredDivider color={colors.white50} />
-          <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={opChangeHeight}
-            value={height}
-            keyboardType="numeric"
-          />
-          <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={onChangeWeight}
-            value={weight}
-            keyboardType="numeric"
-          />
-          <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
-        </Space>
-      </Card>
+    <ScreenView
+      navigation={navigation}
+      title="Cập nhật thể trạng"
+      bgColor={colors.primary}
+      style={{
+        alignItems: "center",
+        height: sizes.long,
+        marginTop: sizes.base,
+      }}
+      headerColor={colors.primary}
+    >
+      <Space>
+        <LargeChildInfo item={children[0]} />
+        <ColoredDivider color={colors.white50} />
+        <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 4 }}
+          onChangeText={opChangeHeight}
+          value={height}
+          keyboardType="numeric"
+        />
+        <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 4 }}
+          onChangeText={onChangeWeight}
+          value={weight}
+          keyboardType="numeric"
+        />
+        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+      </Space>
     </ScreenView>
   );
 };

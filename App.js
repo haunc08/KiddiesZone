@@ -59,7 +59,6 @@ const DisplayedScreens = () => {
           <Stack.Screen name="Tabs" component={Tabs} />
           <Stack.Screen name="AddRecordScreen" component={AddRecordScreen} />
           <Stack.Screen name="AddChildScreen" component={AddChildScreen} />
-
           <Stack.Screen
             name="ParentPasswordScreen"
             component={ParentPasswordScreen}
