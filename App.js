@@ -29,6 +29,7 @@ import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import allReducers from "./redux/reducers";
+import AddRecordScreen from "./screens/parent/AddRecordScreen";
 
 const store = createStore(allReducers);
 
@@ -55,6 +56,8 @@ const DisplayedScreens = () => {
         >
           <Stack.Screen name="KidsZone" component={KidsZone} />
           <Stack.Screen name="Tabs" component={Tabs} />
+          <Stack.Screen name="AddRecordScreen" component={AddRecordScreen} />
+
           <Stack.Screen
             name="ParentPasswordScreen"
             component={ParentPasswordScreen}

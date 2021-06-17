@@ -5,6 +5,8 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
@@ -36,90 +38,94 @@ export const ScreenView = ({
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {(!isMainScreen || showHeader) && (
-        <View
-          style={{
-            backgroundColor: colors.white98,
-            alignSelf: "stretch",
-            width: sizes.short,
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: sizes.base,
-            paddingHorizontal: sizes.base * 1.5,
-            elevation: sizes.base * 2,
-            position: "absolute",
-            zIndex: 2,
-            flexDirection: "row",
-            height: headerHeight,
-          }}
-        >
-          {!isMainScreen && (
-            <ImageButton
-              onPress={() => {
-                navigation.goBack();
-              }}
-              source={IconManager.backline}
-              height={sizes.h3}
-            />
-          )}
-          <View
-            style={{
-              position: "absolute",
-              width: sizes.short,
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Heading3>{title}</Heading3>
-          </View>
-        </View>
-      )}
-      {isMainScreen && !showHeader && (
-        <View
-          style={{
-            height: headerHeight,
-            width: sizes.short,
-            backgroundColor: colors.smoke,
-            zIndex: 2,
-            position: "absolute",
-          }}
-        />
-      )}
-      <ScrollView
-        onScroll={handleScroll}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={horizontal}
-        style={{
-          backgroundColor: bgColor || colors.smoke,
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View
-          style={
-            horizontal
-              ? {
-                  alignContent: "stretch",
-                  padding: sizes.base,
-                  paddingRight: 100,
-                  flexDirection: "row",
-                }
-              : { padding: sizes.base, paddingBottom: 100, ...style }
-          }
-        >
+        {(!isMainScreen || showHeader) && (
           <View
             style={{
-              marginTop: headerHeight - sizes.base * 1.25,
+              backgroundColor: colors.white98,
               alignSelf: "stretch",
+              width: sizes.short,
               justifyContent: "space-between",
-              marginBottom: sizes.base * 1.5,
+              alignItems: "center",
+              padding: sizes.base,
+              paddingHorizontal: sizes.base * 1.5,
+              elevation: sizes.base * 2,
+              position: "absolute",
+              zIndex: 2,
+              flexDirection: "row",
+              height: headerHeight,
             }}
           >
-            {/* <ImageButton /> */}
-            {isMainScreen && <Heading1>{title}</Heading1>}
+            {!isMainScreen && (
+              <ImageButton
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                source={IconManager.backline}
+                height={sizes.h3}
+              />
+            )}
+            <View
+              style={{
+                position: "absolute",
+                width: sizes.short,
+                justifyContent: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Heading3>{title}</Heading3>
+            </View>
           </View>
-          {children}
-        </View>
-      </ScrollView>
+        )}
+        {isMainScreen && !showHeader && (
+          <View
+            style={{
+              height: headerHeight,
+              width: sizes.short,
+              backgroundColor: colors.smoke,
+              zIndex: 2,
+              position: "absolute",
+            }}
+          />
+        )}
+        <ScrollView
+          onScroll={handleScroll}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={horizontal}
+          style={{
+            backgroundColor: bgColor || colors.smoke,
+          }}
+        >
+          <View
+            style={
+              horizontal
+                ? {
+                    alignContent: "stretch",
+                    padding: sizes.base,
+                    paddingRight: 100,
+                    flexDirection: "row",
+                  }
+                : { padding: sizes.base, paddingBottom: 100, ...style }
+            }
+          >
+            <View
+              style={{
+                marginTop: headerHeight - sizes.base * 1.25,
+                alignSelf: "stretch",
+                justifyContent: "space-between",
+                marginBottom: sizes.base * 1.5,
+              }}
+            >
+              {/* <ImageButton /> */}
+              {isMainScreen && <Heading1>{title}</Heading1>}
+            </View>
+            {children}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -303,5 +309,35 @@ export const RoundImpress = ({ children, size, color }) => {
     >
       {children}
     </View>
+  );
+};
+
+export const Round = ({ color, children, size }) => {
+  return (
+    <View
+      style={{
+        backgroundColor: color,
+        borderRadius: 999,
+        width: size,
+        height: size,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </View>
+  );
+};
+
+export const ColoredDivider = ({ color }) => {
+  return (
+    <View
+      style={{
+        alignSelf: "stretch",
+        height: 1,
+        backgroundColor: color || colors.fadeblack50,
+        marginVertical: sizes.base,
+      }}
+    />
   );
 };
