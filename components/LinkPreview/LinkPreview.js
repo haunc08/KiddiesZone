@@ -67,7 +67,8 @@ export default class LinkPreview extends React.PureComponent {
   }
 
   _onLinkPressed = () => {
-    Linking.openURL(this.props.text.match(REGEX)[0]);
+    // Linking.openURL(this.props.text.match(REGEX)[0]);
+    this.props.onPress;
   };
 
   renderImage = (
@@ -135,7 +136,7 @@ export default class LinkPreview extends React.PureComponent {
       <TouchableOpacity
         style={[styles.containerStyle, containerStyle]}
         activeOpacity={0.95}
-        onPress={() => this._onLinkPressed()}
+        onPress={this.props.onPress}
       >
         {this.renderImage(
           imageLink,

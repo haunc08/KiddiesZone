@@ -27,6 +27,7 @@ export const ScreenView = ({
   style,
   headerColor,
   scrollToTop,
+  absoluteChildren,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const scrollRef = useRef(null);
@@ -42,9 +43,22 @@ export const ScreenView = ({
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {absoluteChildren ? (
+        <View
+          style={{ zIndex: 2, position: "absolute" }}
+          pointerEvents="box-none"
+        >
+          {absoluteChildren}
+        </View>
+      ) : null}
       {showHeader && scrollToTop && (
         <View
-          style={{ zIndex: 32, position: "absolute", alignSelf: "flex-end" }}
+          pointerEvents="box-none"
+          style={{
+            zIndex: 2,
+            position: "absolute",
+            alignSelf: "flex-end",
+          }}
         >
           <TouchableOpacity
             onPress={() =>

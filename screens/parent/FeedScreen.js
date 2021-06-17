@@ -73,7 +73,7 @@ const posts = [
   },
 ];
 
-export const FeedScreen = () => {
+export const FeedScreen = ({ navigation }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const scrollRef = useRef();
 
@@ -85,6 +85,12 @@ export const FeedScreen = () => {
           text={item.url}
           titleNumberOfLines={5}
           descriptionNumberOfLines={10}
+          onPress={() =>
+            navigation.navigate("PostScreen", {
+              hearted: hearted,
+              url: item.url,
+            })
+          }
         />
         <Row style={{ justifyContent: "space-between", padding: sizes.base }}>
           <Row>
@@ -186,7 +192,12 @@ export const FeedScreen = () => {
   };
 
   return (
-    <ScreenView isMainScreen title="Bài viết" scrollToTop>
+    <ScreenView
+      isMainScreen
+      title="Bài viết"
+      scrollToTop
+      navigation={navigation}
+    >
       <FeedTabs />
       <FlatList
         data={posts}
