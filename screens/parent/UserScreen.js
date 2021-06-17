@@ -21,6 +21,8 @@ import {
 import { ScrollView, View, TouchableOpacity } from "react-native";
 import { hexToRgba } from "../../utils/color";
 import { Icon, Divider } from "react-native-elements";
+// import * as firebase from "firebase";
+import auth from "@react-native-firebase/auth";
 
 export const ChildItem = ({ age, name }) => {
   return (
@@ -93,6 +95,13 @@ const SettingRow = ({ onPress, iconSource, text, color }) => {
   );
 };
 
+const signOut = () => {
+  auth()
+    .signOut()
+    .then(() => console.log("Signed out successfully"))
+    .catch((error) => console.log(error));
+};
+
 export const UserScreen = () => {
   return (
     <ScreenView title="Người dùng" isMainScreen>
@@ -123,6 +132,7 @@ export const UserScreen = () => {
               iconSource={IconManager.logout}
               text="Đăng xuất"
               color={colors.red}
+              onPress={signOut}
             />
           </Space>
         </Card>

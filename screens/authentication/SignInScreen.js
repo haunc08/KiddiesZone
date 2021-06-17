@@ -8,7 +8,8 @@ import { Button } from "../../components/Button";
 import Orientation from "react-native-orientation-locker";
 
 // firebase
-import * as firebase from "firebase";
+// import * as firebase from "firebase";
+import auth from "@react-native-firebase/auth";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -25,9 +26,12 @@ const SignInScreen = ({ navigation }) => {
     }
   }, [errorMessage]);
 
+  const reset = () => {
+    setEmail("");
+    setPassword("");
+  };
+
   const userLogin = () => {
-    console.log("email ", email);
-    console.log("pass ", password);
     if (email === "" || password === "") {
       setErrorMessage("Không thể để trống email hoặc password!");
       Alert.alert("Thông báo", errorMessage, [
@@ -36,15 +40,11 @@ const SignInScreen = ({ navigation }) => {
     } else {
       // setIsLoading(true);
 
-      firebase
-        .auth()
+      auth()
         .signInWithEmailAndPassword(email, password)
         .then((res) => {
-          //console.log(res)
           console.log("User logged-in successfully!");
           reset();
-
-          //this.props.navigation.navigate('Main')
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -60,7 +60,7 @@ const SignInScreen = ({ navigation }) => {
           Alert.alert("Thông báo", errorMessage, [
             { text: "OK", onPress: () => setErrorMessage("") },
           ]);
-          console.log(error.code);
+          console.log(error);
         });
 
       // Notifications.dismissAllNotificationsAsync();
@@ -80,6 +80,7 @@ const SignInScreen = ({ navigation }) => {
           label="Mật khẩu"
           placeholder="Mật khẩu"
           onChangeText={(val) => setPassword(val)}
+          secureTextEntry={true}
         />
         <Row style={{ marginTop: sizes.base }}>
           <Button

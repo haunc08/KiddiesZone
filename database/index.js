@@ -1,3 +1,3 @@
-import firebase, { firebaseConfig } from "./firebase/firebase";
+// import firebase, { firebaseConfig } from "./firebase/firebase";
 
-export { firebase, firebaseConfig };
+// export { firebase, firebaseConfig };

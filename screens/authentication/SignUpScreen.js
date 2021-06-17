@@ -5,11 +5,13 @@ import { Card, NoScrollView, Row } from "../../components/Wrapper";
 import { TextInput } from "../../components/TextInput";
 import { Button } from "../../components/Button";
 import { Body } from "../../components/Typography";
-import { Alert, View } from "react-native";
+import { Alert, View, ActivityIndicator } from "react-native";
 
 // firebase
-import * as firebase from "firebase";
-import { ActivityIndicator } from "react-native";
+// import { firebase } from "../../database";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import { collectionName } from "../../utils/collection";
 
 const SignUpScreen = ({ navigation }) => {
   const [displayName, setDisplayName] = useState("");
@@ -40,11 +42,10 @@ const SignUpScreen = ({ navigation }) => {
     } else {
       setIsLoading(true);
 
-      firebase
-        .auth()
+      auth()
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          const { uid } = firebase.auth().currentUser;
+          const { uid } = auth().currentUser;
 
           res.user
             .updateProfile({
@@ -56,6 +57,12 @@ const SignUpScreen = ({ navigation }) => {
               //   .ref("users/" + firebase.auth().currentUser.uid + "/profile")
               //   .set({ name: firebase.auth().currentUser.displayName });
               // addDefaultDatabase(uid);
+              firestore()
+                .collection(collectionName.USERS)
+                .doc(uid)
+                .set({ name: displayName })
+                .then(() => console.log("Add firestore successfully"))
+                .catch((error) => console.log(error));
             });
           console.log("User registered successfully!");
 
@@ -79,6 +86,7 @@ const SignUpScreen = ({ navigation }) => {
           Alert.alert("Thông báo", errorMessage, [
             { text: "OK", onPress: () => setErrorMessage("") },
           ]);
+          console.log(error);
         });
     }
   };
