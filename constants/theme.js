@@ -9,8 +9,8 @@ export const colors = {
   // colors
   black: "#1E1F20",
   white: "#FFFFFF",
-  purple: "#7a81ff",
-  orange: "#ff9724",
+  purple: "#626aff",
+  orange: "#ff8b24",
   yellow: "#fec700",
   pink: "#ff3d66",
   blue: "#0d8bf8",
@@ -18,6 +18,7 @@ export const colors = {
   cyan: "#00cfce",
   red: "#ee4238",
   brown: "#6f4938",
+  grass: "#73c673",
 
   white98: "rgba(255, 255, 255, 0.98)",
   white80: "rgba(255, 255, 255, 0.8)",

@@ -25,6 +25,7 @@ export const ScreenView = ({
   navigation,
   title,
   style,
+  headerColor,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const handleScroll = (e) => {
@@ -44,14 +45,16 @@ export const ScreenView = ({
         {(!isMainScreen || showHeader) && (
           <View
             style={{
-              backgroundColor: colors.white98,
+              backgroundColor: headerColor
+                ? hexToRgba(headerColor, 0.95)
+                : colors.white98,
               alignSelf: "stretch",
               width: sizes.short,
               justifyContent: "space-between",
               alignItems: "center",
               padding: sizes.base,
               paddingHorizontal: sizes.base * 1.5,
-              elevation: sizes.base * 2,
+              elevation: headerColor ? 0 : sizes.base * 2,
               position: "absolute",
               zIndex: 2,
               flexDirection: "row",
@@ -65,6 +68,7 @@ export const ScreenView = ({
                 }}
                 source={IconManager.backline}
                 height={sizes.h3}
+                color={headerColor ? colors.white : colors.black}
               />
             )}
             <View
@@ -75,7 +79,11 @@ export const ScreenView = ({
                 flexDirection: "row",
               }}
             >
-              <Heading3>{title}</Heading3>
+              <Heading3
+                style={{ color: headerColor ? colors.white : colors.black }}
+              >
+                {title}
+              </Heading3>
             </View>
           </View>
         )}
@@ -170,6 +178,8 @@ export const Card = ({
   style,
   touchable,
   onPress,
+  imgSource,
+  height,
 }) => {
   const containerStyle = {
     backgroundColor: bgColor || "white",
@@ -179,6 +189,7 @@ export const Card = ({
     alignItems: "stretch",
     elevation: sizes.base / 4,
     shadowOpacity: 0,
+    height: height || "auto",
     ...style,
   };
   return touchable ? (
@@ -196,7 +207,7 @@ export const Card = ({
       )}
       {children}
     </TouchableOpacity>
-  ) : (
+  ) : !imgSource ? (
     <View style={containerStyle}>
       {title && (
         <Heading2
@@ -211,6 +222,21 @@ export const Card = ({
       )}
       {children}
     </View>
+  ) : (
+    <ImageBackground style={containerStyle} source={imgSource}>
+      {title && (
+        <Heading2
+          style={{
+            alignSelf: "center",
+            marginBottom: sizes.base * 1.25,
+            color: bgColor ? "white" : colors.black,
+          }}
+        >
+          {title}
+        </Heading2>
+      )}
+      {children}
+    </ImageBackground>
   );
 };
 
@@ -273,6 +299,7 @@ export const Frame = ({ background, children }) => {
 };
 
 export const Impress = ({ color, children }) => {
+  if (!color) color = colors.primary;
   return (
     <View
       style={{

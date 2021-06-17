@@ -22,6 +22,7 @@ import { IconManager } from "../../utils/image";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { hexToRgba } from "../../utils/color";
 import { LineChart } from "react-native-chart-kit";
+import { calcAge } from "../../utils/string";
 
 // firebase
 import { useAuthState } from "react-firebase-hooks/auth";

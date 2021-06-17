@@ -13,6 +13,7 @@ import { View, TextInput, Alert } from "react-native";
 import { LargeChildInfo } from "./TrackingScreen";
 import { IconManager } from "../../utils/image";
 import { Heading3 } from "../../components/Typography";
+import { hexToRgba } from "../../utils/color";
 
 // firebase
 import firestore from "@react-native-firebase/firestore";
@@ -36,14 +37,21 @@ export const White12Icon = ({ iconSource, title }) => {
   );
 };
 
-export const FlatInput = ({ onChangeText, value, keyboardType, style }) => {
+export const FlatInput = ({
+  onChangeText,
+  value,
+  keyboardType,
+  style,
+  color,
+}) => {
+  if (!color) color = colors.white;
   return (
     <TextInput
       style={{
-        backgroundColor: colors.white12,
+        backgroundColor: hexToRgba(color, 0.12),
         paddingHorizontal: sizes.base * 1.25,
         borderRadius: sizes.base,
-        color: "white",
+        color: color,
         fontSize: sizes.body,
         alignSelf: "stretch",
         marginBottom: sizes.base,
@@ -89,28 +97,36 @@ export const AddRecordScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScreenView navigation={navigation} title="Cập nhật thể trạng">
-      <Card bgColor={colors.primary} style={{ alignItems: "center" }}>
-        <Space>
-          <LargeChildInfo item={child} />
-          <ColoredDivider color={colors.white50} />
-          <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={onChangeHeight}
-            value={height}
-            keyboardType="numeric"
-          />
-          <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
-          <FlatInput
-            style={{ marginHorizontal: sizes.base * 4 }}
-            onChangeText={onChangeWeight}
-            value={weight}
-            keyboardType="numeric"
-          />
-          <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
-        </Space>
-      </Card>
+    <ScreenView
+      navigation={navigation}
+      title="Cập nhật thể trạng"
+      bgColor={colors.primary}
+      style={{
+        alignItems: "center",
+        height: sizes.long,
+        marginTop: sizes.base,
+      }}
+      headerColor={colors.primary}
+    >
+      <Space>
+        <LargeChildInfo item={child} />
+        <ColoredDivider color={colors.white50} />
+        <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 4 }}
+          onChangeText={onChangeHeight}
+          value={height}
+          keyboardType="numeric"
+        />
+        <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
+        <FlatInput
+          style={{ marginHorizontal: sizes.base * 4 }}
+          onChangeText={onChangeWeight}
+          value={weight}
+          keyboardType="numeric"
+        />
+        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+      </Space>
     </ScreenView>
   );
 };

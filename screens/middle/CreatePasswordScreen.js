@@ -29,9 +29,6 @@ const fieldSize = 16;
 const numberSize = 36;
 
 export const CreatePasswordScreen = ({ navigation }) => {
-  useEffect(() => {
-    Orientation.lockToPortrait();
-  }, []);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const wrong = useRef(false);
@@ -116,13 +113,17 @@ export const CreatePasswordScreen = ({ navigation }) => {
       );
   };
   return (
-    <View
+    <ScreenView
+      navigation={navigation}
+      title="Đổi mật khẩu"
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#a4d1d6",
+        height: sizes.long,
       }}
+      headerColor="#a4d1d6"
     >
       <Space loose>
         <Heading2
@@ -166,7 +167,7 @@ export const CreatePasswordScreen = ({ navigation }) => {
           </View>
         </Space>
       </Space>
-    </View>
+    </ScreenView>
   );
 };
 

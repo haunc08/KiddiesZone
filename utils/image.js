@@ -67,6 +67,9 @@ export const IconManager = {
   password: require("../assets/icons/password.png"),
   pincode: require("../assets/icons/pincode.png"),
   logout: require("../assets/icons/logout.png"),
+  name: require("../assets/icons/name.png"),
+  gender: require("../assets/icons/gender.png"),
+  cake: require("../assets/icons/cake.png"),
 };
 
 export const ImageManager = {
@@ -235,6 +238,8 @@ export const ImageManager = {
     animals: require("../assets/images/passwordparent/animals.png"),
     test: require("../assets/images/passwordparent/test.png"),
   },
+  gokid: require("../assets/images/gokid.jpg"),
+  gokidpng: require("../assets/images/gokid.png"),
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

@@ -35,7 +35,7 @@ export const Button = ({ children, type, onPress, style, small }) => {
   return (
     <TouchableOpacity
       style={{
-        padding: sizes.base - 2,
+        padding: sizes.base * 2 - 2,
         paddingVertical: small ? sizes.base - 8 : sizes.base - 2,
         backgroundColor: matchType.background,
         alignItems: "center",
@@ -46,15 +46,14 @@ export const Button = ({ children, type, onPress, style, small }) => {
       }}
       onPress={onPress}
     >
-      <Text
+      <Heading3
         style={{
           color: matchType.foreground,
-          ...fonts.h3,
-          fontSize: 14,
+          fontSize: 16,
         }}
       >
         {children}
-      </Text>
+      </Heading3>
     </TouchableOpacity>
   );
 };

@@ -23,8 +23,7 @@ import { hexToRgba } from "../../utils/color";
 import { Icon, Divider } from "react-native-elements";
 
 import auth from "@react-native-firebase/auth";
-
-export const ChildItem = ({ age, name }) => {
+export const ChildItem = ({ age, name, color, onPress }) => {
   return (
     <TouchableOpacity
       style={{
@@ -32,8 +31,9 @@ export const ChildItem = ({ age, name }) => {
         width: sizes.h1 + sizes.base * 4,
         paddingRight: sizes.base,
       }}
+      onPress={() => onPress}
     >
-      <RoundImpress color={colors.primary} size={3}>
+      <RoundImpress color={color || colors.primary} size={3}>
         <Heading2 white>{age}</Heading2>
       </RoundImpress>
       <Body style={{ marginTop: sizes.base / 2, fontWeight: "bold" }}>
@@ -43,7 +43,7 @@ export const ChildItem = ({ age, name }) => {
   );
 };
 
-export const ChildAddButton = () => {
+export const ChildAddButton = ({ onPress }) => {
   return (
     <TouchableOpacity
       style={{
@@ -51,6 +51,7 @@ export const ChildAddButton = () => {
         width: sizes.h1 + sizes.base * 4,
         paddingRight: sizes.base,
       }}
+      onPress={onPress}
     >
       <RoundImpress color={colors.primary} size={3}>
         <Body
@@ -95,14 +96,17 @@ const SettingRow = ({ onPress, iconSource, text, color }) => {
   );
 };
 
-const signOut = () => {
-  auth()
-    .signOut()
-    .then(() => console.log("Signed out successfully"))
-    .catch((error) => console.log(error));
-};
+export const UserScreen = ({ navigation }) => {
+  const handlePressAddChild = () => {
+    navigation.navigate("AddChildScreen");
+  };
+  const signOut = () => {
+    auth()
+      .signOut()
+      .then(() => console.log("Signed out successfully"))
+      .catch((error) => console.log(error));
+  };
 
-export const UserScreen = () => {
   return (
     <ScreenView title="Người dùng" isMainScreen>
       <Space>
@@ -119,13 +123,19 @@ export const UserScreen = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <ChildItem name="Hậu" age="5" />
               <ChildItem name="Tiến" age="3" />
-              <ChildAddButton />
+              <ChildAddButton onPress={handlePressAddChild} />
             </ScrollView>
           </Space>
         </Card>
         <Card title="Cài đặt">
           <Space>
-            <SettingRow iconSource={IconManager.pincode} text="Đổi mã pin" />
+            <SettingRow
+              iconSource={IconManager.pincode}
+              text="Đổi mã pin"
+              onPress={() => {
+                navigation.navigate("CreatePasswordScreen");
+              }}
+            />
             <SettingRow iconSource={IconManager.info} text="Đổi tên" />
             <SettingRow iconSource={IconManager.password} text="Đổi mật khẩu" />
             <SettingRow
