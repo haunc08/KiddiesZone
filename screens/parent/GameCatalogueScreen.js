@@ -27,6 +27,7 @@ import { LargeChildInfo } from "./TrackingScreen";
 import LineChart from "../../components/Chart/LineChart";
 import { PieChart } from "react-native-chart-kit";
 import { FlatInput } from "./AddRecordScreen";
+import { shortenName } from "../../utils/string";
 
 const games = [
   {
@@ -228,7 +229,7 @@ export const GameCatalogueScreen = () => {
           </View>
         </View>
         <Space>
-          <Heading2>Danh sách game</Heading2>
+          <Heading2>{shortenName("Danh sách game")}</Heading2>
           <HorizontalList data={games} />
         </Space>
         <Carousel
