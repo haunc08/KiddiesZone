@@ -29,6 +29,7 @@ export const IconManager = {
     star: require("../assets/icons/star.png"),
     sushi: require("../assets/icons/sushi.png"),
   },
+  star: require("../assets/icons/star.png"),
   heart: require("../assets/icons/heart.png"),
   heartempty: require("../assets/icons/heartempty.png"),
   instruments: {
@@ -70,6 +71,8 @@ export const IconManager = {
   name: require("../assets/icons/name.png"),
   gender: require("../assets/icons/gender.png"),
   cake: require("../assets/icons/cake.png"),
+  flame: require("../assets/icons/flame.png"),
+  upline: require("../assets/icons/upline.png"),
 };
 
 export const ImageManager = {

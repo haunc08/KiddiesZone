@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import {
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { hexToRgba } from "../utils/color";
 import { IconManager } from "../utils/image";
-import { Button, ImageButton } from "./Button";
+import { Button, ImageButton, AutoIcon } from "./Button";
 import { Heading1, Heading2, Heading3 } from "./Typography";
 
 const headerHeight = 50;
@@ -26,8 +26,10 @@ export const ScreenView = ({
   title,
   style,
   headerColor,
+  scrollToTop,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
+  const scrollRef = useRef(null);
   const handleScroll = (e) => {
     if (e.nativeEvent.contentOffset.y > headerHeight) {
       setShowHeader(true);
@@ -37,8 +39,32 @@ export const ScreenView = ({
       setShowHeader(false);
     }
   };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {showHeader && scrollToTop && (
+        <View
+          style={{ zIndex: 32, position: "absolute", alignSelf: "flex-end" }}
+        >
+          <TouchableOpacity
+            onPress={() =>
+              scrollRef.current.scrollTo({ x: 0, y: 0, animated: true })
+            }
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 999,
+              backgroundColor: hexToRgba(colors.primary, 0.9),
+              marginRight: sizes.base * 2,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: sizes.long - sizes.base * 10,
+            }}
+          >
+            <AutoIcon source={IconManager.upline} height={30} white />
+          </TouchableOpacity>
+        </View>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
@@ -98,6 +124,7 @@ export const ScreenView = ({
             }}
           />
         )}
+
         <ScrollView
           onScroll={handleScroll}
           showsVerticalScrollIndicator={false}
@@ -106,6 +133,7 @@ export const ScreenView = ({
           style={{
             backgroundColor: bgColor || colors.smoke,
           }}
+          ref={scrollRef}
         >
           <View
             style={

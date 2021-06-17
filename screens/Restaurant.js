@@ -247,15 +247,6 @@ const Restaurant = ({ route, navigation }) => {
                 marginTop: 10,
               }}
             >
-              <Image
-                source={icons.fire}
-                style={{
-                  width: 20,
-                  height: 20,
-                  marginRight: 10,
-                }}
-              />
-
               <Text
                 style={{
                   ...fonts.body3,

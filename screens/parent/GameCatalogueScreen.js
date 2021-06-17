@@ -229,7 +229,7 @@ export const GameCatalogueScreen = () => {
           </View>
         </View>
         <Space>
-          <Heading2>{shortenName("Danh sách game")}</Heading2>
+          <Heading2>Danh sách game</Heading2>
           <HorizontalList data={games} />
         </Space>
         <Carousel

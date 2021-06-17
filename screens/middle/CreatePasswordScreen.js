@@ -115,7 +115,7 @@ export const CreatePasswordScreen = ({ navigation }) => {
   return (
     <ScreenView
       navigation={navigation}
-      title="Đổi mật khẩu"
+      title="Đổi mã PIN"
       style={{
         flex: 1,
         justifyContent: "center",
