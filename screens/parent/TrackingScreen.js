@@ -196,56 +196,58 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const historyItem = ({ item }) => {
-    if (!item) return <View></View>;
-
-    // sau khi tao moi health record thi bi loi null o day
-    const createdAt = item?.createdAt.toDate().toDateString();
-    return (
-      <View
-        style={{
-          alignItems: "center",
-        }}
-      >
+    try {
+      const createdAt = item?.createdAt.toDate().toDateString();
+      return (
         <View
-          style={{
-            marginTop: sizes.base,
-            alignSelf: "stretch",
-            height: 1,
-            backgroundColor: colors.white50,
-            marginBottom: sizes.base / 2,
-          }}
-        />
-        <TouchableOpacity
           style={{
             alignItems: "center",
           }}
         >
-          <Space tight>
-            <Heading2 color={colors.white50}>{createdAt}</Heading2>
-            <Row>
-              <Space>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.height}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body style={{ color: colors.white }}>{item?.height}</Body>
+          <View
+            style={{
+              marginTop: sizes.base,
+              alignSelf: "stretch",
+              height: 1,
+              backgroundColor: colors.white50,
+              marginBottom: sizes.base / 2,
+            }}
+          />
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <Space tight>
+              <Heading2 color={colors.white50}>{createdAt}</Heading2>
+              <Row>
+                <Space>
+                  <Space tight>
+                    <AutoIcon
+                      white
+                      source={IconManager.height}
+                      height={sizes.h2 - 6}
+                    />
+                    <Body style={{ color: colors.white }}>{item?.height}</Body>
+                  </Space>
+                  <Space tight>
+                    <AutoIcon
+                      white
+                      source={IconManager.weight}
+                      height={sizes.h2 - 6}
+                    />
+                    <Body style={{ color: colors.white }}>{item?.weight}</Body>
+                  </Space>
                 </Space>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.weight}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body style={{ color: colors.white }}>{item?.weight}</Body>
-                </Space>
-              </Space>
-            </Row>
-          </Space>
-        </TouchableOpacity>
-      </View>
-    );
+              </Row>
+            </Space>
+          </TouchableOpacity>
+        </View>
+      );
+    } catch (error) {
+      console.log(item);
+      console.log(error);
+    }
   };
 
   const calcAge = (birthday) => {
