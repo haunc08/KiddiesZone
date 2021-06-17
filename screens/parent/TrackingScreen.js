@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -25,92 +25,12 @@ import { LineChart } from "react-native-chart-kit";
 import { calcAge } from "../../utils/string";
 
 // firebase
-import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName, Gender } from "../../utils/enum";
+import { UserContext } from "../../App";
+import { ChildrenContext } from "../../navigation/ParentNavigator";
 
 const dummyArray = ["item1", "item2", "item3"];
-
-// const children = [
-//   {
-//     age: 5,
-//     gender: "Nữ",
-//     name: "Ngô Công Hậu",
-//     height: "120",
-//     weight: "35",
-//   },
-//   {
-//     age: 3,
-//     gender: "Nam",
-//     name: "Phan Huy Tiến",
-//     height: "110",
-//     weight: "53",
-//   },
-// ];
-
-const history = [
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-];
 
 export const LargeChildInfo = ({ item }) => {
   return (
@@ -128,9 +48,9 @@ export const LargeChildInfo = ({ item }) => {
 };
 
 const TrackingScreen = ({ navigation }) => {
-  const [user] = useAuthState(auth());
+  const user = useContext(UserContext);
+  const children = useContext(ChildrenContext);
 
-  const [children, setChildren] = useState([]);
   const [currentChild, setCurrentChild] = useState(null);
   const [healthRecords, setHealthRecords] = useState([]);
 
@@ -138,22 +58,6 @@ const TrackingScreen = ({ navigation }) => {
     .collection(CollectionName.USERS)
     .doc(user?.uid)
     .collection(CollectionName.CHILDREN);
-
-  // fetch all children of user
-  useEffect(() => {
-    childrenRef.onSnapshot((querySnapshot) => {
-      let childrenData = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        const child = {
-          ...documentSnapshot.data(),
-          _id: documentSnapshot.id,
-        };
-        childrenData.push(child);
-      });
-
-      setChildren(childrenData);
-    });
-  }, []);
 
   useEffect(() => {
     if (children) {
@@ -249,12 +153,6 @@ const TrackingScreen = ({ navigation }) => {
       console.log(item);
       console.log(error);
     }
-  };
-
-  const calcAge = (birthday) => {
-    const today = Date.now();
-    const dateRange = (today - birthday) / (1000 * 3600 * 24);
-    return Math.floor(dateRange / 365);
   };
 
   const calcBMI = () => {

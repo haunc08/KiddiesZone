@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -16,11 +16,8 @@ import {
   Instruments,
   Story2,
   TrashGame,
-  ParentPasswordScreen,
-  CreatePasswordScreen,
 } from "./screens";
-import Tabs from "./navigation/tabs";
-// import { firebase, firebaseConfig } from "./database";
+
 import auth from "@react-native-firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
@@ -29,55 +26,51 @@ import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import allReducers from "./redux/reducers";
-import AddRecordScreen from "./screens/parent/AddRecordScreen";
-import AddChildScreen from "./screens/parent/AddChildScreen";
 import ParentNavigator from "./navigation/ParentNavigator";
 
 const store = createStore(allReducers);
 
 const Stack = createStackNavigator();
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(firebaseConfig);
-// } else {
-//   firebase.app();
-// }
+export const UserContext = createContext();
 
 const DisplayedScreens = () => {
   const [user, loading, error] = useAuthState(auth());
 
   if (user) {
     return (
-      <NavigationContainer>
-        <Stack.Navigator
-          name="ok"
-          screenOptions={{
-            headerShown: false,
-          }}
-          initialRouteName={"Tabs"}
-        >
-          <Stack.Screen name="ParentNavigator" component={ParentNavigator} />
-          <Stack.Screen name="KidsZone" component={KidsZone} />
-          <Stack.Screen name="Instruments" component={Instruments} />
-          <Stack.Screen name="Sandbox" component={Sandbox} />
-          <Stack.Screen name="Shapes" component={Shapes} />
-          <Stack.Screen name="Stories" component={Stories} />
-          <Stack.Screen
-            name="GameCountNumberScreen"
-            component={GameCountNumberScreen}
-          />
-          <Stack.Screen name="Story" component={Story} />
-          <Stack.Screen name="Story2" component={Story2} />
-          <Stack.Screen name="Movies" component={Movies} />
-          <Stack.Screen name="GameAlphabet" component={GameAlphabet} />
-          <Stack.Screen
-            name="GameAdd"
-            component={GameCalculate}
-            initialParams={{ gameType: "Add" }}
-          />
-          <Stack.Screen name="TrashGame" component={TrashGame} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <UserContext.Provider value={user}>
+        <NavigationContainer>
+          <Stack.Navigator
+            name="ok"
+            screenOptions={{
+              headerShown: false,
+            }}
+            initialRouteName={"Tabs"}
+          >
+            <Stack.Screen name="ParentNavigator" component={ParentNavigator} />
+            <Stack.Screen name="KidsZone" component={KidsZone} />
+            <Stack.Screen name="Instruments" component={Instruments} />
+            <Stack.Screen name="Sandbox" component={Sandbox} />
+            <Stack.Screen name="Shapes" component={Shapes} />
+            <Stack.Screen name="Stories" component={Stories} />
+            <Stack.Screen
+              name="GameCountNumberScreen"
+              component={GameCountNumberScreen}
+            />
+            <Stack.Screen name="Story" component={Story} />
+            <Stack.Screen name="Story2" component={Story2} />
+            <Stack.Screen name="Movies" component={Movies} />
+            <Stack.Screen name="GameAlphabet" component={GameAlphabet} />
+            <Stack.Screen
+              name="GameAdd"
+              component={GameCalculate}
+              initialParams={{ gameType: "Add" }}
+            />
+            <Stack.Screen name="TrashGame" component={TrashGame} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserContext.Provider>
     );
   }
   return (

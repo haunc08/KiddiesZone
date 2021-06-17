@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -16,6 +16,9 @@ import { hexToRgba } from "../../utils/color";
 import { Divider } from "react-native-elements";
 
 import auth from "@react-native-firebase/auth";
+import { UserContext } from "../../App";
+import { ChildrenContext } from "../../navigation/ParentNavigator";
+import { calcAge } from "../../utils/string";
 export const ChildItem = ({ age, name, color, onPress }) => {
   return (
     <TouchableOpacity
@@ -90,6 +93,9 @@ const SettingRow = ({ onPress, iconSource, text, color }) => {
 };
 
 export const UserScreen = ({ navigation }) => {
+  const user = useContext(UserContext);
+  const children = useContext(ChildrenContext);
+
   const handlePressAddChild = () => {
     navigation.navigate("AddChildScreen");
   };
@@ -101,6 +107,19 @@ export const UserScreen = ({ navigation }) => {
       .catch((error) => console.log(error));
   };
 
+  const ChildrenItems = () => {
+    let items = [];
+
+    if (children.length > 0) {
+      items = children.map((child) => (
+        <ChildItem name={child?.name} age={calcAge(child?.birthday.toDate())} />
+      ));
+    }
+
+    items.push(<ChildAddButton onPress={handlePressAddChild} />);
+    return items;
+  };
+
   return (
     <ScreenView title="Người dùng" isMainScreen>
       <Space>
@@ -109,15 +128,13 @@ export const UserScreen = ({ navigation }) => {
             <View style={{ alignItems: "center" }}>
               <Space>
                 <AutoIcon source={IconManager.avatar} width={sizes.short / 3} />
-                <Heading2>Ngô Công Hậu</Heading2>
-                <Body color={colors.fadeblack50}>muiheoconghau@gmail.com</Body>
+                <Heading2>{user?.displayName}</Heading2>
+                <Body color={colors.fadeblack50}>{user?.email}</Body>
               </Space>
             </View>
             <Heading3 style={{ alignSelf: "flex-start" }}>Các con</Heading3>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <ChildItem name="Hậu" age="5" />
-              <ChildItem name="Tiến" age="3" />
-              <ChildAddButton onPress={handlePressAddChild} />
+              <ChildrenItems />
             </ScrollView>
           </Space>
         </Card>
