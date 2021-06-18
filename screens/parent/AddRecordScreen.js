@@ -2,18 +2,14 @@ import React, { useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
-  Card,
   ColoredDivider,
   Round,
-  Row,
   ScreenView,
   Space,
 } from "../../components/Wrapper";
 import { AutoIcon, Button, WhiteButton } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
 import { StatusBar, View, TextInput, KeyboardAvoidingView } from "react-native";
 import { LargeChildInfo } from "./TrackingScreen";
-import { Divider } from "react-native-elements/dist/divider/Divider";
 import { IconManager } from "../../utils/image";
 import { Heading3 } from "../../components/Typography";
 import { hexToRgba } from "../../utils/color";

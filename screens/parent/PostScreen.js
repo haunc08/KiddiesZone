@@ -1,35 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
-import {
-  Card,
-  Row,
-  ScreenView,
-  Space,
-  Impress,
-  RoundImpress,
-  NoScrollView,
-} from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
+import { ScreenView } from "../../components/Wrapper";
 import { AutoIcon, Button, ImageButton } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
 import { ImageManager, IconManager } from "../../utils/image";
 import { View, TouchableOpacity, Switch, FlatList } from "react-native";
-import {
-  Heading2,
-  Body,
-  Heading3,
-  Heading1,
-} from "../../components/Typography";
-import ProgressChart from "../../components/Chart/ProgressChart";
-import { hexToRgba } from "../../utils/color";
-import Carousel from "react-native-snap-carousel";
-import { LargeChildInfo } from "./TrackingScreen";
-import LineChart from "../../components/Chart/LineChart";
-import { PieChart } from "react-native-chart-kit";
-import { FlatInput } from "./AddRecordScreen";
-import { shortenName } from "../../utils/string";
-import LinkPreview from "../../components/LinkPreview/LinkPreview";
+
 import { WebView } from "react-native-webview";
 
 export const PostScreen = ({ route, navigation }) => {

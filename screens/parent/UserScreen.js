@@ -8,9 +8,7 @@ import {
   Space,
   RoundImpress,
 } from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
 import { AutoIcon, Button } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
 import { IconManager } from "../../utils/image";
 import {
   Heading2,

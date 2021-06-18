@@ -9,7 +9,6 @@ import {
   Impress,
   RoundImpress,
 } from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
 import { AutoIcon, Button, ImageButton } from "../../components/Button";
 import { HorizontalList } from "../../components/HorizontalList";
 import { ImageManager, IconManager } from "../../utils/image";
@@ -25,9 +24,7 @@ import { hexToRgba } from "../../utils/color";
 import Carousel from "react-native-snap-carousel";
 import { LargeChildInfo } from "./TrackingScreen";
 import LineChart from "../../components/Chart/LineChart";
-import { PieChart } from "react-native-chart-kit";
 import { FlatInput } from "./AddRecordScreen";
-import { shortenName } from "../../utils/string";
 
 const games = [
   {

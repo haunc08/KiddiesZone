@@ -1,17 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
-import {
-  Card,
-  Row,
-  ScreenView,
-  Space,
-  Impress,
-  RoundImpress,
-} from "../../components/Wrapper";
-import { TextInput } from "../../components/TextInput";
+import { Card, Row, ScreenView, Space } from "../../components/Wrapper";
 import { AutoIcon, Button, ImageButton } from "../../components/Button";
-import { HorizontalList } from "../../components/HorizontalList";
 import { ImageManager, IconManager } from "../../utils/image";
 import { View, TouchableOpacity, Switch, FlatList } from "react-native";
 import {
@@ -20,14 +11,8 @@ import {
   Heading3,
   Heading1,
 } from "../../components/Typography";
-import ProgressChart from "../../components/Chart/ProgressChart";
 import { hexToRgba } from "../../utils/color";
-import Carousel from "react-native-snap-carousel";
-import { LargeChildInfo } from "./TrackingScreen";
-import LineChart from "../../components/Chart/LineChart";
-import { PieChart } from "react-native-chart-kit";
-import { FlatInput } from "./AddRecordScreen";
-import { shortenName } from "../../utils/string";
+
 import LinkPreview from "../../components/LinkPreview/LinkPreview";
 
 const userId = "6921420";
@@ -75,7 +60,6 @@ const posts = [
 
 export const FeedScreen = ({ navigation }) => {
   const [currentTab, setCurrentTab] = useState(0);
-  const scrollRef = useRef();
 
   const Post = ({ item }) => {
     const hearted = item.hearts.includes(userId);
