@@ -19,6 +19,14 @@ import TrashGame from "./games/TrashGame";
 import ParentPasswordScreen from "./middle/ParentPasswordScreen";
 import CreatePasswordScreen from "./middle/CreatePasswordScreen";
 
+// parent
+import AddChildScreen from "./parent/AddChildScreen";
+import AddRecordScreen from "./parent/AddRecordScreen";
+import FeedScreen from "./parent/FeedScreen";
+import GameCatalogueScreen from "./parent/GameCatalogueScreen";
+import TrackingScreen from "./parent/TrackingScreen";
+import UserScreen from "./parent/UserScreen";
+
 export {
   Home,
   Restaurant,
@@ -40,4 +48,10 @@ export {
   TrashGame,
   ParentPasswordScreen,
   CreatePasswordScreen,
+  AddChildScreen,
+  AddRecordScreen,
+  FeedScreen,
+  GameCatalogueScreen,
+  TrackingScreen,
+  UserScreen,
 };

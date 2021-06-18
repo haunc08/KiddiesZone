@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -8,28 +8,21 @@ import {
   Space,
 } from "../../components/Wrapper";
 import { AutoIcon, Button, WhiteButton } from "../../components/Button";
-import { StatusBar, View, TextInput, KeyboardAvoidingView } from "react-native";
+import {
+  StatusBar,
+  View,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+} from "react-native";
 import { LargeChildInfo } from "./TrackingScreen";
 import { IconManager } from "../../utils/image";
 import { Heading3 } from "../../components/Typography";
 import { hexToRgba } from "../../utils/color";
 
-const children = [
-  {
-    age: 5,
-    gender: "male",
-    name: "Ngô Công Hậu",
-    height: "120",
-    weight: "35",
-  },
-  {
-    age: 3,
-    gender: "female",
-    name: "Phan Huy Tiến",
-    height: "110",
-    weight: "53",
-  },
-];
+// firebase
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
 
 export const White12Icon = ({ iconSource, title }) => {
   return (
@@ -77,13 +70,37 @@ export const FlatInput = ({
   );
 };
 
-export const AddRecordScreen = ({ navigation }) => {
-  const [height, opChangeHeight] = useState(null);
+export const AddRecordScreen = ({ route, navigation }) => {
+  const { child, userId } = route.params;
+
+  const [height, onChangeHeight] = useState(null);
   const [weight, onChangeWeight] = useState(null);
+
   const handleSubmit = () => {
-    console.log(height);
+    if (!height || !weight) {
+      Alert.alert("Thông báo", "Nhập thông tin vào ô trống");
+      return;
+    }
+
+    const healthRecord = {
+      height: height,
+      weight: weight,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    };
+
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(userId)
+      .collection(CollectionName.CHILDREN)
+      .doc(child?._id)
+      .collection(CollectionName.HEALTH_RECORDS)
+      .add(healthRecord)
+      .then(() => console.log("Add a new health record successfully"))
+      .catch((error) => console.log(error));
+
     navigation.goBack();
   };
+
   return (
     <ScreenView
       navigation={navigation}
@@ -97,12 +114,12 @@ export const AddRecordScreen = ({ navigation }) => {
       headerColor={colors.primary}
     >
       <Space>
-        <LargeChildInfo item={children[0]} />
+        <LargeChildInfo item={child} />
         <ColoredDivider color={colors.white50} />
         <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
         <FlatInput
           style={{ marginHorizontal: sizes.base * 4 }}
-          onChangeText={opChangeHeight}
+          onChangeText={onChangeHeight}
           value={height}
           keyboardType="numeric"
         />

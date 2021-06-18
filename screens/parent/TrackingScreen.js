@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -25,92 +25,12 @@ import { LineChart } from "react-native-chart-kit";
 import { calcAge } from "../../utils/string";
 
 // firebase
-import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName, Gender } from "../../utils/enum";
+import { UserContext } from "../../App";
+import { ChildrenContext } from "../../navigation/ParentNavigator";
 
 const dummyArray = ["item1", "item2", "item3"];
-
-// const children = [
-//   {
-//     age: 5,
-//     gender: "Nữ",
-//     name: "Ngô Công Hậu",
-//     height: "120",
-//     weight: "35",
-//   },
-//   {
-//     age: 3,
-//     gender: "Nam",
-//     name: "Phan Huy Tiến",
-//     height: "110",
-//     weight: "53",
-//   },
-// ];
-
-const history = [
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-  {
-    date: "15/06/2021",
-    height: "1m20",
-    weight: "35kg",
-  },
-];
 
 export const LargeChildInfo = ({ item }) => {
   return (
@@ -128,102 +48,124 @@ export const LargeChildInfo = ({ item }) => {
 };
 
 const TrackingScreen = ({ navigation }) => {
-  const [user] = useAuthState(auth());
+  const user = useContext(UserContext);
+  const children = useContext(ChildrenContext);
 
-  const [children, setChildren] = useState([]);
+  const [currentChild, setCurrentChild] = useState(null);
+  const [healthRecords, setHealthRecords] = useState([]);
 
-  useEffect(() => {
-    firestore()
-      .collection(CollectionName.USERS)
-      .doc(user?.uid)
-      .collection(CollectionName.CHILDREN)
-      .onSnapshot((querySnapshot) => {
-        // console.log("Total children: ", querySnapshot.size);
-
-        let childrenData = [];
-        querySnapshot.forEach((documentSnapshot) => {
-          // console.log(
-          //   "children ID: ",
-          //   documentSnapshot.id,
-          //   documentSnapshot.data()
-          // );
-
-          const child = documentSnapshot.data();
-          childrenData.push(child);
-        });
-
-        setChildren(childrenData);
-      });
-  }, []);
+  const childrenRef = firestore()
+    .collection(CollectionName.USERS)
+    .doc(user?.uid)
+    .collection(CollectionName.CHILDREN);
 
   useEffect(() => {
     if (children) {
       children[0]?.gender === Gender.MALE
         ? setScheme(colors.blue)
         : setScheme(colors.pink);
+
+      setCurrentChild(children[0]);
     }
   }, [children]);
+
+  // fetch health records of selected child
+  useEffect(() => {
+    childrenRef
+      .doc(currentChild?._id)
+      .collection(CollectionName.HEALTH_RECORDS)
+      .orderBy("createdAt", "desc")
+      .onSnapshot((querySnapshot) => {
+        let records = [];
+
+        querySnapshot.forEach((documentSnapshot) => {
+          const record = {
+            ...documentSnapshot.data(),
+            _id: documentSnapshot.id,
+          };
+          records.push(record);
+        });
+
+        setHealthRecords(records);
+      });
+  }, [currentChild]);
 
   const carouselChild = useRef();
   const carouselHeight = useRef();
   const carouselWeight = useRef();
 
   const [scheme, setScheme] = useState(colors.blue);
-  const handleAddRecord = () => {
-    navigation.navigate("AddRecordScreen");
+
+  const handleAddRecord = (item) => {
+    navigation.navigate("AddRecordScreen", { child: item, userId: user?.uid });
   };
+
   const historyItem = ({ item }) => {
-    return (
-      <View
-        style={{
-          alignItems: "center",
-        }}
-      >
+    try {
+      const createdAt = item?.createdAt.toDate().toDateString();
+      return (
         <View
-          style={{
-            marginTop: sizes.base,
-            alignSelf: "stretch",
-            height: 1,
-            backgroundColor: colors.white50,
-            marginBottom: sizes.base / 2,
-          }}
-        />
-        <TouchableOpacity
           style={{
             alignItems: "center",
           }}
         >
-          <Space tight>
-            <Heading2 color={colors.white50}>{item.date}</Heading2>
-            <Row>
-              <Space>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.height}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body style={{ color: colors.white }}>{item.height}</Body>
+          <View
+            style={{
+              marginTop: sizes.base,
+              alignSelf: "stretch",
+              height: 1,
+              backgroundColor: colors.white50,
+              marginBottom: sizes.base / 2,
+            }}
+          />
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <Space tight>
+              <Heading2 color={colors.white50}>{createdAt}</Heading2>
+              <Row>
+                <Space>
+                  <Space tight>
+                    <AutoIcon
+                      white
+                      source={IconManager.height}
+                      height={sizes.h2 - 6}
+                    />
+                    <Body style={{ color: colors.white }}>{item?.height}</Body>
+                  </Space>
+                  <Space tight>
+                    <AutoIcon
+                      white
+                      source={IconManager.weight}
+                      height={sizes.h2 - 6}
+                    />
+                    <Body style={{ color: colors.white }}>{item?.weight}</Body>
+                  </Space>
                 </Space>
-                <Space tight>
-                  <AutoIcon
-                    white
-                    source={IconManager.weight}
-                    height={sizes.h2 - 6}
-                  />
-                  <Body style={{ color: colors.white }}>{item.height}</Body>
-                </Space>
-              </Space>
-            </Row>
-          </Space>
-        </TouchableOpacity>
-      </View>
-    );
+              </Row>
+            </Space>
+          </TouchableOpacity>
+        </View>
+      );
+    } catch (error) {
+      console.log(item);
+      console.log(error);
+    }
+  };
+
+  const calcBMI = () => {
+    if (!healthRecords[0]) return 0;
+
+    const record = healthRecords[0];
+    const height = (record?.height / 100).toFixed(2);
+    return (record?.weight / (height * height)).toFixed(2);
   };
 
   const childCard = ({ item, index }) => {
     const age = calcAge(item?.birthday.toDate());
-    console.log(age);
+    const latestRecord = healthRecords[0];
 
     return (
       <View
@@ -242,7 +184,7 @@ const TrackingScreen = ({ navigation }) => {
           }}
         >
           <ImageButton
-            onPress={() => handleAddRecord()}
+            onPress={() => handleAddRecord(item)}
             color={colors.white}
             source={IconManager.roundadd}
             height={46}
@@ -276,7 +218,7 @@ const TrackingScreen = ({ navigation }) => {
                   source={IconManager.height}
                   height={sizes.h2 - 6}
                 />
-                <Body white>{`${item.height}cm`}</Body>
+                <Body white>{`${latestRecord?.height ?? 0}cm`}</Body>
               </Space>
               <Space tight>
                 <AutoIcon
@@ -284,7 +226,7 @@ const TrackingScreen = ({ navigation }) => {
                   source={IconManager.weight}
                   height={sizes.h2 - 6}
                 />
-                <Body white>{`${item.weight}kg`}</Body>
+                <Body white>{`${latestRecord?.weight ?? 0}kg`}</Body>
               </Space>
             </Space>
           </View>
@@ -370,14 +312,16 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const handleSelectChild = (index) => {
-    if (children[index].gender === Gender.MALE) {
+    setCurrentChild(children[index]);
+
+    if (children[index]?.gender === Gender.MALE) {
       setScheme(colors.blue);
     }
-    if (children[index].gender === Gender.FEMALE) {
+    if (children[index]?.gender === Gender.FEMALE) {
       setScheme(colors.pink);
     }
   };
-
+  console.log(healthRecords);
   return (
     <ScreenView isMainScreen title="Sức khỏe" navigation={navigation}>
       {children[0] ? (
@@ -404,7 +348,7 @@ const TrackingScreen = ({ navigation }) => {
                 style={{ alignItems: "center", marginRight: sizes.base * 4 }}
               >
                 <Impress color={scheme}>
-                  <Heading3 white>20,1</Heading3>
+                  <Heading3 white>{calcBMI()}</Heading3>
                 </Impress>
                 <Heading3 style={{ color: scheme }}>Bình thường</Heading3>
               </View>
@@ -423,13 +367,13 @@ const TrackingScreen = ({ navigation }) => {
           </Card>
           <Card bgColor={scheme} title="Lịch sử cập nhật">
             <FlatList
-              data={history}
+              data={healthRecords}
               renderItem={historyItem}
               keyExtractor={(item) => item.id}
               style={{ height: 250 }}
             />
             <ImageButton
-              onPress={() => handleAddRecord()}
+              onPress={() => handleAddRecord(children[0])}
               color={colors.white}
               source={IconManager.roundadd}
               height={46}
