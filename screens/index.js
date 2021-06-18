@@ -23,6 +23,7 @@ import CreatePasswordScreen from "./middle/CreatePasswordScreen";
 import AddChildScreen from "./parent/AddChildScreen";
 import AddRecordScreen from "./parent/AddRecordScreen";
 import FeedScreen from "./parent/FeedScreen";
+import PostScreen from "./parent/PostScreen";
 import GameCatalogueScreen from "./parent/GameCatalogueScreen";
 import TrackingScreen from "./parent/TrackingScreen";
 import UserScreen from "./parent/UserScreen";
@@ -51,6 +52,7 @@ export {
   AddChildScreen,
   AddRecordScreen,
   FeedScreen,
+  PostScreen,
   GameCatalogueScreen,
   TrackingScreen,
   UserScreen,
