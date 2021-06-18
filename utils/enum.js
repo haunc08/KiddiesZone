@@ -8,3 +8,8 @@ export const Gender = {
   MALE: "Nam",
   FEMALE: "Nữ",
 };
+
+export const HandlingMode = {
+  ADD: "add",
+  EDIT: "edit",
+};

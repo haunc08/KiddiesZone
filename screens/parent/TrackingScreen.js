@@ -26,7 +26,7 @@ import { calcAge } from "../../utils/string";
 
 // firebase
 import firestore from "@react-native-firebase/firestore";
-import { CollectionName, Gender } from "../../utils/enum";
+import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 import { UserContext } from "../../App";
 import { ChildrenContext } from "../../navigation/ParentNavigator";
 
@@ -47,14 +47,13 @@ export const LargeChildInfo = ({ item }) => {
   );
 };
 
-/**
- * @param {Carousel} carousel
- */
 const TrackingScreen = ({ navigation }) => {
   const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
 
   const carouselChild = useRef();
+  const curChildIndex = carouselChild.current?.currentIndex;
+
   const carouselHeight = useRef();
   const carouselWeight = useRef();
 
@@ -64,7 +63,6 @@ const TrackingScreen = ({ navigation }) => {
 
   const scheme =
     currentChild?.gender === Gender.MALE ? colors.blue : colors.pink;
-  const curChildIndex = carouselChild.current?.currentIndex;
 
   const childrenRef = firestore()
     .collection(CollectionName.USERS)
@@ -73,7 +71,7 @@ const TrackingScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (children) {
-      setCurrentChild(children[curChildIndex]);
+      setCurrentChild(children[curChildIndex ?? 0]);
     }
   }, [children]);
 
@@ -93,13 +91,25 @@ const TrackingScreen = ({ navigation }) => {
           };
           records.push(record);
         });
+        console.log("set health ");
 
         setHealthRecords(records);
       });
   }, [currentChild]);
 
-  const handleAddRecord = (item) => {
-    navigation.navigate("AddRecordScreen", { child: item, userId: user?.uid });
+  const handleAddRecord = (child) => {
+    navigation.navigate("AddRecordScreen", {
+      child: child,
+      mode: HandlingMode.ADD,
+    });
+  };
+
+  const handleEditRecord = (child, record) => {
+    navigation.navigate("AddRecordScreen", {
+      child,
+      record,
+      mode: HandlingMode.EDIT,
+    });
   };
 
   const historyItem = ({ item }) => {
@@ -124,6 +134,7 @@ const TrackingScreen = ({ navigation }) => {
             style={{
               alignItems: "center",
             }}
+            onPress={() => handleEditRecord(currentChild, item)}
           >
             <Space tight>
               <Heading2 color={colors.white50}>{createdAt}</Heading2>
@@ -152,7 +163,6 @@ const TrackingScreen = ({ navigation }) => {
         </View>
       );
     } catch (error) {
-      console.log(item);
       console.log(error);
     }
   };
@@ -315,13 +325,6 @@ const TrackingScreen = ({ navigation }) => {
 
   const handleSelectChild = (index) => {
     setCurrentChild(children[index]);
-
-    // if (children[index]?.gender === Gender.MALE) {
-    //   setScheme(colors.blue);
-    // }
-    // if (children[index]?.gender === Gender.FEMALE) {
-    //   setScheme(colors.pink);
-    // }
   };
 
   return (
@@ -375,7 +378,7 @@ const TrackingScreen = ({ navigation }) => {
               style={{ height: 250 }}
             />
             <ImageButton
-              onPress={() => handleAddRecord(children[0])}
+              onPress={() => handleAddRecord(currentChild)}
               color={colors.white}
               source={IconManager.roundadd}
               height={46}

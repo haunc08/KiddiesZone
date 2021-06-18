@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -22,7 +22,8 @@ import { hexToRgba } from "../../utils/color";
 
 // firebase
 import firestore from "@react-native-firebase/firestore";
-import { CollectionName } from "../../utils/enum";
+import { CollectionName, HandlingMode } from "../../utils/enum";
+import { UserContext } from "../../App";
 
 export const White12Icon = ({ iconSource, title }) => {
   return (
@@ -71,34 +72,64 @@ export const FlatInput = ({
 };
 
 export const AddRecordScreen = ({ route, navigation }) => {
-  const { child, userId } = route.params;
+  const user = useContext(UserContext);
+  const { child, record, mode } = route.params;
 
-  const [height, onChangeHeight] = useState(null);
-  const [weight, onChangeWeight] = useState(null);
+  const [height, onChangeHeight] = useState(record?.height);
+  const [weight, onChangeWeight] = useState(record?.weight);
 
-  const handleSubmit = () => {
+  const healthRecordsRef = firestore()
+    .collection(CollectionName.USERS)
+    .doc(user?.uid)
+    .collection(CollectionName.CHILDREN)
+    .doc(child?._id)
+    .collection(CollectionName.HEALTH_RECORDS);
+
+  const isValidInput = () => {
     if (!height || !weight) {
-      Alert.alert("Thông báo", "Nhập thông tin vào ô trống");
-      return;
+      Alert.alert("Thông báo", "Nhập thông tin vào ô trống.");
+      return false;
     }
+    if (height < 0 || weight < 0) {
+      Alert.alert("Thông báo", "Các chỉ số không được nhỏ hơn 0.");
+      return false;
+    }
+    return true;
+  };
 
-    const healthRecord = {
+  const addHealthRecord = () => {
+    if (!isValidInput()) return false;
+    console.log(heightRef);
+    const newHealthRecord = {
       height: height,
       weight: weight,
       createdAt: firestore.FieldValue.serverTimestamp(),
     };
 
-    firestore()
-      .collection(CollectionName.USERS)
-      .doc(userId)
-      .collection(CollectionName.CHILDREN)
-      .doc(child?._id)
-      .collection(CollectionName.HEALTH_RECORDS)
-      .add(healthRecord)
+    healthRecordsRef
+      .add(newHealthRecord)
       .then(() => console.log("Add a new health record successfully"))
       .catch((error) => console.log(error));
+  };
 
-    navigation.goBack();
+  const editHealthRecord = () => {
+    if (!isValidInput()) return false;
+
+    healthRecordsRef
+      .doc(record?._id)
+      .update({
+        height: height,
+        weight: weight,
+      })
+      .then(() => console.log("Edit a health record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const handleSubmit = () => {
+    const result =
+      mode === HandlingMode.ADD ? addHealthRecord() : editHealthRecord();
+
+    result ?? navigation.goBack();
   };
 
   return (
