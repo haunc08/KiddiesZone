@@ -47,12 +47,24 @@ export const LargeChildInfo = ({ item }) => {
   );
 };
 
+/**
+ * @param {Carousel} carousel
+ */
 const TrackingScreen = ({ navigation }) => {
   const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
 
+  const carouselChild = useRef();
+  const carouselHeight = useRef();
+  const carouselWeight = useRef();
+
+  // const [scheme, setScheme] = useState(colors.blue);
   const [currentChild, setCurrentChild] = useState(null);
   const [healthRecords, setHealthRecords] = useState([]);
+
+  const scheme =
+    currentChild?.gender === Gender.MALE ? colors.blue : colors.pink;
+  const curChildIndex = carouselChild.current?.currentIndex;
 
   const childrenRef = firestore()
     .collection(CollectionName.USERS)
@@ -61,11 +73,7 @@ const TrackingScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (children) {
-      children[0]?.gender === Gender.MALE
-        ? setScheme(colors.blue)
-        : setScheme(colors.pink);
-
-      setCurrentChild(children[0]);
+      setCurrentChild(children[curChildIndex]);
     }
   }, [children]);
 
@@ -89,12 +97,6 @@ const TrackingScreen = ({ navigation }) => {
         setHealthRecords(records);
       });
   }, [currentChild]);
-
-  const carouselChild = useRef();
-  const carouselHeight = useRef();
-  const carouselWeight = useRef();
-
-  const [scheme, setScheme] = useState(colors.blue);
 
   const handleAddRecord = (item) => {
     navigation.navigate("AddRecordScreen", { child: item, userId: user?.uid });
@@ -314,14 +316,14 @@ const TrackingScreen = ({ navigation }) => {
   const handleSelectChild = (index) => {
     setCurrentChild(children[index]);
 
-    if (children[index]?.gender === Gender.MALE) {
-      setScheme(colors.blue);
-    }
-    if (children[index]?.gender === Gender.FEMALE) {
-      setScheme(colors.pink);
-    }
+    // if (children[index]?.gender === Gender.MALE) {
+    //   setScheme(colors.blue);
+    // }
+    // if (children[index]?.gender === Gender.FEMALE) {
+    //   setScheme(colors.pink);
+    // }
   };
-  console.log(healthRecords);
+
   return (
     <ScreenView isMainScreen title="Sức khỏe" navigation={navigation}>
       {children[0] ? (
