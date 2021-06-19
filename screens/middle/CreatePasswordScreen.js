@@ -23,6 +23,7 @@ import { IconManager, ImageManager } from "../../utils/image";
 import { ImageButton } from "../../components/Button";
 import { Heading1, Heading2 } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Alert } from "react-native";
 
 const buttonSize = 81;
 const fieldSize = 16;
@@ -38,6 +39,8 @@ export const CreatePasswordScreen = ({ navigation }) => {
       if (rePassword !== password) {
         wrong.current = true;
         setRePassword("");
+      } else {
+        Alert.alert("Thông báo", "Cập nhật mã PIN thành công!");
       }
     }
   }, [rePassword]);

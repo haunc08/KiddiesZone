@@ -320,7 +320,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
               </Space>
             </Row>
           </Row>
-          <Card title="7 ngày qua" style={{ alignItems: "center" }}>
+          <Card title="Tuần này" style={{ alignItems: "center" }}>
             <Space>
               <View style={{ alignItems: "center" }}>
                 <Heading3
