@@ -11,7 +11,7 @@ import { White12Icon, FlatInput } from "./AddRecordScreen";
 import { Body } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DatePicker from "react-native-date-picker";
-import { CollectionName, Gender } from "../../utils/enum";
+import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 
 import firestore from "@react-native-firebase/firestore";
 import { UserContext } from "../../App";
@@ -100,17 +100,23 @@ const GenderSelect = ({ selectedGender, setSelectedGender }) => {
   );
 };
 
-export const AddRecordScreen = ({ navigation }) => {
+export const AddRecordScreen = ({ route, navigation }) => {
   const user = useContext(UserContext);
+  const { mode, child } = route.params;
+  console.log(mode, child);
 
-  const [childName, setChildName] = useState("");
-  const [selectedGender, setSelectedGender] = useState(Gender.MALE);
-  const [date, setDate] = useState(new Date());
+  const [childName, setChildName] = useState(child?.name ?? "");
+  const [selectedGender, setSelectedGender] = useState(
+    child?.gender ?? Gender.MALE
+  );
+
+  const birthday = child?.birthday?.toDate();
+  const [date, setDate] = useState(birthday ?? new Date());
 
   const [height, onChangeHeight] = useState(null);
   const [weight, onChangeWeight] = useState(null);
 
-  const addChild = () => {
+  const isValidInput = () => {
     if (!childName || !childName.trim()) {
       Alert.alert("Thông báo", "Chưa nhập họ tên của bé.");
       return false;
@@ -121,12 +127,19 @@ export const AddRecordScreen = ({ navigation }) => {
       return false;
     }
 
+    return true;
+  };
+
+  const addChild = () => {
+    if (!isValidInput()) return false;
+
     const newChild = {
       name: childName,
       birthday: date,
       gender: selectedGender,
     };
 
+    // add new child
     firestore()
       .collection(CollectionName.USERS)
       .doc(user?.uid)
@@ -142,18 +155,64 @@ export const AddRecordScreen = ({ navigation }) => {
           createdAt: firestore.FieldValue.serverTimestamp(),
         };
 
+        // add new health record
         child
           .collection(CollectionName.HEALTH_RECORDS)
           .add(healthRecord)
-          .then(() => console.log("Add a new health record successfully"))
+          .then((res) => {
+            console.log("Add a new health record successfully"),
+              child.update({
+                healthRecordId: res.id,
+              });
+          })
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
   };
 
+  const updateChild = () => {
+    if (!isValidInput()) return false;
+
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .collection(CollectionName.CHILDREN)
+      .doc(child?._id)
+      .update({
+        name: childName,
+        gender: selectedGender,
+        birthday: date,
+      })
+      .then(() => "Update child successfully");
+  };
+
   const handleSubmit = () => {
-    // if added child successfully -> addChild is null/undefined, go back user screen
-    addChild() ?? navigation.goBack();
+    const result = mode === HandlingMode.ADD ? addChild() : updateChild();
+    result ?? navigation.goBack();
+  };
+
+  const HeightAndWeight = () => {
+    if (mode === HandlingMode.ADD) {
+      return (
+        <View style={{ width: "100%" }}>
+          <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
+          <FlatInput
+            style={{ marginHorizontal: sizes.base * 6 }}
+            onChangeText={onChangeHeight}
+            value={height}
+            keyboardType="numeric"
+          />
+          <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
+          <FlatInput
+            style={{ marginHorizontal: sizes.base * 6 }}
+            onChangeText={onChangeWeight}
+            value={weight}
+            keyboardType="numeric"
+          />
+        </View>
+      );
+    }
+    return <View></View>;
   };
 
   return (
@@ -170,7 +229,7 @@ export const AddRecordScreen = ({ navigation }) => {
         <FlatInput
           style={{ marginHorizontal: sizes.base * 2 }}
           onChangeText={setChildName}
-          value={height}
+          value={childName}
         />
         <White12Icon iconSource={IconManager.gender} title="Giới tính" />
         <GenderSelect
@@ -186,20 +245,7 @@ export const AddRecordScreen = ({ navigation }) => {
           textColor="white"
           mode="date"
         />
-        <White12Icon iconSource={IconManager.height} title="Chiều cao (cm)" />
-        <FlatInput
-          style={{ marginHorizontal: sizes.base * 6 }}
-          onChangeText={onChangeHeight}
-          value={height}
-          keyboardType="numeric"
-        />
-        <White12Icon iconSource={IconManager.weight} title="Cân nặng (kg)" />
-        <FlatInput
-          style={{ marginHorizontal: sizes.base * 6 }}
-          onChangeText={onChangeWeight}
-          value={weight}
-          keyboardType="numeric"
-        />
+        {HeightAndWeight()}
         <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
       </Space>
     </ScreenView>

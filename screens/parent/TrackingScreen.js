@@ -175,6 +175,18 @@ const TrackingScreen = ({ navigation }) => {
     return (record?.weight / (height * height)).toFixed(2);
   };
 
+  const getLatestHealthRecord = (child) => {
+    let record;
+    childrenRef
+      .doc(child?._id)
+      .collection(CollectionName.HEALTH_RECORDS)
+      .doc(child?.healthRecordId)
+      .onSnapshot((snapshot) => {
+        record = snapshot.data();
+      });
+    return record;
+  };
+
   const childCard = ({ item, index }) => {
     const age = calcAge(item?.birthday.toDate());
     const latestRecord = healthRecords[0];

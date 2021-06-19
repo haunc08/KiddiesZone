@@ -19,6 +19,8 @@ import auth from "@react-native-firebase/auth";
 import { UserContext } from "../../App";
 import { ChildrenContext } from "../../navigation/ParentNavigator";
 import { calcAge, shortenName } from "../../utils/string";
+import { HandlingMode } from "../../utils/enum";
+
 export const ChildItem = ({ age, name, color, onPress }) => {
   return (
     <TouchableOpacity
@@ -27,7 +29,7 @@ export const ChildItem = ({ age, name, color, onPress }) => {
         width: sizes.h1 + sizes.base * 4,
         paddingRight: sizes.base,
       }}
-      onPress={() => onPress}
+      onPress={onPress}
     >
       <RoundImpress color={color || colors.primary} size={3}>
         <Heading2 white>{age}</Heading2>
@@ -97,7 +99,12 @@ export const UserScreen = ({ navigation }) => {
   const children = useContext(ChildrenContext);
 
   const handlePressAddChild = () => {
-    navigation.navigate("AddChildScreen");
+    navigation.navigate("AddChildScreen", { mode: HandlingMode.ADD });
+  };
+
+  const handleEditChild = (child) => {
+    console.log("handle edit child");
+    navigation.navigate("AddChildScreen", { mode: HandlingMode.EDIT, child });
   };
 
   const signOut = () => {
@@ -112,7 +119,11 @@ export const UserScreen = ({ navigation }) => {
 
     if (children.length > 0) {
       items = children.map((child) => (
-        <ChildItem name={child?.name} age={calcAge(child?.birthday.toDate())} />
+        <ChildItem
+          name={child?.name}
+          age={calcAge(child?.birthday.toDate())}
+          onPress={() => handleEditChild(child)}
+        />
       ));
     }
 

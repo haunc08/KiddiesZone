@@ -78,12 +78,11 @@ export const AddRecordScreen = ({ route, navigation }) => {
   const [height, onChangeHeight] = useState(record?.height);
   const [weight, onChangeWeight] = useState(record?.weight);
 
-  const healthRecordsRef = firestore()
+  const curChild = firestore()
     .collection(CollectionName.USERS)
     .doc(user?.uid)
     .collection(CollectionName.CHILDREN)
-    .doc(child?._id)
-    .collection(CollectionName.HEALTH_RECORDS);
+    .doc(child?._id);
 
   const isValidInput = () => {
     if (!height || !weight) {
@@ -99,23 +98,30 @@ export const AddRecordScreen = ({ route, navigation }) => {
 
   const addHealthRecord = () => {
     if (!isValidInput()) return false;
-    console.log(heightRef);
+
     const newHealthRecord = {
       height: height,
       weight: weight,
       createdAt: firestore.FieldValue.serverTimestamp(),
     };
 
-    healthRecordsRef
+    curChild
+      .collection(CollectionName.HEALTH_RECORDS)
       .add(newHealthRecord)
-      .then(() => console.log("Add a new health record successfully"))
+      .then((res) => {
+        console.log("Add a new health record successfully");
+        curChild.update({
+          healthRecordId: res.id,
+        });
+      })
       .catch((error) => console.log(error));
   };
 
   const editHealthRecord = () => {
     if (!isValidInput()) return false;
 
-    healthRecordsRef
+    curChild
+      .collection(CollectionName.HEALTH_RECORDS)
       .doc(record?._id)
       .update({
         height: height,
