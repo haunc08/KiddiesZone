@@ -23,8 +23,7 @@ import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { hexToRgba } from "../../utils/color";
 import { LineChart } from "react-native-chart-kit";
 import { calcAge } from "../../utils/string";
-
-// firebase
+import { getLastMonth, getMostRecentMonths } from "../../utils/time";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 import { UserContext } from "../../App";
@@ -175,18 +174,6 @@ const TrackingScreen = ({ navigation }) => {
     return (record?.weight / (height * height)).toFixed(2);
   };
 
-  const getLatestHealthRecord = (child) => {
-    let record;
-    childrenRef
-      .doc(child?._id)
-      .collection(CollectionName.HEALTH_RECORDS)
-      .doc(child?.healthRecordId)
-      .onSnapshot((snapshot) => {
-        record = snapshot.data();
-      });
-    return record;
-  };
-
   const childCard = ({ item, index }) => {
     const age = calcAge(item?.birthday.toDate());
     const latestRecord = healthRecords[0];
@@ -259,21 +246,40 @@ const TrackingScreen = ({ navigation }) => {
     );
   };
 
+  const getHeightWeightRecentMonths = (type, months) => {
+    // calc average in each month
+    const curYear = new Date().getFullYear();
+    const result = months.map((month) => {
+      const recordsInMonth = healthRecords.filter(
+        (record) =>
+          record?.createdAt.toDate().getMonth() === month - 1 &&
+          record?.createdAt.toDate().getFullYear() === curYear
+      );
+
+      if (recordsInMonth.length <= 0) return 0;
+
+      const sum = recordsInMonth.reduce(
+        (a, b) => parseInt(a) + (parseInt(b[type]) || 0),
+        0
+      );
+      return sum / recordsInMonth.length;
+    });
+
+    return result;
+  };
+
+  const recentMonths = getMostRecentMonths(6);
+
   const heightChart = ({ item, index }) => {
+    const averageHeight = getHeightWeightRecentMonths("height", recentMonths);
+
     return (
       <LineChart
         data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          labels: recentMonths,
           datasets: [
             {
-              data: [
-                Math.random() * 160,
-                Math.random() * 160,
-                Math.random() * 160,
-                Math.random() * 160,
-                Math.random() * 160,
-                Math.random() * 160,
-              ],
+              data: averageHeight,
             },
           ],
         }}
@@ -298,20 +304,15 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const weightChart = ({ item, index }) => {
+    const averageWeight = getHeightWeightRecentMonths("weight", recentMonths);
+
     return (
       <LineChart
         data={{
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          labels: recentMonths,
           datasets: [
             {
-              data: [
-                Math.random() * 50,
-                Math.random() * 50,
-                Math.random() * 50,
-                Math.random() * 50,
-                Math.random() * 50,
-                Math.random() * 50,
-              ],
+              data: averageWeight,
             },
           ],
         }}
@@ -418,7 +419,7 @@ const TrackingScreen = ({ navigation }) => {
                 ref={(c) => {
                   carouselHeight.current = c;
                 }}
-                data={dummyArray}
+                data={[0]}
                 renderItem={heightChart}
                 sliderWidth={sizes.short - sizes.base * 2}
                 itemWidth={sizes.short - sizes.base * 2}
@@ -442,7 +443,7 @@ const TrackingScreen = ({ navigation }) => {
                 ref={(c) => {
                   carouselWeight.current = c;
                 }}
-                data={dummyArray}
+                data={[0]}
                 renderItem={weightChart}
                 sliderWidth={sizes.short - sizes.base * 2}
                 itemWidth={sizes.short - sizes.base * 2}
