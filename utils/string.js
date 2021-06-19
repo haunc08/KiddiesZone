@@ -1,3 +1,5 @@
+import { colors } from "../constants";
+
 export const shortenName = (name) => {
   const start = name.lastIndexOf(" ");
   return name.slice(start + 1);

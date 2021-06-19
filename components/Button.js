@@ -310,13 +310,13 @@ export const GameObject = ({
   );
 };
 
-export const WhiteButton = ({ onPress, color, children }) => {
+export const FilledButton = ({ onPress, buttonColor, color, children }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
         borderRadius: 999,
-        backgroundColor: colors.white,
+        backgroundColor: buttonColor || colors.white,
         padding: sizes.base,
         paddingHorizontal: sizes.base * 2,
       }}
@@ -324,6 +324,25 @@ export const WhiteButton = ({ onPress, color, children }) => {
       <Heading3
         style={{ color: color || colors.primary, fontSize: sizes.body }}
       >
+        {children}
+      </Heading3>
+    </TouchableOpacity>
+  );
+};
+
+export const OutlinedButton = ({ onPress, color, children }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        borderRadius: 999,
+        borderColor: colors.white,
+        borderWidth: 2,
+        padding: sizes.base,
+        paddingHorizontal: sizes.base * 2,
+      }}
+    >
+      <Heading3 style={{ color: color || colors.white, fontSize: sizes.body }}>
         {children}
       </Heading3>
     </TouchableOpacity>

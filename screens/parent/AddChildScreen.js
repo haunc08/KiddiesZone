@@ -2,7 +2,12 @@ import React, { useContext, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import { Row, ScreenView, Space } from "../../components/Wrapper";
-import { AutoIcon, Button, WhiteButton } from "../../components/Button";
+import {
+  AutoIcon,
+  Button,
+  FilledButton,
+  OutlinedButton,
+} from "../../components/Button";
 import { StatusBar, View, Alert } from "react-native";
 
 import { IconManager } from "../../utils/image";
@@ -127,6 +132,25 @@ export const AddRecordScreen = ({ route, navigation }) => {
       return false;
     }
 
+    if (!height || !weight) {
+      Alert.alert("Thông báo", "Chưa nhập chiều cao hoặc cân nặng.");
+      return false;
+    }
+
+    if (isNaN(height) || isNaN(weight)) {
+      Alert.alert("Thông báo", "Chiều cao và cân nặng phải là số.");
+      return false;
+    }
+
+    if (height <= 0 || weight <= 0) {
+      console.log(weight);
+      Alert.alert(
+        "Thông báo",
+        "Chiều cao và cân nặng không thể nhỏ hơn hoặc bằng 0."
+      );
+      return false;
+    }
+
     return true;
   };
 
@@ -148,10 +172,9 @@ export const AddRecordScreen = ({ route, navigation }) => {
       .then((child) => {
         console.log("Add a new child successfully");
 
-        // neu user ko nhap height, weight thi xu ly ntn?
         const healthRecord = {
-          height: height ?? 0,
-          weight: weight ?? 0,
+          height: height,
+          weight: weight,
           createdAt: firestore.FieldValue.serverTimestamp(),
         };
 
@@ -246,7 +269,12 @@ export const AddRecordScreen = ({ route, navigation }) => {
           mode="date"
         />
         {HeightAndWeight()}
-        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+        <FilledButton onPress={handleSubmit}>Hoàn tất</FilledButton>
+        {mode === HandlingMode.EDIT ? (
+          <OutlinedButton onPress={handleSubmit}>Xóa</OutlinedButton>
+        ) : (
+          <View></View>
+        )}
       </Space>
     </ScreenView>
   );

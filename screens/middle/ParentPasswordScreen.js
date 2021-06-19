@@ -39,10 +39,12 @@ export const ParentPasswordScreen = ({ navigation }) => {
         wrong.current = true;
         setPassword("");
       } else {
+        Orientation.lockToPortrait();
         navigation.navigate("Tabs");
       }
     }
   }, [password]);
+
   const button = (num) => {
     return (
       <TouchableOpacity
@@ -121,7 +123,7 @@ export const ParentPasswordScreen = ({ navigation }) => {
       >
         <ImageButton
           width={45}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("KidsZone")}
           source={require("../../assets/icons/back.png")}
         />
       </View>

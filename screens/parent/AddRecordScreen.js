@@ -7,7 +7,12 @@ import {
   ScreenView,
   Space,
 } from "../../components/Wrapper";
-import { AutoIcon, Button, WhiteButton } from "../../components/Button";
+import {
+  AutoIcon,
+  Button,
+  FilledButton,
+  OutlinedButton,
+} from "../../components/Button";
 import {
   StatusBar,
   View,
@@ -49,6 +54,7 @@ export const FlatInput = ({
   keyboardType,
   style,
   color,
+  secureTextEntry,
 }) => {
   if (!color) color = colors.white;
   return (
@@ -67,6 +73,7 @@ export const FlatInput = ({
       onChangeText={onChangeText}
       value={value}
       keyboardType={keyboardType || "default"}
+      secureTextEntry={secureTextEntry}
     />
   );
 };
@@ -145,7 +152,6 @@ export const AddRecordScreen = ({ route, navigation }) => {
       bgColor={colors.primary}
       style={{
         alignItems: "center",
-        height: sizes.long,
         marginTop: sizes.base,
       }}
       headerColor={colors.primary}
@@ -167,7 +173,8 @@ export const AddRecordScreen = ({ route, navigation }) => {
           value={weight}
           keyboardType="numeric"
         />
-        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+        <FilledButton onPress={handleSubmit}>Hoàn tất</FilledButton>
+        <OutlinedButton onPress={handleSubmit}>Xóa</OutlinedButton>
       </Space>
     </ScreenView>
   );
