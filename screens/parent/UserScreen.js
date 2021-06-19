@@ -147,8 +147,13 @@ export const UserScreen = ({ navigation }) => {
                 navigation.navigate("CreatePasswordScreen");
               }}
             />
-            <SettingRow iconSource={IconManager.info} text="Đổi tên" />
-            <SettingRow iconSource={IconManager.password} text="Đổi mật khẩu" />
+            <SettingRow
+              iconSource={IconManager.info}
+              onPress={() => {
+                navigation.navigate("ChangeNameScreen");
+              }}
+              text="Cài đặt tài khoản"
+            />
             <SettingRow
               iconSource={IconManager.logout}
               text="Đăng xuất"

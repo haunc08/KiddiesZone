@@ -32,16 +32,16 @@ import { ChildrenContext } from "../../navigation/ParentNavigator";
 
 const dummyArray = ["item1", "item2", "item3"];
 
-export const LargeChildInfo = ({ item }) => {
+export const LargeChildInfo = ({ item, color }) => {
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
       <Space tight>
         <AutoIcon
-          white
+          color={color || colors.white}
           source={IconManager[item.gender === Gender.MALE ? "male" : "female"]}
           height={sizes.h2 - 4}
         />
-        <Heading2 white>{item.name}</Heading2>
+        <Heading2 color={color || colors.white}>{item.name}</Heading2>
       </Space>
     </View>
   );

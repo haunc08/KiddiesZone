@@ -13,6 +13,8 @@ import {
   FeedScreen,
   GameCatalogueScreen,
   PostScreen,
+  SelectChildScreen,
+  ChangeNameScreen,
 } from "../screens";
 import Tabs from "./tabs";
 
@@ -61,6 +63,8 @@ const ParentNavigator = () => {
           name="GameCatalogueScreen"
           component={GameCatalogueScreen}
         />
+        <Stack.Screen name="SelectChildScreen" component={SelectChildScreen} />
+        <Stack.Screen name="ChangeNameScreen" component={ChangeNameScreen} />
         <Stack.Screen
           name="ParentPasswordScreen"
           component={ParentPasswordScreen}

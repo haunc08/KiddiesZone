@@ -4,10 +4,10 @@ import { Avatar } from "react-native-elements";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
 import { Button, ImageButton } from "./Button";
-import { Body } from "./Typography";
+import { Body, Heading3 } from "./Typography";
 import { Space } from "./Wrapper";
 
-export const KidsZoneNavbar = ({ navigation }) => {
+export const KidsZoneNavbar = ({ navigation, child }) => {
   return (
     <View
       style={{
@@ -20,13 +20,19 @@ export const KidsZoneNavbar = ({ navigation }) => {
     >
       <View style={{ alignItems: "center", flexDirection: "row" }}>
         <Space>
-          <Avatar
-            rounded
-            source={{
-              uri: "https://picsum.photos/128",
+          <View
+            style={{
+              backgroundColor: colors.white,
+              height: 35,
+              width: 35,
+              borderRadius: 999,
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
-          <Body white>Ngô Công Hậu</Body>
+          >
+            <Heading3>5</Heading3>
+          </View>
+          <Body white>Phan Huy Tiến</Body>
         </Space>
       </View>
       <Button small onPress={() => navigation.navigate("ParentPasswordScreen")}>

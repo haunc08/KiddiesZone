@@ -42,7 +42,7 @@ export const ScreenView = ({
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor || colors.smoke }}>
       {absoluteChildren ? (
         <View
           style={{ zIndex: 2, position: "absolute" }}

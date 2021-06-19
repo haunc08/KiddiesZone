@@ -25,8 +25,10 @@ import AddRecordScreen from "./parent/AddRecordScreen";
 import FeedScreen from "./parent/FeedScreen";
 import PostScreen from "./parent/PostScreen";
 import GameCatalogueScreen from "./parent/GameCatalogueScreen";
+import SelectChildScreen from "./parent/SelectChildScreen";
 import TrackingScreen from "./parent/TrackingScreen";
 import UserScreen from "./parent/UserScreen";
+import ChangeNameScreen from "./parent/ChangeNameScreen";
 
 export {
   Home,
@@ -56,4 +58,6 @@ export {
   GameCatalogueScreen,
   TrackingScreen,
   UserScreen,
+  SelectChildScreen,
+  ChangeNameScreen,
 };

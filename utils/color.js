@@ -1,3 +1,5 @@
+import { colors } from "../constants";
+
 export function hexToRgba(hex, opacity) {
   if (!opacity) opacity = 1;
   var c;
@@ -17,3 +19,10 @@ export function hexToRgba(hex, opacity) {
   }
   throw new Error("Bad Hex");
 }
+
+export const genderToColor = (gender) => {
+  if (gender === "male") {
+    return colors.blue;
+  }
+  return colors.pink;
+};

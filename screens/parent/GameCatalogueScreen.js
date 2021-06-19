@@ -20,7 +20,7 @@ import {
   Heading1,
 } from "../../components/Typography";
 import ProgressChart from "../../components/Chart/ProgressChart";
-import { hexToRgba } from "../../utils/color";
+import { hexToRgba, genderToColor } from "../../utils/color";
 import Carousel from "react-native-snap-carousel";
 import { LargeChildInfo } from "./TrackingScreen";
 import LineChart from "../../components/Chart/LineChart";
@@ -96,7 +96,9 @@ const usageData = [
   },
 ];
 
-export const ChildCard = ({ item, index }) => {
+export const ChildCard = ({ item, index, cardColor, textColor }) => {
+  const scheme = genderToColor(item.gender);
+  const isWhite = cardColor === colors.white;
   return (
     <View
       style={{
@@ -106,17 +108,22 @@ export const ChildCard = ({ item, index }) => {
       <View
         style={{
           borderRadius: sizes.base,
-          backgroundColor: item.gender === "male" ? colors.blue : colors.pink,
+          backgroundColor: cardColor || scheme,
           padding: sizes.base,
           alignItems: "center",
           paddingVertical: sizes.base * 2,
         }}
       >
         <Space>
-          <RoundImpress>
-            <Heading1>{item.age}</Heading1>
+          <RoundImpress color={isWhite ? scheme : colors.white}>
+            <Heading1 color={isWhite ? colors.white : colors.black}>
+              {item.age}
+            </Heading1>
           </RoundImpress>
-          <LargeChildInfo item={item} />
+          <LargeChildInfo
+            item={item}
+            color={isWhite ? colors.grass : colors.white}
+          />
         </Space>
       </View>
     </View>
@@ -199,14 +206,14 @@ const LimitRow = ({ current, color }) => {
   );
 };
 
-export const GameCatalogueScreen = () => {
+export const GameCatalogueScreen = ({ navigation }) => {
   const [isLimit, setIsLimit] = useState(false);
   const carouselChild = useRef();
   const carouselUsage = useRef();
   const toggleSwitch = () => setIsLimit((previousState) => !previousState);
   const handleSelectChild = (index) => {};
   return (
-    <ScreenView isMainScreen title="Giải trí">
+    <ScreenView isMainScreen title="Giải trí" navigation={navigation}>
       <Space loose>
         <View style={{ alignItems: "flex-end" }}>
           <AutoIcon
@@ -215,6 +222,7 @@ export const GameCatalogueScreen = () => {
           />
           <View style={{ position: "absolute" }}>
             <TouchableOpacity
+              onPress={() => navigation.navigate("SelectChildScreen")}
               style={{ marginRight: sizes.base, marginTop: sizes.base * 3 }}
             >
               <Impress color={colors.grass}>

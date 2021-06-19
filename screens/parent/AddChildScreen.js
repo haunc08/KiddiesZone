@@ -2,7 +2,12 @@ import React, { useContext, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import { Row, ScreenView, Space } from "../../components/Wrapper";
-import { AutoIcon, Button, WhiteButton } from "../../components/Button";
+import {
+  AutoIcon,
+  Button,
+  FilledButton,
+  OutlinedButton,
+} from "../../components/Button";
 import { StatusBar, View, Alert } from "react-native";
 
 import { IconManager } from "../../utils/image";
@@ -200,7 +205,8 @@ export const AddRecordScreen = ({ navigation }) => {
           value={weight}
           keyboardType="numeric"
         />
-        <WhiteButton onPress={handleSubmit}>Hoàn tất</WhiteButton>
+        <FilledButton onPress={handleSubmit}>Hoàn tất</FilledButton>
+        <OutlinedButton onPress={handleSubmit}>Xóa</OutlinedButton>
       </Space>
     </ScreenView>
   );
