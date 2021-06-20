@@ -1,38 +1,38 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
-import {
-  Card,
-  NoScrollView,
-  Row,
-  ScreenView,
-  Space,
-} from "../../components/Wrapper";
-import Orientation from "react-native-orientation-locker";
+import { ScreenView, Space } from "../../components/Wrapper";
 
-import {
-  View,
-  ScrollView,
-  StatusBar,
-  Text,
-  ImageBackground,
-} from "react-native";
-import { KidsZoneNavbar } from "../../components/Navigation";
-import { FullHorizontalList } from "../../components/HorizontalList";
-import { IconManager, ImageManager } from "../../utils/image";
-import { ImageButton } from "../../components/Button";
-import { Heading1, Heading2 } from "../../components/Typography";
+import { View, Text } from "react-native";
+import { Heading2 } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Alert } from "react-native";
+import { UserContext } from "../../App";
+
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
 
 const buttonSize = 81;
 const fieldSize = 16;
 const numberSize = 36;
 
 export const CreatePasswordScreen = ({ navigation }) => {
+  const user = useContext(UserContext);
+
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const wrong = useRef(false);
+
+  const updatePasscode = () => {
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .update({
+        passcode: password,
+      })
+      .then(() => console.log("Update passcode successfully"))
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     if (rePassword.length >= 4) {
@@ -40,10 +40,14 @@ export const CreatePasswordScreen = ({ navigation }) => {
         wrong.current = true;
         setRePassword("");
       } else {
-        Alert.alert("Thông báo", "Cập nhật mã PIN thành công!");
+        updatePasscode();
+        Alert.alert("Thông báo", "Cập nhật mã PIN thành công!", [
+          { text: "OK", onPress: () => navigation.goBack() },
+        ]);
       }
     }
   }, [rePassword]);
+
   const button = (num) => {
     return (
       <TouchableOpacity
