@@ -72,10 +72,16 @@ export const FeedScreen = ({ navigation }) => {
 
     firestore()
       .collection(CollectionName.POSTS)
+      .orderBy("createdAt", "desc")
       .onSnapshot((querySnapshot) => {
         let tempPosts = [];
         querySnapshot.forEach((post) => {
-          tempPosts.push(post.data());
+          const tempPost = {
+            ...post.data(),
+            _id: post.id,
+          };
+
+          tempPosts.push(tempPost);
         });
         setPosts(tempPosts);
       });
@@ -230,7 +236,7 @@ export const FeedScreen = ({ navigation }) => {
         <FlatList
           data={posts}
           renderItem={Post}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item?._id}
         />
       ) : (
         <View></View>
