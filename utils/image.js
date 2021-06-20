@@ -243,6 +243,13 @@ export const ImageManager = {
   },
   gokid: require("../assets/images/gokid.jpg"),
   gokidpng: require("../assets/images/gokid.png"),
+  games: {
+    instrument: require("../assets/images/games/instrument.png"),
+    shapes: require("../assets/images/games/shapes.png"),
+    movies: require("../assets/images/games/movies.png"),
+    sandbox: require("../assets/images/games/sandbox.png"),
+  },
+  kidszonebg: require("../assets/images/kidszonebg.jpg"),
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

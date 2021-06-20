@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Avatar } from "react-native-elements";
 
 import { icons, images, sizes, colors, fonts } from "../constants";
+import { hexToRgba } from "../utils/color";
 import { Button, ImageButton } from "./Button";
 import { Body, Heading3 } from "./Typography";
 import { Space } from "./Wrapper";
@@ -11,7 +12,7 @@ export const KidsZoneNavbar = ({ navigation, child }) => {
   return (
     <View
       style={{
-        backgroundColor: colors.fadeblack,
+        backgroundColor: hexToRgba(colors.white, 0.5),
         padding: sizes.base,
         flexDirection: "row",
         alignItems: "center",
@@ -23,8 +24,8 @@ export const KidsZoneNavbar = ({ navigation, child }) => {
           <View
             style={{
               backgroundColor: colors.white,
-              height: 35,
-              width: 35,
+              height: 30,
+              width: 30,
               borderRadius: 999,
               alignItems: "center",
               justifyContent: "center",

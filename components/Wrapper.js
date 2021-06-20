@@ -222,6 +222,7 @@ export const Card = ({
   onPress,
   imgSource,
   height,
+  noShadow,
 }) => {
   const containerStyle = {
     backgroundColor: bgColor || "white",
@@ -229,7 +230,7 @@ export const Card = ({
     borderWidth: 0,
     borderRadius: sizes.base,
     alignItems: "stretch",
-    elevation: sizes.base / 4,
+    elevation: noShadow ? 0 : sizes.base / 4,
     shadowOpacity: 0,
     height: height || "auto",
     ...style,
@@ -296,7 +297,7 @@ export const Row = ({ children, style }) => {
   );
 };
 
-export const Space = ({ children, loose, tight, center }) => {
+export const Space = ({ children, loose, tight, center, scale }) => {
   const spaceStyle = loose
     ? {
         width: sizes.base * 2,
@@ -306,6 +307,11 @@ export const Space = ({ children, loose, tight, center }) => {
     ? {
         width: sizes.base / 2,
         height: sizes.base / 2,
+      }
+    : scale
+    ? {
+        width: sizes.base * scale,
+        height: sizes.base * scale,
       }
     : {
         width: sizes.base,

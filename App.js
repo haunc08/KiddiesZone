@@ -46,7 +46,7 @@ const DisplayedScreens = () => {
             screenOptions={{
               headerShown: false,
             }}
-            initialRouteName={"Tabs"}
+            initialRouteName={"ParentNavigator"}
           >
             <Stack.Screen name="ParentNavigator" component={ParentNavigator} />
             <Stack.Screen name="KidsZone" component={KidsZone} />

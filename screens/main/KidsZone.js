@@ -13,6 +13,7 @@ import Orientation from "react-native-orientation-locker";
 import { View, ScrollView, StatusBar } from "react-native";
 import { KidsZoneNavbar } from "../../components/Navigation";
 import { FullHorizontalList } from "../../components/HorizontalList";
+import { ImageManager } from "../../utils/image";
 
 export const KidsZone = ({ navigation }) => {
   useEffect(() => {
@@ -25,18 +26,22 @@ export const KidsZone = ({ navigation }) => {
     {
       key: "Instruments",
       name: "Âm nhạc",
+      image: ImageManager.games.instrument,
     },
     {
       key: "Shapes",
       name: "Hình khối",
+      image: ImageManager.games.shapes,
     },
     {
       key: "Movies",
       name: "Xem hoạt hình",
+      image: ImageManager.games.movies,
     },
     {
       key: "Sandbox",
       name: "Vẽ trên cát",
+      image: ImageManager.games.sandbox,
     },
     {
       key: "Stories",
@@ -60,9 +65,9 @@ export const KidsZone = ({ navigation }) => {
     },
   ];
   return (
-    <NoScrollView style={{ padding: 0 }}>
+    <NoScrollView style={{ padding: 0 }} imgSource={ImageManager.kidszonebg}>
       <StatusBar hidden />
-      <KidsZoneNavbar navigation={navigation} />
+      {/* <KidsZoneNavbar navigation={navigation} /> */}
       <FullHorizontalList data={games} onPress={handleChooseGame} />
     </NoScrollView>
   );
