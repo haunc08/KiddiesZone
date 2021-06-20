@@ -87,6 +87,7 @@ export const ImageManager = {
     8: require("../assets/images/number/eight.png"),
     9: require("../assets/images/number/nine.png"),
     0: require("../assets/images/number/0.png"),
+    bg: require("../assets/images/number/bg.jpg"),
   },
   alphabet: {
     a: require("../assets/images/alphabet/a.png"),
@@ -248,6 +249,8 @@ export const ImageManager = {
     shapes: require("../assets/images/games/shapes.png"),
     movies: require("../assets/images/games/movies.png"),
     sandbox: require("../assets/images/games/sandbox.png"),
+    stories: require("../assets/images/games/stories.png"),
+    numbers2: require("../assets/images/games/numbers.png"),
   },
   kidszonebg: require("../assets/images/kidszonebg.jpg"),
 };

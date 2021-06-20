@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet, ImageBackground } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import { ImageButton } from "../../components/Button";
+import { colors, sizes } from "../../constants";
 import { IconManager, ImageManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
@@ -189,9 +190,10 @@ const GameCountNumberScreen = ({ navigation }) => {
   };
 
   return (
-    <View
+    <ImageBackground
+      source={ImageManager.number.bg}
       style={{
-        backgroundColor: "#34A853",
+        backgroundColor: "pink",
         width: "100%",
         height: "100%",
         flexDirection: "row",
@@ -205,6 +207,8 @@ const GameCountNumberScreen = ({ navigation }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            position: "absolute",
+            padding: sizes.base,
           }}
         >
           <View style={{ marginLeft: 16 }}>
@@ -212,6 +216,7 @@ const GameCountNumberScreen = ({ navigation }) => {
               small
               source={IconManager.back}
               onPress={() => navigation.goBack()}
+              color={colors.red}
             />
           </View>
           <View style={{ flex: 1, alignItems: "center" }}>
@@ -223,6 +228,7 @@ const GameCountNumberScreen = ({ navigation }) => {
             style={{
               flexDirection: "row",
               flex: 4,
+              marginTop: sizes.base * 2,
             }}
           >
             <View
@@ -264,7 +270,7 @@ const GameCountNumberScreen = ({ navigation }) => {
           ></ImageButton>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -285,8 +291,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: "bold",
+    color: colors.red,
   },
   largeCountingItem: {
     width: 90,

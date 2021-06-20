@@ -34,7 +34,7 @@ export const FullHorizontalList = ({ data, onPress, width, children }) => {
     <ScrollView
       showsHorizontalScrollIndicator={false}
       horizontal
-      style={{ padding: 0 }}
+      style={{ paddingLeft: 50 }}
     >
       {children}
       <View
@@ -45,29 +45,6 @@ export const FullHorizontalList = ({ data, onPress, width, children }) => {
           // backgroundColor: "pink",
         }}
       >
-        <View
-          style={{
-            alignItems: "center",
-            alignSelf: "center",
-            marginRight: 100,
-          }}
-        >
-          <Space tight>
-            <View style={{ height: sizes.base * 0 }} />
-            <RoundImpress size={3}>
-              <Heading2 style={{ fontSize: sizes.h2 + 6 }}>5</Heading2>
-            </RoundImpress>
-            <Heading2 white>Ngô Công Hậu</Heading2>
-
-            <ImageButton
-              onPress={() => navigation.goBack()}
-              source={IconManager.back}
-              height={sizes.base * 3}
-              style={{ marginTop: sizes.base }}
-            />
-          </Space>
-        </View>
-
         <Space scale={10}>
           {data.map((d) => (
             <Card
