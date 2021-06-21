@@ -139,7 +139,7 @@ export const UserScreen = ({ navigation }) => {
             <View style={{ alignItems: "center" }}>
               <Space>
                 <AutoIcon source={IconManager.avatar} width={sizes.short / 3} />
-                <Heading2>{user?.displayName}</Heading2>
+                <Heading2>{user?.name}</Heading2>
                 <Body color={colors.fadeblack50}>{user?.email}</Body>
               </Space>
             </View>

@@ -1,21 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import { Card, Row, ScreenView, Space } from "../../components/Wrapper";
-import { AutoIcon, Button, ImageButton } from "../../components/Button";
-import { ImageManager, IconManager } from "../../utils/image";
-import { View, TouchableOpacity, Switch, FlatList } from "react-native";
-import {
-  Heading2,
-  Body,
-  Heading3,
-  Heading1,
-} from "../../components/Typography";
+import { AutoIcon, ImageButton } from "../../components/Button";
+import { IconManager } from "../../utils/image";
+import { View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { Body, Heading3 } from "../../components/Typography";
 import { hexToRgba } from "../../utils/color";
-
 import LinkPreview from "../../components/LinkPreview/LinkPreview";
 
-const userId = "6921420";
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import { ActivityIndicator } from "react-native";
+import { UserContext } from "../../App";
+import { calcTimeRangeUntilNow } from "../../utils/time";
 
 const posts = [
   {
@@ -59,10 +57,61 @@ const posts = [
 ];
 
 export const FeedScreen = ({ navigation }) => {
+  const user = useContext(UserContext);
+
   const [currentTab, setCurrentTab] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = () => {
+    setLoading(true);
+
+    firestore()
+      .collection(CollectionName.POSTS)
+      .orderBy("createdAt", "desc")
+      .onSnapshot((querySnapshot) => {
+        let tempPosts = [];
+        querySnapshot.forEach((post) => {
+          const tempPost = {
+            ...post.data(),
+            _id: post.id,
+          };
+
+          tempPosts.push(tempPost);
+        });
+        setPosts(tempPosts);
+      });
+  };
+
+  const renderFooter = () => {
+    return (
+      //Footer View with Load More button
+      <View style={styles.footer}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={getData}
+          //On Click of button load more data
+          style={styles.loadMoreBtn}
+        >
+          <Text style={styles.btnText}>Load More</Text>
+          {loading ? (
+            <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
+          ) : null}
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const Post = ({ item }) => {
-    const hearted = item.hearts.includes(userId);
+    const hearted = item?.lovedUsers.includes(user?.uid);
+
+    const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
+    console.log(timeText);
+
     return (
       <Card style={{ padding: sizes.base / 2, marginTop: sizes.base }}>
         <LinkPreview
@@ -90,7 +139,7 @@ export const FeedScreen = ({ navigation }) => {
                 marginBottom: 2,
               }}
             >
-              12
+              {item?.lovedUsers?.length}
             </Heading3>
           </Row>
           <Body
@@ -99,7 +148,7 @@ export const FeedScreen = ({ navigation }) => {
               color: colors.fadeblack50,
             }}
           >
-            2 ngày trước
+            {timeText}
           </Body>
         </Row>
       </Card>
@@ -183,13 +232,43 @@ export const FeedScreen = ({ navigation }) => {
       navigation={navigation}
     >
       <FeedTabs />
-      <FlatList
-        data={posts}
-        renderItem={Post}
-        keyExtractor={(item) => item.id}
-      />
+      {posts ? (
+        <FlatList
+          data={posts}
+          renderItem={Post}
+          keyExtractor={(item) => item?._id}
+        />
+      ) : (
+        <View></View>
+      )}
     </ScreenView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    flex: 1,
+  },
+  footer: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  loadMoreBtn: {
+    padding: 10,
+    backgroundColor: "#800000",
+    borderRadius: 4,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btnText: {
+    color: "white",
+    fontSize: 15,
+    textAlign: "center",
+  },
+});
 
 export default FeedScreen;

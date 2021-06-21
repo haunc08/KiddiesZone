@@ -2,6 +2,7 @@ export const CollectionName = {
   USERS: "Users",
   CHILDREN: "Children",
   HEALTH_RECORDS: "HealthRecords",
+  POSTS: "Posts",
 };
 
 export const Gender = {

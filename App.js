@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,6 +19,7 @@ import {
 } from "./screens";
 
 import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthenticationNavigator from "./navigation/AuthenticationNavigator";
 
@@ -27,6 +28,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import allReducers from "./redux/reducers";
 import ParentNavigator from "./navigation/ParentNavigator";
+import { CollectionName } from "./utils/enum";
 
 const store = createStore(allReducers);
 
@@ -37,9 +39,25 @@ export const UserContext = createContext();
 const DisplayedScreens = () => {
   const [user, loading, error] = useAuthState(auth());
 
+  const userAuth = {
+    uid: user?.uid,
+    email: user?.email,
+  };
+
+  const [userInfo, setUserInfo] = useState(userAuth);
+
+  useEffect(() => {
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .onSnapshot((documentSnapshot) =>
+        setUserInfo({ ...userInfo, name: documentSnapshot.data().name })
+      );
+  }, []);
+
   if (user) {
     return (
-      <UserContext.Provider value={user}>
+      <UserContext.Provider value={userInfo}>
         <NavigationContainer>
           <Stack.Navigator
             name="ok"
