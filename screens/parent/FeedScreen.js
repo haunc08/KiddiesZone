@@ -87,6 +87,16 @@ export const FeedScreen = ({ navigation }) => {
       });
   };
 
+  const handleLovePost = (post) => {
+    const userIndex = post?.lovedUsers.indexOf(user?.uid);
+    const newLovedUsers =
+      userIndex > -1
+        ? post?.lovedUsers.splice(userIndex, 1)
+        : [...post?.lovedUsers, user?.uid];
+
+    console.log(newLovedUsers);
+  };
+
   const renderFooter = () => {
     return (
       //Footer View with Load More button
@@ -108,9 +118,7 @@ export const FeedScreen = ({ navigation }) => {
 
   const Post = ({ item }) => {
     const hearted = item?.lovedUsers.includes(user?.uid);
-
     const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
-    console.log(timeText);
 
     return (
       <Card style={{ padding: sizes.base / 2, marginTop: sizes.base }}>
@@ -131,6 +139,7 @@ export const FeedScreen = ({ navigation }) => {
               source={hearted ? IconManager.heart : IconManager.heartempty}
               color={hearted ? colors.pink : colors.black}
               height={26}
+              onPress={() => handleLovePost(item)}
             />
             <Heading3
               style={{
