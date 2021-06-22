@@ -32,18 +32,20 @@ export const PostScreen = ({ route, navigation }) => {
   };
 
   const handleLovePost = () => {
-    console.log(post?.lovedUsers);
     const userIndex = post?.lovedUsers.indexOf(user?.uid);
     const newLovedUsers =
       userIndex > -1
         ? post?.lovedUsers.filter((userId) => userId !== user?.uid)
         : [...post?.lovedUsers, user?.uid];
-    console.log(newLovedUsers);
+    const newCount =
+      userIndex > -1 ? post?.countLovedUsers - 1 : post?.countLovedUsers + 1;
+
     firestore()
       .collection(CollectionName.POSTS)
       .doc(postId)
       .update({
         lovedUsers: newLovedUsers,
+        countLovedUsers: newCount,
       })
       .then(() => {
         console.log("Update loved users of post successfully.");
