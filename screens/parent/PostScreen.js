@@ -1,15 +1,56 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import { ScreenView } from "../../components/Wrapper";
-import { AutoIcon, Button, ImageButton } from "../../components/Button";
-import { ImageManager, IconManager } from "../../utils/image";
-import { View, TouchableOpacity, Switch, FlatList } from "react-native";
-
+import { AutoIcon } from "../../components/Button";
+import { IconManager } from "../../utils/image";
+import { TouchableOpacity } from "react-native";
 import { WebView } from "react-native-webview";
 
+import firestore from "@react-native-firebase/firestore";
+import { UserContext } from "../../App";
+import { CollectionName } from "../../utils/enum";
+
 export const PostScreen = ({ route, navigation }) => {
-  const { hearted, url } = route.params;
+  const user = useContext(UserContext);
+  const { hearted, postId } = route.params;
+
+  const [post, setPost] = useState();
+  const [isHearted, setIsHearted] = useState(hearted);
+
+  useEffect(() => {
+    fetchAPost();
+  }, []);
+
+  const fetchAPost = () => {
+    firestore()
+      .collection(CollectionName.POSTS)
+      .doc(postId)
+      .onSnapshot((documentSnapshot) => {
+        setPost(documentSnapshot.data());
+      });
+  };
+
+  const handleLovePost = () => {
+    console.log(post?.lovedUsers);
+    const userIndex = post?.lovedUsers.indexOf(user?.uid);
+    const newLovedUsers =
+      userIndex > -1
+        ? post?.lovedUsers.filter((userId) => userId !== user?.uid)
+        : [...post?.lovedUsers, user?.uid];
+    console.log(newLovedUsers);
+    firestore()
+      .collection(CollectionName.POSTS)
+      .doc(postId)
+      .update({
+        lovedUsers: newLovedUsers,
+      })
+      .then(() => {
+        console.log("Update loved users of post successfully.");
+        setIsHearted(!isHearted);
+      });
+  };
+
   const Heart = () => {
     return (
       <TouchableOpacity
@@ -25,15 +66,17 @@ export const PostScreen = ({ route, navigation }) => {
           marginLeft: sizes.base * 2,
           elevation: 25,
         }}
+        onPress={handleLovePost}
       >
         <AutoIcon
-          source={hearted ? IconManager.heart : IconManager.heartempty}
-          color={hearted ? colors.pink : colors.black}
+          source={isHearted ? IconManager.heart : IconManager.heartempty}
+          color={isHearted ? colors.pink : colors.black}
           height={26}
         />
       </TouchableOpacity>
     );
   };
+
   return (
     <ScreenView
       title="Chế độ đọc"
@@ -43,7 +86,7 @@ export const PostScreen = ({ route, navigation }) => {
     >
       <WebView
         source={{
-          uri: url,
+          uri: post?.url,
         }}
         style={{ height: sizes.height, margin: 0, padding: 0 }}
       />

@@ -14,6 +14,7 @@ import { CollectionName } from "../../utils/enum";
 import { ActivityIndicator } from "react-native";
 import { UserContext } from "../../App";
 import { calcTimeRangeUntilNow } from "../../utils/time";
+import { Text } from "react-native-elements";
 
 const posts = [
   {
@@ -62,17 +63,22 @@ export const FeedScreen = ({ navigation }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [outOfPosts, setOutOfPosts] = useState(false);
+
+  const pageSize = 4;
 
   useEffect(() => {
-    fetchPosts();
+    fetchFirstPosts();
+    setOutOfPosts(false);
   }, []);
 
-  const fetchPosts = () => {
+  const fetchFirstPosts = () => {
     setLoading(true);
 
     firestore()
       .collection(CollectionName.POSTS)
       .orderBy("createdAt", "desc")
+      .limit(pageSize)
       .onSnapshot((querySnapshot) => {
         let tempPosts = [];
         querySnapshot.forEach((post) => {
@@ -84,6 +90,35 @@ export const FeedScreen = ({ navigation }) => {
           tempPosts.push(tempPost);
         });
         setPosts(tempPosts);
+        setLoading(false);
+      });
+  };
+
+  const fetchMorePosts = () => {
+    setLoading(true);
+
+    const lastPost = posts[posts.length - 1];
+    firestore()
+      .collection(CollectionName.POSTS)
+      .orderBy("createdAt", "desc")
+      .startAfter(lastPost?.createdAt)
+      .limit(pageSize)
+      .onSnapshot((querySnapshot) => {
+        let tempPosts = [...posts];
+        querySnapshot.forEach((post) => {
+          const tempPost = {
+            ...post.data(),
+            _id: post.id,
+          };
+
+          tempPosts.push(tempPost);
+        });
+
+        if (tempPosts.length === posts.length) setOutOfPosts(true);
+        else {
+          setPosts(tempPosts);
+          setLoading(false);
+        }
       });
   };
 
@@ -91,23 +126,32 @@ export const FeedScreen = ({ navigation }) => {
     const userIndex = post?.lovedUsers.indexOf(user?.uid);
     const newLovedUsers =
       userIndex > -1
-        ? post?.lovedUsers.splice(userIndex, 1)
+        ? post?.lovedUsers.filter((userId) => userId !== user?.uid)
         : [...post?.lovedUsers, user?.uid];
 
-    console.log(newLovedUsers);
+    firestore()
+      .collection(CollectionName.POSTS)
+      .doc(post?._id)
+      .update({
+        lovedUsers: newLovedUsers,
+      })
+      .then(() => console.log("Update loved users of post successfully."));
   };
 
   const renderFooter = () => {
+    console.log(outOfPosts);
+    if (outOfPosts) return <Text style={styles.text}>Không còn bài viết</Text>;
+
     return (
       //Footer View with Load More button
       <View style={styles.footer}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={getData}
+          onPress={fetchMorePosts}
           //On Click of button load more data
           style={styles.loadMoreBtn}
         >
-          <Text style={styles.btnText}>Load More</Text>
+          <Text style={styles.btnText}>Xem thêm</Text>
           {loading ? (
             <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
           ) : null}
@@ -117,6 +161,8 @@ export const FeedScreen = ({ navigation }) => {
   };
 
   const Post = ({ item }) => {
+    if (!item) return <View></View>;
+
     const hearted = item?.lovedUsers.includes(user?.uid);
     const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
 
@@ -129,7 +175,7 @@ export const FeedScreen = ({ navigation }) => {
           onPress={() =>
             navigation.navigate("PostScreen", {
               hearted: hearted,
-              url: item.url,
+              postId: item?._id,
             })
           }
         />
@@ -250,6 +296,7 @@ export const FeedScreen = ({ navigation }) => {
       ) : (
         <View></View>
       )}
+      {renderFooter()}
     </ScreenView>
   );
 };
@@ -267,16 +314,23 @@ const styles = StyleSheet.create({
   },
   loadMoreBtn: {
     padding: 10,
-    backgroundColor: "#800000",
+    backgroundColor: colors.primary,
     borderRadius: 4,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 8,
   },
   btnText: {
     color: "white",
     fontSize: 15,
     textAlign: "center",
+  },
+  text: {
+    color: "black",
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 8,
   },
 });
 
