@@ -248,8 +248,67 @@ export const ImageManager = {
     shapes: require("../assets/images/games/shapes.png"),
     movies: require("../assets/images/games/movies.png"),
     sandbox: require("../assets/images/games/sandbox.png"),
+    stories: require("../assets/images/games/stories.png"),
+    numbers2: require("../assets/images/games/numbers.png"),
   },
   kidszonebg: require("../assets/images/kidszonebg.jpg"),
+  count: {
+    bg: require("../assets/images/count/bg.jpg"),
+    food: [
+      {
+        img: require("../assets/images/count/banh.png"),
+        name: "cái bánh",
+      },
+      {
+        img: require("../assets/images/count/bo.png"),
+        name: "quả bơ",
+      },
+      {
+        img: require("../assets/images/count/cachua.png"),
+        name: "quả cà chua",
+      },
+      {
+        img: require("../assets/images/count/cam.png"),
+        name: "quả cam",
+      },
+      {
+        img: require("../assets/images/count/coke.png"),
+        name: "chai nước ngọt",
+      },
+      {
+        img: require("../assets/images/count/dau.png"),
+        name: "quả dâu",
+      },
+      {
+        img: require("../assets/images/count/hamburger.png"),
+        name: "cái hamburger",
+      },
+      {
+        img: require("../assets/images/count/kem.png"),
+        name: "cây kem",
+      },
+      {
+        img: require("../assets/images/count/le.png"),
+        name: "quả lê",
+      },
+      {
+        img: require("../assets/images/count/nho.png"),
+        name: "quả nho",
+      },
+      {
+        img: require("../assets/images/count/tao.png"),
+        name: "quả táo",
+      },
+      {
+        img: require("../assets/images/count/chanh.png"),
+        name: "quả chanh",
+      },
+      {
+        img: require("../assets/images/count/duahau.png"),
+        name: "quả dưa hấu",
+      },
+    ],
+  },
 };
 
 // Usage: Scale the picture to fit the maxmium 'width' or 'height'.

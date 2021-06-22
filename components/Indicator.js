@@ -1,20 +1,21 @@
 import React from "react";
 import { Animated, View } from "react-native";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
+import { colors } from "react-native-elements";
 import { sizes } from "../constants";
 import { autoSize, IconManager, ImageManager } from "../utils/image";
 import { ImageButton } from "./Button";
 import { Heading1, Heading2 } from "./Typography";
 import { Space } from "./Wrapper";
 
-export const Hearts = ({ lives, points }) => {
+export const Hearts = ({ lives, points, reverse, pointColor, noPadding }) => {
   const size = autoSize(IconManager.correct, null, 50);
 
   return (
     <View
       style={{
-        flexDirection: "row",
-        padding: sizes.base,
+        flexDirection: reverse ? "row-reverse" : "row",
+        padding: noPadding ? 0 : sizes.base,
         zIndex: 32,
       }}
     >
@@ -40,7 +41,10 @@ export const Hearts = ({ lives, points }) => {
           }}
           source={lives > 2 ? IconManager.heart : IconManager.heartempty}
         />
-        <Heading1 white style={{ marginLeft: sizes.base }}>
+        <Heading1
+          color={pointColor || colors.white}
+          style={{ marginLeft: sizes.base }}
+        >
           {points}
         </Heading1>
       </Space>
