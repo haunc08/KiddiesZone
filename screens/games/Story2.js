@@ -5,7 +5,7 @@ import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
 import { ImageManager, IconManager } from "../../utils/image";
-import { Heading1 } from "../../components/Typography";
+import { Heading1, Heading3 } from "../../components/Typography";
 
 const gameImages = ImageManager.threeHamers;
 
@@ -28,8 +28,8 @@ export const Story2 = ({ navigation }) => {
 
   const handleStart = () => {
     console.log("handle start");
-    backgroundMusic.current = createSound(media.background.audio, -1);
-    backgroundMusic.current.setVolume(0.25);
+    backgroundMusic.current = createSound(media.background.audio, -1, 0.3);
+    playScript(0);
     setPage(page + 1);
 
     // media.background.audio.play();
@@ -37,21 +37,42 @@ export const Story2 = ({ navigation }) => {
     // media.background.audio.setVolume(0.25);
   };
 
-  const playScript = () => {
-    script.current = createSound(`riu_${page + 1}`);
+  const playScript = (no) => {
+    script.current = createSound(`riu_${no + 1}`);
   };
-  useEffect(() => {
-    playScript();
-  }, [page]);
 
   const StartFrame = () => {
     return (
-      <Frame>
-        <ImageButton
-          source={IconManager.next}
-          title="Bắt đầu"
-          onPress={() => handleStart()}
-        />
+      <Frame background={ImageManager.threeHamers.blur}>
+        <View
+          style={{
+            position: "absolute",
+            alignSelf: "flex-start",
+            height: sizes.short,
+            padding: sizes.base,
+          }}
+        >
+          <ImageButton
+            onPress={() => navigation.goBack()}
+            source={IconManager.buttons.orange.back}
+            height={sizes.base * 4}
+          />
+        </View>
+        <View style={{ marginBottom: sizes.base * 2, alignItems: "center" }}>
+          <Heading1 white>3 Chiếc Rìu</Heading1>
+          <Heading3
+            white
+            style={{ marginTop: sizes.base / 2, marginBottom: sizes.base * 3 }}
+          >
+            Số trang: 14
+          </Heading3>
+          <ImageButton
+            source={IconManager.buttons.orange.play}
+            height={sizes.base * 7}
+            // title="Bắt đầu"
+            onPress={() => handleStart()}
+          />
+        </View>
       </Frame>
     );
   };
@@ -70,15 +91,17 @@ export const Story2 = ({ navigation }) => {
   };
   const handleNext = async () => {
     await stopScript();
+    playScript(page + 1);
     setPage(page + 1);
   };
   const handlePrevious = async () => {
     await stopScript();
+    playScript(page - 1);
     setPage(page - 1);
   };
   const handleReplay = async () => {
     await stopScript();
-    playScript();
+    playScript(page);
   };
   return (
     <NoScrollView

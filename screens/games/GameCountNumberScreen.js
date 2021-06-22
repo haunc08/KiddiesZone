@@ -190,8 +190,12 @@ const GameCountNumberScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         <ImageButton
-          source={IconManager.next}
-          height={sizes.base * 4}
+          source={
+            lives.current > 0
+              ? IconManager.buttons.orange.play
+              : IconManager.buttons.orange.replay
+          }
+          height={sizes.base * 5}
           onPress={() => resetValue()}
         />
       </Row>
@@ -207,6 +211,10 @@ const GameCountNumberScreen = ({ navigation }) => {
 
   const resetValue = () => {
     const ranNum = Math.floor(Math.random() * 9) + 1;
+    if (lives.current <= 0) {
+      lives.current = 3;
+      points.current = 0;
+    }
     setNumberOfItems(ranNum);
     setIsAnswered(false);
     foodIndex.current = randomFood();
@@ -238,10 +246,11 @@ const GameCountNumberScreen = ({ navigation }) => {
         >
           <View style={{ marginLeft: 16 }}>
             <ImageButton
-              small
-              source={IconManager.back}
+              // small
+              source={IconManager.buttons.orange.back}
               onPress={() => navigation.goBack()}
-              color={colors.red}
+              height={sizes.base * 4.5}
+              // color={colors.red}
             />
           </View>
           <View style={{ alignItems: "center", marginLeft: sizes.base * 2 }}>
@@ -312,7 +321,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: colors.red,
+    color: colors.darkRed,
   },
   largeCountingItem: {
     width: 90,

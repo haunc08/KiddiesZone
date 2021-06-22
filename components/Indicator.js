@@ -43,7 +43,7 @@ export const Hearts = ({ lives, points, reverse, pointColor, noPadding }) => {
         />
         <Heading1
           color={pointColor || colors.white}
-          style={{ marginLeft: sizes.base }}
+          style={{ marginHorizontal: sizes.base }}
         >
           {points}
         </Heading1>

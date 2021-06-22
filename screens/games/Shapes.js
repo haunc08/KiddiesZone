@@ -52,6 +52,7 @@ export const Shapes = ({ navigation }) => {
   const increaseCurrentItem = () => {
     currentItem.current = (currentItem.current + 1) % 3;
   };
+
   useEffect(() => {
     item0ref.current = item0;
   }, [item0]);
@@ -115,10 +116,14 @@ export const Shapes = ({ navigation }) => {
     });
   };
 
-  useEffect(() => {
+  const play = () => {
     play0();
     setTimeout(play1, duration / 3);
     setTimeout(play2, (duration / 3) * 2);
+  };
+
+  useEffect(() => {
+    play();
   }, []);
 
   function handleSelect(shape) {
@@ -128,20 +133,20 @@ export const Shapes = ({ navigation }) => {
           setItem0((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
-            setPoints(points + 1);
+            setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives(lives - 1);
+        } else setLives((prev) => prev - 1);
         break;
       case 1:
         if (shape === item1.shape) {
           setItem1((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
-            setPoints(points + 1);
+            setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives(lives - 1);
+        } else setLives((prev) => prev - 1);
 
         break;
       case 2:
@@ -149,10 +154,10 @@ export const Shapes = ({ navigation }) => {
           setItem2((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
-            setPoints(points + 1);
+            setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives(lives - 1);
+        } else setLives((prev) => prev - 1);
 
         break;
     }
@@ -176,9 +181,9 @@ export const Shapes = ({ navigation }) => {
           }}
         >
           <ImageButton
-            width={45}
+            width={sizes.base * 4}
             onPress={() => navigation.goBack()}
-            source={require("../../assets/icons/back.png")}
+            source={IconManager.buttons.orange.back}
           />
         </View>
 
@@ -255,12 +260,17 @@ export const Shapes = ({ navigation }) => {
         flexDirection: "row",
         justifyContent: "space-between",
       }}
+      imgSource={ImageManager.shapes.blur}
     >
       <Frame>
         <ImageButton
-          source={IconManager.replay}
+          source={IconManager.buttons.orange.replay}
+          height={sizes.base * 4.5}
           title="Điểm của bạn"
           onPress={() => {
+            // setLives(3);
+            // setPoints(0);
+            // play();
             navigation.goBack();
             navigation.navigate("Shapes");
           }}

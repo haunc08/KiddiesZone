@@ -16,6 +16,7 @@ import {
 } from "react-native";
 
 import { SketchCanvas } from "@terrylinla/react-native-sketch-canvas";
+import { IconManager } from "../../utils/image";
 
 async function hasAndroidPermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
@@ -122,14 +123,14 @@ export const Sandbox = ({ navigation }) => {
       <View
         style={{
           alignSelf: "stretch",
-          flexDirection: "row-reverse",
+          flexDirection: "row",
           padding: sizes.base,
         }}
       >
         <ImageButton
-          width={45}
+          width={sizes.base * 4.5}
           onPress={() => goHome()}
-          source={require("../../assets/icons/back.png")}
+          source={IconManager.buttons.orange.back}
         />
       </View>
       <View

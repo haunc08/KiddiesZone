@@ -19,6 +19,8 @@ export const colors = {
   red: "#ee4238",
   brown: "#6f4938",
   grass: "#73c673",
+  darkRed: "#cf3a32",
+  darkBlue: "#007498",
 
   white98: "rgba(255, 255, 255, 0.98)",
   white80: "rgba(255, 255, 255, 0.8)",

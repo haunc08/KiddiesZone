@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ImageBackground } from "react-native";
 import { Image } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Orientation from "react-native-orientation-locker";
 import { ImageButton } from "../../components/Button";
 import { colors, sizes } from "../../constants";
 import {
@@ -14,10 +13,14 @@ import {
   autoSize,
 } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
+import { Hearts } from "../../components/Indicator";
+import { Row, Space } from "../../components/Wrapper";
 
 const GameAlphabet = ({ navigation }) => {
   const [question, setQuestion] = useState("Chữ này là chữ gì?");
   const [isAnswered, setIsAnswered] = useState(false);
+  const lives = useRef(3);
+  const points = useRef(0);
 
   const lowercaseLetters = [
     "a",
@@ -57,10 +60,6 @@ const GameAlphabet = ({ navigation }) => {
   const randomLetterIndex = Math.floor(Math.random() * lowercaseLetters.length);
   const [chosenLetterIndex, setChosenLetterIndex] = useState(randomLetterIndex);
 
-  useEffect(() => {
-    Orientation.lockToLandscapeLeft();
-  }, []);
-
   // return image on the left
   const getAlphabetImage = (index) => {
     return ImageManager.alphabet[`letter${uppercaseLetters[index]}`];
@@ -89,11 +88,14 @@ const GameAlphabet = ({ navigation }) => {
 
   const handleRightAnswer = () => {
     playSoundFile("yayy");
+    points.current = points.current + 1;
     setQuestion("Đúng rồi!");
   };
 
   const handleWrongAnswer = () => {
     playSoundFile("lose");
+    lives.current = lives.current - 1;
+
     setQuestion("Sai rồi!");
   };
 
@@ -136,26 +138,41 @@ const GameAlphabet = ({ navigation }) => {
   const AnswerImage = () => {
     const imagePath = getAlphabet(chosenLetterIndex);
     return (
-      <TouchableOpacity
-        style={{ alignItems: "center", marginTop: -32 }}
-        onPress={() => playSoundFile(`${lowercaseLetters[chosenLetterIndex]}`)}
-      >
-        <Image
-          style={{
-            resizeMode: "contain",
-            // width: 150,
-            width: autoSize(
-              getAlphabet(chosenLetterIndex),
-              sizes.long / 3,
-              null
-            ).width,
-            opacity: 1,
-          }}
-          source={imagePath}
-        />
-        {/* <Text>{lowercaseLetters[chosenLetterIndex]}</Text>
+      <Row style={{ marginRight: sizes.base * 3 }}>
+        <Space scale={3}>
+          <TouchableOpacity
+            style={{ alignItems: "center", marginTop: -32 }}
+            onPress={() =>
+              playSoundFile(`${lowercaseLetters[chosenLetterIndex]}`)
+            }
+          >
+            <Image
+              style={{
+                resizeMode: "contain",
+                // width: 150,
+                width: autoSize(
+                  getAlphabet(chosenLetterIndex),
+                  sizes.long / 3,
+                  null
+                ).width,
+                opacity: 1,
+              }}
+              source={imagePath}
+            />
+            {/* <Text>{lowercaseLetters[chosenLetterIndex]}</Text>
         <Text>{uppercaseLetters[chosenLetterIndex]}</Text> */}
-      </TouchableOpacity>
+          </TouchableOpacity>
+          <ImageButton
+            source={
+              lives.current > 0
+                ? IconManager.buttons.orange.play
+                : IconManager.buttons.orange.replay
+            }
+            height={sizes.base * 5}
+            onPress={() => resetValue()}
+          />
+        </Space>
+      </Row>
     );
   };
 
@@ -170,6 +187,10 @@ const GameAlphabet = ({ navigation }) => {
     const randomLetterIndex = Math.floor(
       Math.random() * lowercaseLetters.length
     );
+    if (lives.current <= 0) {
+      lives.current = 3;
+      points.current = 0;
+    }
     setChosenLetterIndex(randomLetterIndex);
     setIsAnswered(false);
     setQuestion("Chữ này là chữ gì?");
@@ -186,26 +207,25 @@ const GameAlphabet = ({ navigation }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingRight: sizes.base * 2,
         }}
       >
         <View style={{ marginLeft: 16 }}>
           <ImageButton
-            small
-            source={IconManager.back}
+            source={IconManager.buttons.orange.back}
             onPress={() => navigation.goBack()}
           />
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Text style={styles.title}>{question}</Text>
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <ImageButton
-            small
-            style={{ marginRight: 16 }}
-            onPress={() => resetValue()}
-            source={IconManager.playButton}
-          ></ImageButton>
-        </View>
+        <Hearts
+          lives={lives.current}
+          points={points.current}
+          reverse
+          pointColor={colors.black}
+          noPadding
+        />
       </View>
       <View style={{ flex: 4 }}>
         <View

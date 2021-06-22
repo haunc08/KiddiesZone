@@ -16,7 +16,7 @@ export const IconManager = {
   correct: require("../assets/icons/correct.png"),
   incorrect: require("../assets/icons/incorrect.png"),
   add: require("../assets/icons/add.png"),
-  substract: require("../assets/icons/substract.png"),
+  subtract: require("../assets/icons/substract.png"),
   gameItem: {
     donut: require("../assets/icons/donut.png"),
     fries: require("../assets/icons/fries.png"),
@@ -73,6 +73,21 @@ export const IconManager = {
   cake: require("../assets/icons/cake.png"),
   flame: require("../assets/icons/flame.png"),
   upline: require("../assets/icons/upline.png"),
+  buttons: {
+    orange: {
+      back: require("../assets/icons/buttons/orange/back.png"),
+      replay: require("../assets/icons/buttons/orange/replay.png"),
+      play: require("../assets/icons/buttons/orange/play.png"),
+    },
+    blue: {
+      home: require("../assets/icons/buttons/blue/home.png"),
+      replay: require("../assets/icons/buttons/blue/replay.png"),
+      play: require("../assets/icons/buttons/blue/play.png"),
+    },
+    green: {
+      play: require("../assets/icons/buttons/green/play.png"),
+    },
+  },
 };
 
 export const ImageManager = {
@@ -150,6 +165,7 @@ export const ImageManager = {
     grid: require("../assets/images/alphabet/grid.jpg"),
   },
   rabbitAndTurtle: {
+    blur: require("../assets/images/RabbitAndTurtle/blur.jpg"),
     forest: [
       require("../assets/images/RabbitAndTurtle/forest0.jpg"),
       require("../assets/images/RabbitAndTurtle/forest1.jpg"),
@@ -178,6 +194,7 @@ export const ImageManager = {
     snail: [require("../assets/images/RabbitAndTurtle/snail.png")],
   },
   threeHamers: {
+    blur: require("../assets/images/riu/blur.jpg"),
     story: [
       require("../assets/images/riu/riu1.jpg"),
       require("../assets/images/riu/riu2.jpg"),
@@ -207,6 +224,7 @@ export const ImageManager = {
   },
   movies: require("../assets/images/movies/movie.png"),
   shapes: {
+    blur: require("../assets/images/shapes/blur.png"),
     beltback: require("../assets/images/shapes/beltback.png"),
     beltfront: require("../assets/images/shapes/beltfront.png"),
     floor: require("../assets/images/shapes/floor.jpg"),
@@ -250,8 +268,18 @@ export const ImageManager = {
     sandbox: require("../assets/images/games/sandbox.png"),
     stories: require("../assets/images/games/stories.png"),
     numbers2: require("../assets/images/games/numbers.png"),
+    letters: require("../assets/images/games/letters.png"),
+  },
+  stories: {
+    riu: require("../assets/images/stories/riu.png"),
+    turtlerabbit: require("../assets/images/stories/turtlerabbit.png"),
   },
   kidszonebg: require("../assets/images/kidszonebg.jpg"),
+  calc: {
+    background: require("../assets/images/calculate/background.jpg"),
+    easy: require("../assets/images/calculate/mode1.png"),
+    hard: require("../assets/images/calculate/mode2.png"),
+  },
   count: {
     bg: require("../assets/images/count/bg.jpg"),
     food: [

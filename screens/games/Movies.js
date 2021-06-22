@@ -10,8 +10,8 @@ import Carousel from "react-native-snap-carousel";
 import YoutubePlayer from "react-native-youtube-iframe";
 import Orientation from "react-native-orientation-locker";
 
-const theaterSize = autoSize(ImageManager.movies, null, sizes.short);
-const screenHeight = sizes.short * 0.64;
+// const theaterSize = autoSize(ImageManager.movies, null, sizes.short);
+const screenHeight = sizes.short * 0.695;
 const screenWidth = screenHeight * 1.76;
 
 var data = [
@@ -188,12 +188,15 @@ export const Movies = ({ navigation }) => {
       <ImageBackground
         source={ImageManager.movies}
         style={{
+          // resizeMode: "cover",
           position: "absolute",
-          width: theaterSize.width,
-          height: theaterSize.height,
+          // width: theaterSize.width,
+          // height: theaterSize.height,
+          width: sizes.long,
+          height: sizes.short,
           backgroundColor: "transparent",
           zIndex: 0,
-          alignSelf: "center",
+          alignSelf: "stretch",
         }}
       />
 
