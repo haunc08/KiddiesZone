@@ -51,7 +51,7 @@ const DisplayedScreens = () => {
       .collection(CollectionName.USERS)
       .doc(user?.uid)
       .onSnapshot((documentSnapshot) =>
-        setUserInfo({ ...userInfo, name: documentSnapshot.data().name })
+        setUserInfo({ ...userInfo, name: documentSnapshot?.data()?.name })
       );
   }, []);
 

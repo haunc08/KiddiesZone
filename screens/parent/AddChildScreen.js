@@ -132,25 +132,26 @@ export const AddRecordScreen = ({ route, navigation }) => {
       return false;
     }
 
-    if (!height || !weight) {
-      Alert.alert("Thông báo", "Chưa nhập chiều cao hoặc cân nặng.");
-      return false;
-    }
+    if (mode === HandlingMode.ADD) {
+      if (!height || !weight) {
+        Alert.alert("Thông báo", "Chưa nhập chiều cao hoặc cân nặng.");
+        return false;
+      }
 
-    if (isNaN(height) || isNaN(weight)) {
-      Alert.alert("Thông báo", "Chiều cao và cân nặng phải là số.");
-      return false;
-    }
+      if (isNaN(height) || isNaN(weight)) {
+        Alert.alert("Thông báo", "Chiều cao và cân nặng phải là số.");
+        return false;
+      }
 
-    if (height <= 0 || weight <= 0) {
-      console.log(weight);
-      Alert.alert(
-        "Thông báo",
-        "Chiều cao và cân nặng không thể nhỏ hơn hoặc bằng 0."
-      );
-      return false;
+      if (height <= 0 || weight <= 0) {
+        console.log(weight);
+        Alert.alert(
+          "Thông báo",
+          "Chiều cao và cân nặng không thể nhỏ hơn hoặc bằng 0."
+        );
+        return false;
+      }
     }
-
     return true;
   };
 
@@ -241,7 +242,9 @@ export const AddRecordScreen = ({ route, navigation }) => {
   return (
     <ScreenView
       navigation={navigation}
-      title="Thêm con"
+      title={
+        mode === HandlingMode.ADD ? "Thêm thông tin con" : "Sửa thông tin con"
+      }
       style={{ alignItems: "center" }}
       bgColor={colors.primary}
       headerColor={colors.primary}

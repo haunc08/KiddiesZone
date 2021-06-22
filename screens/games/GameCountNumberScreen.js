@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, View, StyleSheet, ImageBackground } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,15 +7,29 @@ import { ImageButton } from "../../components/Button";
 import { colors, sizes } from "../../constants";
 import { IconManager, ImageManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
+import { Hearts } from "../../components/Indicator";
+import { Row } from "../../components/Wrapper";
+
+const food = ImageManager.count.food;
 
 const GameCountNumberScreen = ({ navigation }) => {
   // const [lifePoint, setLifePoint] = useState(3);
-  const [question, setQuestion] = useState("Có mấy cái bánh?");
   const [isAnswered, setIsAnswered] = useState(false);
+
+  const points = useRef(0);
+  const lives = useRef(3);
 
   // random from 1 to 9
   const randomNum = Math.floor(Math.random() * 9) + 1;
   const [numberOfItems, setNumberOfItems] = useState(randomNum);
+
+  const randomFood = () => Math.floor(Math.random() * food.length);
+
+  const foodIndex = useRef(randomFood());
+
+  const [question, setQuestion] = useState(
+    "Có mấy " + food[foodIndex.current].name + "?"
+  );
 
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
@@ -58,7 +72,7 @@ const GameCountNumberScreen = ({ navigation }) => {
           itemRow.push(
             <Image
               key={i * itemInRow + j}
-              source={require("../../assets/icons/donut.png")}
+              source={food[foodIndex.current].img}
               style={itemStyle}
             />
           );
@@ -81,7 +95,7 @@ const GameCountNumberScreen = ({ navigation }) => {
       itemRow.push(
         <Image
           key={numberOfRows * 3 + j}
-          source={require("../../assets/icons/donut.png")}
+          source={food[foodIndex.current].img}
           style={itemStyle}
         />
       );
@@ -117,12 +131,13 @@ const GameCountNumberScreen = ({ navigation }) => {
   const handleRightAnswer = () => {
     playSoundFile("yayy");
     setQuestion("Đúng rồi!");
+    points.current = points.current + 1;
   };
 
   const handleWrongAnswer = () => {
     playSoundFile("lose");
     setQuestion("Sai rồi!");
-
+    lives.current = lives.current - 1;
     // const newLifePoint = lifePoint - 1;
     // setLifePoint(newLifePoint);
     // console.log("LP", lifePoint);
@@ -159,19 +174,27 @@ const GameCountNumberScreen = ({ navigation }) => {
   const AnswerImage = () => {
     const imagePath = ImageManager.number[`${numberOfItems}`];
     return (
-      <TouchableOpacity
-        style={{ alignItems: "center" }}
-        onPress={() => playSoundFile(`no${numberOfItems}`)}
-      >
-        <Image
-          style={{
-            width: 150,
-            height: 150,
-            opacity: 1,
-          }}
-          source={imagePath}
+      <Row style={{ marginBottom: sizes.base * 2 }}>
+        <TouchableOpacity
+          style={{ alignItems: "center" }}
+          onPress={() => playSoundFile(`no${numberOfItems}`)}
+        >
+          <Image
+            style={{
+              width: 150,
+              height: 150,
+              opacity: 1,
+              marginRight: sizes.base * 3,
+            }}
+            source={imagePath}
+          />
+        </TouchableOpacity>
+        <ImageButton
+          source={IconManager.next}
+          height={sizes.base * 4}
+          onPress={() => resetValue()}
         />
-      </TouchableOpacity>
+      </Row>
     );
   };
 
@@ -186,12 +209,13 @@ const GameCountNumberScreen = ({ navigation }) => {
     const ranNum = Math.floor(Math.random() * 9) + 1;
     setNumberOfItems(ranNum);
     setIsAnswered(false);
-    setQuestion("Có mấy cái bánh?");
+    foodIndex.current = randomFood();
+    setQuestion("Có mấy " + food[foodIndex.current].name + "?");
   };
 
   return (
     <ImageBackground
-      source={ImageManager.number.bg}
+      source={ImageManager.count.bg}
       style={{
         backgroundColor: "pink",
         width: "100%",
@@ -205,10 +229,11 @@ const GameCountNumberScreen = ({ navigation }) => {
           style={{
             flex: 1,
             flexDirection: "row",
-            justifyContent: "space-between",
+            // justifyContent: "",
             alignItems: "center",
-            position: "absolute",
+            // position: "absolute",
             padding: sizes.base,
+            marginBottom: -sizes.base * 3,
           }}
         >
           <View style={{ marginLeft: 16 }}>
@@ -219,8 +244,17 @@ const GameCountNumberScreen = ({ navigation }) => {
               color={colors.red}
             />
           </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ alignItems: "center", marginLeft: sizes.base * 2 }}>
             <Text style={styles.title}>{question}</Text>
+          </View>
+          <View style={{ flex: 1, marginRight: sizes.base * 2 }}>
+            <Hearts
+              lives={lives.current}
+              points={points.current}
+              reverse
+              pointColor={colors.black}
+              noPadding
+            />
           </View>
         </View>
         <View style={{ flex: 4 }}>
@@ -241,6 +275,7 @@ const GameCountNumberScreen = ({ navigation }) => {
             >
               {CountingItems()}
             </View>
+
             <View
               style={{
                 flex: 1,
@@ -252,22 +287,6 @@ const GameCountNumberScreen = ({ navigation }) => {
               {AnswerView()}
             </View>
           </View>
-        </View>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <View>
-          <ImageButton
-            small
-            style={{ marginRight: 16 }}
-            onPress={() => resetValue()}
-            source={require("../../assets/icons/play-button.png")}
-          ></ImageButton>
         </View>
       </View>
     </ImageBackground>

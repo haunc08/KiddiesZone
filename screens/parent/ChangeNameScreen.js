@@ -71,6 +71,8 @@ export const ChangeNameScreen = ({ navigation }) => {
             .currentUser.updatePassword(newPassword)
             .then(() => {
               Alert.alert("Thông báo", "Bạn đã cập nhật mật khẩu thành công.");
+              setCurPassword("");
+              setnewPassword("");
             })
             .catch((error) => console.log(error));
         })
