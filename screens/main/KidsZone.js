@@ -29,8 +29,13 @@ export const KidsZone = ({ navigation }) => {
 
   const games = [
     {
+      key: "TrashGame",
+      name: "Dọn rác",
+    },
+    {
       key: "GameAdd",
       name: "Phép cộng",
+      image: ImageManager.games.calc,
     },
     {
       key: "Instruments",
@@ -66,11 +71,6 @@ export const KidsZone = ({ navigation }) => {
       key: "GameAlphabet",
       name: "Đánh vần",
       image: ImageManager.games.letters,
-    },
-
-    {
-      key: "TrashGame",
-      name: "Dọn rác",
     },
   ];
   return (

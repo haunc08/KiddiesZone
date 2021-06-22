@@ -88,6 +88,7 @@ export const IconManager = {
       play: require("../assets/icons/buttons/green/play.png"),
     },
   },
+  radioactive: require("../assets/icons/radioactive.png"),
 };
 
 export const ImageManager = {
@@ -254,6 +255,7 @@ export const ImageManager = {
     ],
   },
   ground: require("../assets/images/ground.jpg"),
+  groundblur: require("../assets/images/groundblur.jpg"),
   passwordParent: {
     background: require("../assets/images/passwordparent/background.jpg"),
     animals: require("../assets/images/passwordparent/animals.png"),
@@ -269,6 +271,7 @@ export const ImageManager = {
     stories: require("../assets/images/games/stories.png"),
     numbers2: require("../assets/images/games/numbers.png"),
     letters: require("../assets/images/games/letters.png"),
+    calc: require("../assets/images/games/calc.png"),
   },
   stories: {
     riu: require("../assets/images/stories/riu.png"),

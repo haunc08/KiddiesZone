@@ -1,18 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert } from "react-native";
-import { View } from "react-native";
+import { Alert, ImageBackground, View } from "react-native";
 import { Text } from "react-native-elements";
 import Animated, { Easing } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { ImageButton } from "../../components/Button";
+import { AutoIcon, ImageButton } from "../../components/Button";
 import { Frame } from "../../components/Wrapper";
-import { sizes } from "../../constants";
+import { colors, sizes } from "../../constants";
 import {
   cleanTrashItem,
   clearAllTrashItems,
   createTrashItem,
 } from "../../redux/actions/trashItems";
 import { IconManager, ImageManager } from "../../utils/image";
+import * as Progress from "react-native-progress";
+import { hexToRgba } from "../../utils/color";
+import {
+  Heading2,
+  Heading1,
+  Body,
+  Heading3,
+} from "../../components/Typography";
 
 const calcMarginVertical = (flex) => {
   return (sizes.short * flex) / 5;
@@ -45,7 +52,7 @@ const Trash = ({
     bottomAnim.setValue(calcMarginVertical(initialBottom));
     Animated.timing(bottomAnim, {
       toValue: calcMarginVertical(stopBottom),
-      duration: 2000,
+      duration: 3000,
       easing: Easing.linear,
     }).start(() => {
       // console.log(bottomAnim);
@@ -72,14 +79,14 @@ const Trash = ({
   );
 };
 
-const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
+const limitLandingItems = 10;
+
+const TrashRain = ({ countLandingItems, setCountLandingItems, setPoints }) => {
   const dispatch = useDispatch();
   // const [trashItems, setTrashItems] = useState([]);
   const trashItems = useSelector((state) => state.trashItems);
 
   const [count, setCount] = useState(0);
-
-  const limitLandingItems = 10;
 
   // const trashItemsRef = useRef();
   // trashItemsRef.current = trashItems;
@@ -88,10 +95,10 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
   countLandingRef.current = countLandingItems;
 
   useEffect(() => {
-    if (countLandingItems == limitLandingItems) {
-      Alert.alert("Thong bao", "Game over!");
-      return;
-    }
+    // if (countLandingItems == limitLandingItems) {
+    //   Alert.alert("Thong bao", "Game over!");
+    //   return;
+    // }
 
     const interval = setInterval(() => {
       console.log(countLandingItems);
@@ -143,7 +150,9 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
         <Trash
           key={count}
           trashKey={count}
-          onPress={(trashKey) => cleanTrash(trashKey)}
+          onPress={(trashKey) => {
+            cleanTrash(trashKey), setPoints((prev) => prev + 1);
+          }}
           onChangeStateLanding={(isLanding) =>
             handleChangeStateLanding(isLanding)
           }
@@ -168,6 +177,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems }) => {
 
 const TrashGame = ({ navigation }) => {
   const [countLandingItems, setCountLandingItems] = useState(0);
+  const [points, setPoints] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -179,34 +189,95 @@ const TrashGame = ({ navigation }) => {
           top: calcMarginVertical(0),
           left: calcMarginHorizontal(0),
           margin: 16,
+          zIndex: 6,
         }}
       >
         <ImageButton
           small
-          source={IconManager.back}
+          source={IconManager.buttons.orange.back}
           onPress={() => {
             navigation.goBack();
             dispatch(clearAllTrashItems());
           }}
         />
       </View>
-      <View
-        style={{
-          position: "absolute",
-          top: calcMarginVertical(0),
-          right: calcMarginHorizontal(0),
-          marginRight: 16,
-        }}
-      >
-        <Text
+      {countLandingItems < limitLandingItems ? (
+        <View
+          style={{
+            position: "absolute",
+            top: calcMarginVertical(0.2),
+            right: calcMarginHorizontal(0.05),
+            marginRight: 16,
+            flexDirection: "row",
+            alignItems: "center",
+            zIndex: 3,
+          }}
+        >
+          {/* <Text
           style={{ fontSize: 48, fontWeight: "bold" }}
-        >{`${countLandingItems}/10`}</Text>
-      </View>
+        >{`${countLandingItems}/10`}</Text> */}
+          <Progress.Bar
+            progress={countLandingItems / limitLandingItems}
+            width={sizes.long / 3}
+            color={colors.yellow}
+            borderWidth={4}
+            height={sizes.base * 1.5}
+            borderRadius={999}
+            borderColor={colors.white}
+            unfilledColor={hexToRgba(colors.black, 0.33)}
+          />
+          <AutoIcon
+            source={IconManager.radioactive}
+            width={38}
+            style={{ transform: [{ translateX: -15 }] }}
+          />
+
+          <Heading2
+            white
+            style={{
+              marginLeft: sizes.base,
+              fontSize: 30,
+              transform: [{ translateX: -8 }],
+              // minWidth: 35,
+            }}
+          >
+            {points}
+          </Heading2>
+        </View>
+      ) : (
+        <View
+          style={{
+            alignItems: "center",
+            backgroundColor: colors.white,
+            padding: sizes.base * 2,
+            borderRadius: sizes.base * 2,
+            elevation: 30,
+          }}
+        >
+          <ImageButton
+            source={IconManager.buttons.orange.replay}
+            height={sizes.base * 4.5}
+            onPress={() => {
+              // setLives(3);
+              // setPoints(0);
+              // play();
+              dispatch(clearAllTrashItems());
+              navigation.goBack();
+              navigation.navigate("TrashGame");
+            }}
+          />
+          <Heading3>Điểm của bạn</Heading3>
+          <Heading1>{points}</Heading1>
+        </View>
+      )}
       {/* {TrashRain()} */}
-      <TrashRain
-        countLandingItems={countLandingItems}
-        setCountLandingItems={setCountLandingItems}
-      />
+      {countLandingItems < limitLandingItems ? (
+        <TrashRain
+          countLandingItems={countLandingItems}
+          setCountLandingItems={setCountLandingItems}
+          setPoints={setPoints}
+        />
+      ) : null}
     </Frame>
   );
 };
