@@ -23,13 +23,19 @@ import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { hexToRgba } from "../../utils/color";
 import { LineChart } from "react-native-chart-kit";
 import { calcAge } from "../../utils/string";
-import { getLastMonth, getMostRecentMonths } from "../../utils/time";
+import {
+  getLastMonth,
+  getMostRecentMonths,
+  getRecentHalfYear,
+  halfMonths,
+  numsToMonths,
+} from "../../utils/time";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 import { UserContext } from "../../App";
 import { ChildrenContext } from "../../navigation/ParentNavigator";
 
-const dummyArray = ["item1", "item2", "item3"];
+const healthChartYears = getRecentHalfYear(3);
 
 export const LargeChildInfo = ({ item, color }) => {
   return (
@@ -90,7 +96,6 @@ const TrackingScreen = ({ navigation }) => {
           };
           records.push(record);
         });
-        console.log("set health ");
 
         setHealthRecords(records);
       });
@@ -268,71 +273,155 @@ const TrackingScreen = ({ navigation }) => {
     return result;
   };
 
+  const refinedData = (data) => {
+    const leftBound = (index) => {
+      for (let i = index; i >= 0; i--) {
+        if (data[i] > 0) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+    const rightBound = (index) => {
+      for (let i = index; i < data.length; i++) {
+        if (data[i] > 0) {
+          return i;
+        }
+      }
+      return -1;
+    };
+
+    return data.map((d, index) => {
+      if (d === 0) {
+        const l = leftBound(index);
+        const r = rightBound(index);
+        if (l === -1 || r === -1) {
+          return 0;
+        }
+        return ((data[r] - data[l]) / (r - l)) * (index - l) + data[l];
+      }
+      return d;
+    });
+  };
+
+  const getHealthChartData = (type, months, year) => {
+    const res = months.map((m, index) => {
+      // if (index === 2) {
+      //   return 300;
+      // }
+      const recordsInMonth = healthRecords.filter(
+        (record) =>
+          record?.createdAt.toDate().getMonth() === m - 1 &&
+          record?.createdAt.toDate().getFullYear() === year
+      );
+      if (recordsInMonth.length <= 0) {
+        return 0;
+      }
+      const sum = recordsInMonth.reduce(
+        (a, b) => parseInt(a) + (parseInt(b[type]) || 0),
+        0
+      );
+      return sum / recordsInMonth.length;
+    });
+    const finalData = refinedData(res);
+
+    return finalData;
+  };
+
   const recentMonths = getMostRecentMonths(6);
 
   const heightChart = ({ item, index }) => {
-    const averageHeight = getHeightWeightRecentMonths("height", recentMonths);
+    const heightMonths = halfMonths(item.half);
+    const chartData = getHealthChartData("height", heightMonths, item.year);
 
     return (
-      <LineChart
-        data={{
-          labels: recentMonths,
-          datasets: [
-            {
-              data: averageHeight,
+      <Space>
+        <Row
+          style={{
+            alignSelf: "stretch",
+            justifyContent: "space-between",
+            marginHorizontal: sizes.base * 1.5,
+          }}
+        >
+          <Heading1 style={{ color: scheme }}>{item.year}</Heading1>
+          <Body style={{ color: scheme, fontSize: sizes.h3 }}>Chiều cao</Body>
+        </Row>
+        <LineChart
+          data={{
+            labels: numsToMonths(heightMonths),
+            datasets: [
+              {
+                data: chartData,
+              },
+            ],
+          }}
+          width={sizes.short - sizes.base * 2} // from react-native
+          height={220}
+          chartConfig={{
+            backgroundGradientFrom: colors.white,
+            backgroundGradientTo: colors.white,
+            decimalPlaces: 0, // optional, defaults to 2dp
+            color: () => hexToRgba(scheme, 1),
+            style: {
+              borderRadius: 16,
             },
-          ],
-        }}
-        width={sizes.short - sizes.base * 2} // from react-native
-        height={220}
-        chartConfig={{
-          backgroundGradientFrom: colors.white,
-          backgroundGradientTo: colors.white,
-          decimalPlaces: 0, // optional, defaults to 2dp
-          color: () => hexToRgba(scheme, 1),
-          style: {
+          }}
+          bezier
+          style={{
+            marginLeft: -sizes.base / 2,
             borderRadius: 16,
-          },
-        }}
-        bezier
-        style={{
-          marginLeft: -sizes.base / 2,
-          borderRadius: 16,
-        }}
-      />
+          }}
+          fromZero={true}
+        />
+      </Space>
     );
   };
 
   const weightChart = ({ item, index }) => {
-    const averageWeight = getHeightWeightRecentMonths("weight", recentMonths);
+    const heightMonths = halfMonths(item.half);
+    const chartData = getHealthChartData("weight", heightMonths, item.year);
 
     return (
-      <LineChart
-        data={{
-          labels: recentMonths,
-          datasets: [
-            {
-              data: averageWeight,
+      <Space>
+        <Row
+          style={{
+            alignSelf: "stretch",
+            justifyContent: "space-between",
+            marginHorizontal: sizes.base * 1.5,
+          }}
+        >
+          <Heading1 style={{ color: scheme }}>{item.year}</Heading1>
+          <Body style={{ color: scheme, fontSize: sizes.h3 }}>Cân nặng</Body>
+        </Row>
+        <LineChart
+          data={{
+            labels: numsToMonths(heightMonths),
+            datasets: [
+              {
+                data: chartData,
+              },
+            ],
+          }}
+          width={sizes.short - sizes.base * 2} // from react-native
+          height={220}
+          chartConfig={{
+            backgroundGradientFrom: colors.white,
+            backgroundGradientTo: colors.white,
+            decimalPlaces: 0, // optional, defaults to 2dp
+            color: () => hexToRgba(scheme, 1),
+            style: {
+              borderRadius: 16,
             },
-          ],
-        }}
-        width={sizes.short - sizes.base * 2} // from react-native
-        height={220}
-        chartConfig={{
-          backgroundGradientFrom: colors.white,
-          backgroundGradientTo: colors.white,
-          decimalPlaces: 0, // optional, defaults to 2dp
-          color: () => hexToRgba(scheme, 1),
-          style: {
+          }}
+          bezier
+          style={{
+            marginLeft: -sizes.base / 2,
             borderRadius: 16,
-          },
-        }}
-        bezier
-        style={{
-          marginLeft: -sizes.base / 2,
-          borderRadius: 16,
-        }}
-      />
+          }}
+          fromZero={true}
+        />
+      </Space>
     );
   };
 
@@ -403,52 +492,38 @@ const TrackingScreen = ({ navigation }) => {
             />
           </Card>
           <Card style={{ alignItems: "center" }}>
-            <Space>
-              <Row
-                style={{
-                  alignSelf: "stretch",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Heading1 style={{ color: scheme }}>2021</Heading1>
-                <Body style={{ color: scheme, fontSize: sizes.h3 }}>
-                  Chiều cao
-                </Body>
-              </Row>
-              <Carousel
-                ref={(c) => {
-                  carouselHeight.current = c;
-                }}
-                data={[0]}
-                renderItem={heightChart}
-                sliderWidth={sizes.short - sizes.base * 2}
-                itemWidth={sizes.short - sizes.base * 2}
-              />
-            </Space>
+            <Carousel
+              ref={(c) => {
+                carouselHeight.current = c;
+              }}
+              data={healthChartYears}
+              renderItem={heightChart}
+              sliderWidth={sizes.short - sizes.base * 2}
+              itemWidth={sizes.short - sizes.base * 2}
+              onLayout={() => {
+                carouselHeight.current.snapToItem(
+                  healthChartYears.length - 1,
+                  false
+                );
+              }}
+            />
           </Card>
           <Card style={{ alignItems: "center" }}>
-            <Space>
-              <Row
-                style={{
-                  alignSelf: "stretch",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Heading1 style={{ color: scheme }}>2021</Heading1>
-                <Body style={{ color: scheme, fontSize: sizes.h3 }}>
-                  Cân nặng
-                </Body>
-              </Row>
-              <Carousel
-                ref={(c) => {
-                  carouselWeight.current = c;
-                }}
-                data={[0]}
-                renderItem={weightChart}
-                sliderWidth={sizes.short - sizes.base * 2}
-                itemWidth={sizes.short - sizes.base * 2}
-              />
-            </Space>
+            <Carousel
+              ref={(c) => {
+                carouselWeight.current = c;
+              }}
+              data={healthChartYears}
+              renderItem={weightChart}
+              sliderWidth={sizes.short - sizes.base * 2}
+              itemWidth={sizes.short - sizes.base * 2}
+              onLayout={() => {
+                carouselWeight.current.snapToItem(
+                  healthChartYears.length - 1,
+                  false
+                );
+              }}
+            />
           </Card>
         </Space>
       ) : (
