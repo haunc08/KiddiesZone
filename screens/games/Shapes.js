@@ -11,7 +11,7 @@ import {
 import { colors, sizes } from "../../constants";
 import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { GameObject, ImageButton, StoryObject } from "../../components/Button";
-import { createSound } from "../../utils/sound";
+import { createSound, playSoundFile } from "../../utils/sound";
 import { ImageManager, IconManager, autoSize } from "../../utils/image";
 import { Hearts } from "../../components/Indicator";
 import { Heading1, Heading3 } from "../../components/Typography";
@@ -133,20 +133,28 @@ export const Shapes = ({ navigation }) => {
           setItem0((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            playSoundFile("correct");
             setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives((prev) => prev - 1);
+        } else {
+          playSoundFile("wrong");
+          setLives((prev) => prev - 1);
+        }
         break;
       case 1:
         if (shape === item1.shape) {
           setItem1((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            playSoundFile("correct");
             setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives((prev) => prev - 1);
+        } else {
+          playSoundFile("wrong");
+          setLives((prev) => prev - 1);
+        }
 
         break;
       case 2:
@@ -154,10 +162,14 @@ export const Shapes = ({ navigation }) => {
           setItem2((prevItem) => {
             const temp = { ...prevItem, correct: true };
             increaseCurrentItem();
+            playSoundFile("correct");
             setPoints((prev) => prev + 1);
             return temp;
           });
-        } else setLives((prev) => prev - 1);
+        } else {
+          playSoundFile("wrong");
+          setLives((prev) => prev - 1);
+        }
 
         break;
     }
