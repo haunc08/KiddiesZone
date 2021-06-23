@@ -69,6 +69,24 @@ const TrackingScreen = ({ navigation }) => {
   const scheme =
     currentChild?.gender === Gender.MALE ? colors.blue : colors.pink;
 
+  const calcBMI = () => {
+    if (!healthRecords[0]) return 0;
+
+    const record = healthRecords[0];
+    const height = (record?.height / 100).toFixed(2);
+    return (record?.weight / (height * height)).toFixed(2);
+  };
+
+  const checkBMIResult = (bmi) => {
+    if (bmi >= 0 && bmi < 14) return "Thiếu cân";
+    if (bmi >= 14 && bmi <= 18) return "Sức khỏe dinh dưỡng tốt";
+    if (bmi > 18 && bmi <= 20) return "Nguy cơ béo phì";
+    if (bmi > 20) return "Béo phì";
+  };
+
+  const bmiIndex = calcBMI();
+  const bmiResult = checkBMIResult(bmiIndex);
+
   const childrenRef = firestore()
     .collection(CollectionName.USERS)
     .doc(user?.uid)
@@ -118,7 +136,7 @@ const TrackingScreen = ({ navigation }) => {
 
   const historyItem = ({ item }) => {
     try {
-      const createdAt = item?.createdAt.toDate().toDateString();
+      const createdAt = item?.createdAt?.toDate().toDateString();
       return (
         <View
           style={{
@@ -171,16 +189,8 @@ const TrackingScreen = ({ navigation }) => {
     }
   };
 
-  const calcBMI = () => {
-    if (!healthRecords[0]) return 0;
-
-    const record = healthRecords[0];
-    const height = (record?.height / 100).toFixed(2);
-    return (record?.weight / (height * height)).toFixed(2);
-  };
-
   const childCard = ({ item, index }) => {
-    const age = calcAge(item?.birthday.toDate());
+    const age = calcAge(item.birthday.toDate());
     const latestRecord = healthRecords[0];
 
     return (
@@ -252,14 +262,18 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const getHeightWeightRecentMonths = (type, months) => {
+    if (!healthRecords) return;
     // calc average in each month
     const curYear = new Date().getFullYear();
     const result = months.map((month) => {
-      const recordsInMonth = healthRecords.filter(
-        (record) =>
+      const recordsInMonth = healthRecords.filter((record) => {
+        if (!record?.createdAt) return;
+        if (
           record?.createdAt.toDate().getMonth() === month - 1 &&
           record?.createdAt.toDate().getFullYear() === curYear
-      );
+        )
+          return record;
+      });
 
       if (recordsInMonth.length <= 0) return 0;
 
@@ -455,9 +469,9 @@ const TrackingScreen = ({ navigation }) => {
                 style={{ alignItems: "center", marginRight: sizes.base * 4 }}
               >
                 <Impress color={scheme}>
-                  <Heading3 white>{calcBMI()}</Heading3>
+                  <Heading3 white>{bmiIndex}</Heading3>
                 </Impress>
-                <Heading3 style={{ color: scheme }}>Bình thường</Heading3>
+                <Heading3 style={{ color: scheme }}>{bmiResult}</Heading3>
               </View>
               <AutoIcon
                 color={scheme}

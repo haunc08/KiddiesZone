@@ -18,7 +18,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import DatePicker from "react-native-date-picker";
 import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 
-import firestore from "@react-native-firebase/firestore";
+import firestore, {
+  FirebaseFirestoreTypes,
+} from "@react-native-firebase/firestore";
 import { UserContext } from "../../App";
 
 const GenderSelect = ({ selectedGender, setSelectedGender }) => {
@@ -215,6 +217,45 @@ export const AddRecordScreen = ({ route, navigation }) => {
     result ?? navigation.goBack();
   };
 
+  const deleteChildInfo = async () => {
+    const childDoc = firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .collection(CollectionName.CHILDREN)
+      .doc(child?._id);
+
+    try {
+      await childDoc
+        .collection(CollectionName.HEALTH_RECORDS)
+        .get()
+        .then(async (querySnapshot) => {
+          // console.log(querySnapshot.docs);
+          for (const docSnapshot of querySnapshot.docs) {
+            await docSnapshot.ref
+              .delete()
+              .then(() => console.log("Deleted record"))
+              .catch((error) => console.log(error));
+          }
+        });
+      await childDoc.delete().then(() => console.log("Deleted child info"));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteChild = () => {
+    Alert.alert("Thông báo", "Bạn có muốn xóa thông tin của bé này không?", [
+      {
+        text: "OK",
+        onPress: () => {
+          deleteChildInfo();
+          navigation.goBack();
+        },
+      },
+      { text: "Cancel", onPress: () => {} },
+    ]);
+  };
+
   const HeightAndWeight = () => {
     if (mode === HandlingMode.ADD) {
       return (
@@ -274,7 +315,7 @@ export const AddRecordScreen = ({ route, navigation }) => {
         {HeightAndWeight()}
         <FilledButton onPress={handleSubmit}>Hoàn tất</FilledButton>
         {mode === HandlingMode.EDIT ? (
-          <OutlinedButton onPress={handleSubmit}>Xóa</OutlinedButton>
+          <OutlinedButton onPress={handleDeleteChild}>Xóa</OutlinedButton>
         ) : (
           <View></View>
         )}

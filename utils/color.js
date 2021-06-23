@@ -1,4 +1,5 @@
 import { colors } from "../constants";
+import { Gender } from "./enum";
 
 export function hexToRgba(hex, opacity) {
   if (!opacity) opacity = 1;
@@ -21,7 +22,7 @@ export function hexToRgba(hex, opacity) {
 }
 
 export const genderToColor = (gender) => {
-  if (gender === "male") {
+  if (gender === Gender.MALE) {
     return colors.blue;
   }
   return colors.pink;

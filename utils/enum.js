@@ -3,6 +3,9 @@ export const CollectionName = {
   CHILDREN: "Children",
   HEALTH_RECORDS: "HealthRecords",
   POSTS: "Posts",
+  GAMES: "Games",
+  CHILD_GAME_DATA: "ChildGameData",
+  GAME_RECORDS: "GameRecords",
 };
 
 export const Gender = {
