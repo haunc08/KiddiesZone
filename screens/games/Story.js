@@ -45,6 +45,21 @@ export const Story = ({ navigation }) => {
 
   const keys = Object.keys(media);
 
+  const scriptText = [
+    "Một buổi sáng trời mát mẻ bên bờ hồ trong xanh, rùa đang hì hục tập chạy",
+    `Thỏ đi qua, nhìn thấy vậy thì cười lớn, nhạo báng: "Cậu nên thôi cái việc vô ích ấy đi, khắp cả khu rừng này, ai chẳng biết họ nhà cậu là giống loài chậm chạp nhất"`,
+    `Rùa ngẩng lên đáp: "Tôi tập chạy cho khỏe"`,
+    `Thỏ nói: "Tôi nói thật đấy, dù cậu có dành cả đời tập chạy cũng không bao giờ theo kịp được tôi"`,
+    `Rùa bực mình vì vẻ ngạo mạn của thỏ, trả lời lại: "Nếu vậy tôi với anh thử chạy thi xem ai trong chúng ta sẽ về đích trước"`,
+    `Thỏ cười to bảo rằng: "Sao cậu không rủ sên thi cùng ấy? Chắc chắc cậu sẽ thắng"`,
+    `Rùa nói chắc nịch: "Anh đừng có chế giễu tôi, chúng ta cứ thử thi xem sao, chưa biết ai thua cuộc đâu"`,
+    `Thỏ nhíu mày, vểnh đôi tai lên tự đắc: "Được thôi, tôi sẽ cho cậu thấy`,
+    `Rùa và thỏ quy ước lấy gốc cây cổ thụ bên kia hồ làm đích rồi cả vào vạch xuất phát, thỏ vẫn ngạo nghễ: "Tôi chấp cậu cả nửa đường luôn đấy"`,
+    `Biết mình chậm chạp, rùa không nói gì, chỉ tập trung dồn sức chạy thật nhanh. Thỏ nhìn theo mỉm cười, vỗ tay cổ vũ rùa, thỏ nghĩ: "Giờ mà chạy có thắng cậu ta cũng chẳng vẻ vang gì, để lúc nào rùa gần tới nơi, mình phóng lên cán đích trước càng khiến cậu ta nể phục. `,
+    `Thế là thủ nhởn nhơ nằm ngủ một giấc thật say, mải ngủ, thỏ quên mất cả cuộc thi. Thỏ đang nằm khoan thai ngắm bầu trời trong xanh, mây trôi nhè nhẹ, bỗng bật dậy nhớ tới cuộc thi, nhấc đầu lên thì rùa đã gần tới đích`,
+    `Thỏ cắm đầu cắm cổ chạy miết nhưng không kịp nữa, rùa đã cán đích trước thỏ một đoạn đường dài.`,
+  ];
+
   const frames = [
     {
       page: 1,
@@ -431,7 +446,7 @@ export const Story = ({ navigation }) => {
     await backgroundMusic.current.stop(() => {
       backgroundMusic.current.release();
     });
-    navigation.goBack();
+    navigation.navigate("Stories");
   };
   const handleNext = async () => {
     await stopScript();
@@ -493,6 +508,31 @@ export const Story = ({ navigation }) => {
             />
             <Heading1 white>{page + 1}</Heading1>
           </Space>
+        </View>
+      )}
+      {page > -1 && (
+        <View
+          pointerEvents="none"
+          style={{
+            margin: sizes.base,
+            alignSelf: "flex-start",
+            flex: 1,
+            marginHorizontal: sizes.base * 5,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: colors.darkGrass,
+              // flex: 1,
+              borderRadius: sizes.base,
+              padding: sizes.base,
+              paddingVertical: sizes.base / 2,
+              marginBottom: sizes.base / 3,
+              alignSelf: "center",
+            }}
+          >
+            <Text style={{ color: colors.white }}>{scriptText[page]}</Text>
+          </View>
         </View>
       )}
     </NoScrollView>

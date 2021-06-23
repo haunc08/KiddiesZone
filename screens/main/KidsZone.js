@@ -29,38 +29,9 @@ export const KidsZone = ({ navigation }) => {
 
   const games = [
     {
-      key: "TrashGame",
-      name: "Dọn rác",
-    },
-    {
-      key: "GameAdd",
-      name: "Phép cộng",
-      image: ImageManager.games.calc,
-    },
-    {
-      key: "Instruments",
-      name: "Âm nhạc",
-      image: ImageManager.games.instrument,
-    },
-    {
-      key: "Shapes",
-      name: "Hình khối",
-      image: ImageManager.games.shapes,
-    },
-    {
-      key: "Movies",
-      name: "Xem hoạt hình",
-      image: ImageManager.games.movies,
-    },
-    {
-      key: "Sandbox",
-      name: "Vẽ trên cát",
-      image: ImageManager.games.sandbox,
-    },
-    {
-      key: "Stories",
-      name: "Đọc truyện",
-      image: ImageManager.games.stories,
+      key: "GameAlphabet",
+      name: "Đánh vần",
+      image: ImageManager.games.letters,
     },
     {
       key: "GameCountNumberScreen",
@@ -68,9 +39,42 @@ export const KidsZone = ({ navigation }) => {
       image: ImageManager.games.numbers2,
     },
     {
-      key: "GameAlphabet",
-      name: "Đánh vần",
-      image: ImageManager.games.letters,
+      key: "GameAdd",
+      name: "Phép cộng",
+      image: ImageManager.games.calc,
+    },
+    {
+      key: "Shapes",
+      name: "Hình khối",
+      image: ImageManager.games.shapes,
+    },
+    {
+      key: "TrashGame",
+      name: "Dọn rác",
+      image: ImageManager.games.trash,
+    },
+    {
+      key: "Sandbox",
+      name: "Vẽ trên cát",
+      image: ImageManager.games.sandbox,
+    },
+
+    {
+      key: "Instruments",
+      name: "Âm nhạc",
+      image: ImageManager.games.instrument,
+    },
+
+    {
+      key: "Movies",
+      name: "Xem hoạt hình",
+      image: ImageManager.games.movies,
+    },
+
+    {
+      key: "Stories",
+      name: "Đọc truyện",
+      image: ImageManager.games.stories,
     },
   ];
   return (
