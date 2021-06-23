@@ -11,7 +11,7 @@ export const TextInput = (props) => {
     <Input
       label={label}
       placeholder={placeholder}
-      leftIcon={{ type: "material", name: "mail", color: colors.black }}
+      // leftIcon={{ type: "material", name: "mail", color: colors.black }}
       labelStyle={{ color: colors.black }}
       leftIconContainerStyle={{ marginRight: sizes.base / 2 }}
       containerStyle={styles.container}

@@ -233,10 +233,10 @@ export const GameCatalogueScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <Space>
+        {/* <Space>
           <Heading2>Danh sách game</Heading2>
           <HorizontalList data={games} />
-        </Space>
+        </Space> */}
         <Carousel
           ref={(c) => {
             carouselChild.current = c;

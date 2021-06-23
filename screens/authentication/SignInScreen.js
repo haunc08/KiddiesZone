@@ -69,7 +69,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <NoScrollView imgSource={require("../../assets/images/background.png")}>
+    <NoScrollView imgSource={require("../../assets/images/kidszonebg.jpg")}>
       <Card title="Đăng nhập">
         <TextInput
           label="Email"

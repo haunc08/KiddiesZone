@@ -101,7 +101,7 @@ const SignUpScreen = ({ navigation }) => {
   }
 
   return (
-    <NoScrollView>
+    <NoScrollView imgSource={require("../../assets/images/kidszonebg.jpg")}>
       <Card title="Đăng ký">
         <TextInput
           label="Họ tên"
