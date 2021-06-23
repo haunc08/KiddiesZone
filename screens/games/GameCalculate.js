@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Button, Image, StyleSheet, View } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Image, StyleSheet, View, ImageBackground } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { ImageButton } from "../../components/Button";
-import { colors } from "../../constants";
+import Carousel from "react-native-snap-carousel";
+import { AutoIcon, ImageButton } from "../../components/Button";
+import { Hearts } from "../../components/Indicator";
+import { Heading2, Heading1 } from "../../components/Typography";
+import { Row } from "../../components/Wrapper";
+import { colors, sizes } from "../../constants";
 import {
   autoSize,
   getRandomGameItem,
@@ -13,22 +17,35 @@ import {
 import { playSoundFile } from "../../utils/sound";
 
 const GameCalculate = ({ route, navigation }) => {
-  const { gameType } = route.params;
+  const carouselMode = useRef();
+  const gameType = useRef("Add");
+  const points = useRef(0);
+  const lives = useRef(3);
 
-  const [mode, setMode] = useState("easy");
+  const [mode, setMode] = useState();
 
-  const [question, setQuestion] = useState("Phép tính này ra bao nhiêu?");
+  const [question, setQuestion] = useState("Hãy tính");
   const [xItems, setXItems] = useState(0);
   const [yItems, setYItems] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
   const [imagePath, setImagePath] = useState();
 
-  useEffect(() => {
-    const randomX = Math.floor(Math.random() * 10) + 1;
-    setXItems(randomX);
+  const newType = () => {
+    const playAdd = Math.floor(Math.random() * 2);
+    gameType.current = playAdd ? "Add" : "Subtract";
+  };
 
+  useEffect(() => {
+    newType();
+    const randomX = Math.floor(Math.random() * 10) + 1;
     const randomY = Math.floor(Math.random() * 10) + 1;
-    setYItems(randomY);
+    if (gameType.current === "Subtract" && randomX < randomY) {
+      setXItems(randomY);
+      setYItems(randomX);
+    } else {
+      setXItems(randomX);
+      setYItems(randomY);
+    }
 
     const path = getRandomGameItem();
     setImagePath(path);
@@ -42,18 +59,18 @@ const GameCalculate = ({ route, navigation }) => {
   };
 
   const getCalculatingSign = () => {
-    switch (gameType) {
+    switch (gameType.current) {
       case "Add":
         return IconManager.add;
-      case "Substract":
-        return IconManager.substract;
+      case "Subtract":
+        return IconManager.subtract;
       default:
         break;
     }
   };
 
   const calcAnswer = () => {
-    switch (gameType) {
+    switch (gameType.current) {
       case "Add":
         return xItems + yItems;
       case "Subtract":
@@ -83,16 +100,20 @@ const GameCalculate = ({ route, navigation }) => {
         answer[index] = ranNum;
       }
     }
+    console.log("fucking answer", answer);
     return answer;
   };
 
   const handleRightAnswer = () => {
     playSoundFile("yayy");
+    points.current = points.current + 1;
     setQuestion("Đúng rồi!");
   };
 
   const handleWrongAnswer = () => {
     playSoundFile("lose");
+    lives.current = lives.current - 1;
+
     setQuestion("Sai rồi!");
   };
 
@@ -105,14 +126,29 @@ const GameCalculate = ({ route, navigation }) => {
     setIsAnswered(true);
   };
 
+  const sortPair = (num1, num2) => {
+    return {
+      big: num1 > num2 ? num1 : num2,
+      small: num1 < num2 ? num1 : num2,
+    };
+  };
+
   const resetValue = () => {
+    points.current = 0;
+    lives.current = 3;
     const ranX = Math.floor(Math.random() * 10) + 1;
-    setXItems(ranX);
     const ranY = Math.floor(Math.random() * 10) + 1;
-    setYItems(ranY);
+    newType();
+    if (gameType.current === "Subtract" && ranX < ranY) {
+      setXItems(ranY);
+      setYItems(ranX);
+    } else {
+      setXItems(ranX);
+      setYItems(ranY);
+    }
 
     setIsAnswered(false);
-    setQuestion("Phép tính này ra bao nhiêu?");
+    setQuestion("Hãy tính");
 
     const path = getRandomGameItem();
     setImagePath(path);
@@ -127,7 +163,7 @@ const GameCalculate = ({ route, navigation }) => {
           style={{ alignItems: "center", flexDirection: "row" }}
           onPress={() => playSoundFile(`no${numberOfItems}`)}
         >
-          {numbers.map((number) => {
+          {numbers.map((number, index) => {
             const numPath = ImageManager.number[`${number}`];
             return (
               <Image
@@ -135,7 +171,8 @@ const GameCalculate = ({ route, navigation }) => {
                   resizeMode: "contain",
                   width: autoSize(numPath, 100, null).width,
                   height: autoSize(numPath, 100, null).height,
-                  marginHorizontal: -16,
+                  transform: [{ translateX: index === 1 ? -15 : 0 }],
+                  // marginHorizontal: -16,
                 }}
                 source={numPath}
               />
@@ -271,9 +308,18 @@ const GameCalculate = ({ route, navigation }) => {
           }}
           onPress={() => handleChooseAnswer(answer)}
         >
-          {numbers.map((number) => {
+          {numbers.map((number, index) => {
             const numPath = ImageManager.number[`${number}`];
-            return <Image style={styles.imageButton} source={numPath} />;
+            return (
+              <AutoIcon
+                width={100}
+                source={numPath}
+                style={{
+                  ...styles.imageButton,
+                  transform: [{ translateX: index === 1 ? -7 : 0 }],
+                }}
+              />
+            );
           })}
         </TouchableOpacity>
       );
@@ -290,17 +336,13 @@ const GameCalculate = ({ route, navigation }) => {
         style={{ alignItems: "center", flexDirection: "row" }}
         onPress={() => playSoundFile(`no${rightAnswer}`)}
       >
-        {numbers.map((number) => {
+        {numbers.map((number, index) => {
           const numPath = ImageManager.number[`${number}`];
           return (
-            <Image
-              style={{
-                resizeMode: "contain",
-                width: autoSize(numPath, 100, null).width,
-                height: autoSize(numPath, 100, null).height,
-                marginHorizontal: -16,
-              }}
+            <AutoIcon
+              width={100}
               source={numPath}
+              style={{ transform: [{ translateX: index === 1 ? -15 : 0 }] }}
             />
           );
         })}
@@ -315,15 +357,63 @@ const GameCalculate = ({ route, navigation }) => {
     return AnswerButton();
   };
 
+  const carouselWidth = sizes.long / 1.5;
+
+  const modes = ["easy", "hard"];
+
+  const modePreview = ({ item }) => {
+    return (
+      <ImageButton
+        width={carouselWidth}
+        source={ImageManager.calc[item]}
+        onPress={() => setMode(item)}
+      />
+    );
+  };
+  if (!mode) {
+    return (
+      <ImageBackground
+        style={{ flex: 1, alignItems: "flex-start", padding: sizes.base }}
+        source={ImageManager.calc.background}
+      >
+        <View style={{ position: "absolute", padding: sizes.base }}>
+          <ImageButton
+            small
+            source={IconManager.buttons.blue.home}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        <View style={{ flex: 1, alignSelf: "stretch", alignItems: "center" }}>
+          <Heading1
+            color={colors.darkBlue}
+            style={{ marginBottom: sizes.base }}
+          >
+            Chọn chế độ
+          </Heading1>
+          <Carousel
+            ref={(c) => {
+              carouselMode.current = c;
+            }}
+            data={modes}
+            renderItem={modePreview}
+            sliderWidth={sizes.long}
+            itemWidth={carouselWidth}
+            onSnapToItem={() => {}}
+          />
+        </View>
+      </ImageBackground>
+    );
+  }
+
   return (
-    <View
+    <ImageBackground
       style={{
-        backgroundColor: "#34A853",
         width: "100%",
         height: "100%",
         flexDirection: "row",
         display: "flex",
       }}
+      source={ImageManager.calc.background}
     >
       <View style={{ flex: 10 }}>
         <View
@@ -332,44 +422,36 @@ const GameCalculate = ({ route, navigation }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            paddingRight: sizes.base,
           }}
         >
           <View style={{ marginLeft: 16 }}>
             <ImageButton
               small
-              source={IconManager.back}
+              source={IconManager.buttons.blue.home}
               onPress={() => navigation.goBack()}
             />
           </View>
+          <Hearts points={points.current} lives={lives.current} />
+
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={styles.title}>{question}</Text>
           </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{
-                marginRight: 16,
-                width: 80,
-                alignItems: "center",
-                borderRadius: 12,
-                backgroundColor: mode === "easy" ? colors.green : "green",
-              }}
-              onPress={() => setMode("easy")}
-            >
-              <Text style={{ fontSize: 24, fontWeight: "400" }}>Dễ</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                marginRight: 16,
-                width: 80,
-                alignItems: "center",
-                borderRadius: 12,
-                backgroundColor: mode === "hard" ? colors.green : "green",
-              }}
-              onPress={() => setMode("hard")}
-            >
-              <Text style={{ fontSize: 24, fontWeight: "400" }}>Khó</Text>
-            </TouchableOpacity>
-          </View>
+          <ImageButton
+            source={
+              lives.current > 0
+                ? IconManager.buttons.blue.play
+                : IconManager.buttons.blue.replay
+            }
+            height={sizes.base * 5}
+            onPress={() => resetValue()}
+            style={{
+              marginTop: sizes.base,
+              marginRight: sizes.base / 2,
+              opacity: question === "Hãy tính" ? 0 : 1,
+            }}
+            block={question === "Hãy tính"}
+          />
         </View>
         <View style={{ flex: 4 }}>
           <View
@@ -380,7 +462,7 @@ const GameCalculate = ({ route, navigation }) => {
           >
             <View
               style={{
-                flex: 3,
+                flex: 4,
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
@@ -395,6 +477,7 @@ const GameCalculate = ({ route, navigation }) => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                marginRight: sizes.base * 3,
               }}
             >
               {AnswerView()}
@@ -402,7 +485,7 @@ const GameCalculate = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           flex: 1,
           flexDirection: "column",
@@ -417,8 +500,8 @@ const GameCalculate = ({ route, navigation }) => {
             source={require("../../assets/icons/play-button.png")}
           ></ImageButton>
         </View>
-      </View>
-    </View>
+      </View> */}
+    </ImageBackground>
   );
 };
 
@@ -433,7 +516,7 @@ const styles = StyleSheet.create({
   imageButton: {
     width: 45,
     height: 45,
-    marginHorizontal: -4,
+    // marginHorizontal: -4,
   },
   text: {
     fontSize: 24,
@@ -441,6 +524,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "bold",
+    color: colors.darkBlue,
   },
   imageView: {
     width: 100,

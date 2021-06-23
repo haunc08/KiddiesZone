@@ -29,6 +29,15 @@ export const KidsZone = ({ navigation }) => {
 
   const games = [
     {
+      key: "TrashGame",
+      name: "Dọn rác",
+    },
+    {
+      key: "GameAdd",
+      name: "Phép cộng",
+      image: ImageManager.games.calc,
+    },
+    {
       key: "Instruments",
       name: "Âm nhạc",
       image: ImageManager.games.instrument,
@@ -61,26 +70,24 @@ export const KidsZone = ({ navigation }) => {
     {
       key: "GameAlphabet",
       name: "Đánh vần",
-    },
-    {
-      key: "GameAdd",
-      name: "Phép cộng",
-    },
-    {
-      key: "TrashGame",
-      name: "Dọn rác",
+      image: ImageManager.games.letters,
     },
   ];
   return (
     <NoScrollView style={{ padding: 0 }} imgSource={ImageManager.kidszonebg}>
       <StatusBar hidden />
       {/* <KidsZoneNavbar navigation={navigation} /> */}
-      <FullHorizontalList data={games} onPress={handleChooseGame}>
+      <FullHorizontalList
+        data={games}
+        onPress={handleChooseGame}
+        spaceScale={3}
+      >
         <View
           style={{
             alignItems: "center",
             alignSelf: "center",
-            marginRight: 100,
+            marginRight: sizes.base * 2,
+            marginLeft: sizes.base * 2,
           }}
         >
           <Space tight>
@@ -92,8 +99,8 @@ export const KidsZone = ({ navigation }) => {
 
             <ImageButton
               onPress={() => navigation.navigate("ParentPasswordScreen")}
-              source={IconManager.back}
-              height={sizes.base * 3}
+              source={IconManager.buttons.orange.back}
+              height={sizes.base * 4}
               style={{ marginTop: sizes.base }}
             />
           </Space>

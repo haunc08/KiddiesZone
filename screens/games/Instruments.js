@@ -175,9 +175,9 @@ export const Instruments = ({ navigation }) => {
         }}
       >
         <ImageButton
-          width={45}
+          width={sizes.base * 4.5}
           onPress={() => navigation.goBack()}
-          source={IconManager.back}
+          source={IconManager.buttons.blue.home}
         />
       </View>
       <View

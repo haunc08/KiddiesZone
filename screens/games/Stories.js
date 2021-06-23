@@ -19,20 +19,19 @@ import {
 } from "../../components/Wrapper";
 import { ImageButton } from "../../components/Button";
 import { FullHorizontalList } from "../../components/HorizontalList";
+import { IconManager, ImageManager } from "../../utils/image";
 
 export const Stories = ({ navigation }) => {
   const stories = [
     {
       key: "Story",
       name: "Thỏ và rùa",
+      image: ImageManager.stories.turtlerabbit,
     },
     {
       key: "Story2",
       name: "Ba chiếc rìu",
-    },
-    {
-      key: "Story3",
-      name: "Truyện 3",
+      image: ImageManager.stories.riu,
     },
   ];
   const goHome = () => {
@@ -43,17 +42,22 @@ export const Stories = ({ navigation }) => {
   };
 
   return (
-    <NoScrollView style={{ padding: 0, flexDirection: "row" }}>
+    <NoScrollView
+      style={{ padding: 0, flexDirection: "row" }}
+      imgSource={ImageManager.kidszonebg}
+    >
       <StatusBar hidden />
       <FullHorizontalList
         data={stories}
-        width={550}
+        width={370}
         onPress={handleChooseStory}
+        spaceScale={1}
       >
         <ImageButton
           containerStyle={{ alignSelf: "center", marginRight: sizes.base * 2 }}
           onPress={() => goHome()}
-          source={require("../../assets/icons/back.png")}
+          source={IconManager.buttons.orange.back}
+          height={sizes.base * 4.5}
         />
       </FullHorizontalList>
     </NoScrollView>

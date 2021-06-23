@@ -29,7 +29,13 @@ import {
 import { IconManager, ImageManager } from "../utils/image";
 import { hexToRgba } from "../utils/color";
 
-export const FullHorizontalList = ({ data, onPress, width, children }) => {
+export const FullHorizontalList = ({
+  data,
+  onPress,
+  width,
+  children,
+  spaceScale,
+}) => {
   return (
     <ScrollView
       showsHorizontalScrollIndicator={false}
@@ -42,32 +48,26 @@ export const FullHorizontalList = ({ data, onPress, width, children }) => {
           flexDirection: "row",
           paddingLeft: 50,
           paddingRight: 200,
+          alignItems: "center",
           // backgroundColor: "pink",
         }}
       >
-        <Space scale={10}>
-          {data.map((d) => (
-            <Card
-              key={d.key}
-              touchable
-              style={{ width: width || 320, alignItems: "center" }}
-              title={d.image ? null : d.name}
-              onPress={() => onPress(d.key)}
-              bgColor={d.image ? colors.transparent : colors.pink}
-              noShadow
-            >
-              {d.image ? (
-                <Image
-                  source={d.image}
-                  style={{
-                    flex: 1,
-                    resizeMode: "contain",
-                    alignSelf: "center",
-                  }}
-                />
-              ) : null}
-            </Card>
-          ))}
+        <Space scale={spaceScale || 1}>
+          {data.map((d) =>
+            d.image ? (
+              <ImageButton
+                source={d.image}
+                height={sizes.short}
+                onPress={() => onPress(d.key)}
+              />
+            ) : (
+              <ImageButton
+                source={ImageManager.games.instrument}
+                height={sizes.short}
+                onPress={() => onPress(d.key)}
+              />
+            )
+          )}
         </Space>
       </View>
     </ScrollView>
