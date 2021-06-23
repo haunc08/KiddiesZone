@@ -147,6 +147,29 @@ export const AddRecordScreen = ({ route, navigation }) => {
     result ?? navigation.goBack();
   };
 
+  const deleteHealthRecord = async () => {
+    await curChild
+      .collection(CollectionName.HEALTH_RECORDS)
+      .doc(record?._id)
+      .delete()
+      .then(() => console.log("Deleted health record"));
+
+    // TODO: update healthRecordId field in child (unnecessary b/c not use this field)
+  };
+
+  const handleDeleteRecord = () => {
+    Alert.alert("Thông báo", "Bạn có muốn xóa thông tin sức khỏe này không?", [
+      {
+        text: "OK",
+        onPress: () => {
+          deleteHealthRecord();
+          navigation.goBack();
+        },
+      },
+      { text: "Cancel", onPress: () => {} },
+    ]);
+  };
+
   return (
     <ScreenView
       navigation={navigation}
@@ -176,7 +199,11 @@ export const AddRecordScreen = ({ route, navigation }) => {
           keyboardType="numeric"
         />
         <FilledButton onPress={handleSubmit}>Hoàn tất</FilledButton>
-        <OutlinedButton onPress={handleSubmit}>Xóa</OutlinedButton>
+        {mode === HandlingMode.EDIT ? (
+          <OutlinedButton onPress={handleDeleteRecord}>Xóa</OutlinedButton>
+        ) : (
+          <View></View>
+        )}
       </Space>
     </ScreenView>
   );
