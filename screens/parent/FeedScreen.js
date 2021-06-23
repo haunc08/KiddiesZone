@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import { Card, Row, ScreenView, Space } from "../../components/Wrapper";
 import { AutoIcon, ImageButton } from "../../components/Button";
 import { IconManager } from "../../utils/image";
 import { View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
-import { Body, Heading3 } from "../../components/Typography";
+import { Body, Heading1, Heading3 } from "../../components/Typography";
 import { hexToRgba } from "../../utils/color";
 import LinkPreview from "../../components/LinkPreview/LinkPreview";
 
@@ -15,6 +15,7 @@ import { ActivityIndicator } from "react-native";
 import { UserContext } from "../../App";
 import { calcTimeRangeUntilNow } from "../../utils/time";
 import { Text } from "react-native-elements";
+import { removeDup } from "../../utils/string";
 
 const posts = [
   {
@@ -57,109 +58,110 @@ const posts = [
   },
 ];
 
+const pageSize = 3;
+
 export const FeedScreen = ({ navigation }) => {
   const user = useContext(UserContext);
 
   const [currentTab, setCurrentTab] = useState(FeedScreenTabs.NEW);
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [outOfPosts, setOutOfPosts] = useState(false);
 
-  const pageSize = 3;
-
-  const newPostsQuery = firestore()
-    .collection(CollectionName.POSTS)
-    .orderBy("createdAt", "desc")
-    .limit(pageSize);
-
-  const popularPostsQuery = firestore()
-    .collection(CollectionName.POSTS)
-    .orderBy("countLovedUsers", "desc")
-    .limit(pageSize);
-
-  const lovedPostsQuery = firestore()
-    .collection(CollectionName.POSTS)
-    .where("lovedUsers", "array-contains", user?.uid)
-    .orderBy("createdAt", "desc")
-    .limit(pageSize);
+  const lastVisibleDoc = useRef();
+  const postsFlatListRef = useRef();
+  const page = useRef(1);
 
   useEffect(() => {
-    console.log("change tab");
-    fetchFirstPosts();
+    lastVisibleDoc.current = null;
+    postsFlatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    page.current = 1;
+    fetchFirst();
+    setPosts([]);
     setOutOfPosts(false);
   }, [currentTab]);
 
-  // useEffect(() => {
-  //   setCurrentTab(FeedScreenTabs.NEW);
-  // }, []);
+  const onError = (error) => console.log(error);
 
-  const getQueryBasedOnCurrentTab = () => {
+  const queryWrap = (query) => {
     switch (currentTab) {
       case FeedScreenTabs.NEW:
-        return newPostsQuery;
+        return query.orderBy("createdAt", "desc");
       case FeedScreenTabs.POPULAR:
-        return popularPostsQuery;
+        return query.orderBy("countLovedUsers", "desc");
       case FeedScreenTabs.LOVED:
-        return lovedPostsQuery;
-      default:
-        return;
+        return query
+          .where("lovedUsers", "array-contains", user?.uid)
+          .orderBy("createdAt", "desc");
     }
   };
 
-  const onError = (error) => console.log(error);
-
-  const fetchFirstPosts = () => {
-    setLoading(true);
-    const query = getQueryBasedOnCurrentTab();
-
-    query.onSnapshot((querySnapshot) => {
-      let tempPosts = [];
-      querySnapshot.forEach((post) => {
-        const tempPost = {
-          ...post.data(),
-          _id: post.id,
-        };
-
-        tempPosts.push(tempPost);
+  const fetchFirst = () => {
+    // return;
+    queryWrap(firestore().collection(CollectionName.POSTS))
+      // page current: delag khi like post o trang > 1
+      .limit(pageSize * page.current)
+      .get()
+      .then((qry) => {
+        if (qry.size < pageSize) setOutOfPosts(true);
+        let temp = [];
+        qry.forEach((doc, index) => {
+          temp.push({ ...doc.data(), id: doc.id });
+          if (index === qry.size - 1) lastVisibleDoc.current = doc;
+        });
+        setPosts(temp);
       });
-      console.log(tempPosts);
-      setPosts(tempPosts);
-      setLoading(false);
-    }, onError);
+    // .onSnapshot((qry) => {
+    //   if (qry.size < pageSize) setOutOfPosts(true);
+    //   let temp = [];
+    //   qry.forEach((doc, index) => {
+    //     temp.push({ ...doc.data(), id: doc.id });
+    //     if (index === qry.size - 1) lastVisibleDoc.current = doc;
+    //   });
+    //   setPosts(temp);
+    // });
   };
 
-  const fetchMorePosts = async () => {
-    setLoading(true);
-
-    const lastPostDoc = await firestore()
-      .collection(CollectionName.POSTS)
-      .doc(posts[posts.length - 1]?._id)
-      .get();
-
-    const query = getQueryBasedOnCurrentTab();
-
-    query.startAfter(lastPostDoc).onSnapshot((querySnapshot) => {
-      let tempPosts = [...posts];
-      querySnapshot.forEach((post) => {
-        console.log(post);
-        const tempPost = {
-          ...post.data(),
-          _id: post.id,
-        };
-
-        tempPosts.push(tempPost);
+  const fetchMore = () => {
+    if (posts.length < pageSize || !posts[pageSize - 1].id) return;
+    queryWrap(firestore().collection(CollectionName.POSTS))
+      .limit(pageSize)
+      .startAfter(lastVisibleDoc.current)
+      .get()
+      .then((qry) => {
+        if (qry.size === 0) {
+          setOutOfPosts(true);
+          return;
+        }
+        let temp = [];
+        qry.forEach((doc, index) => {
+          temp.push({ ...doc.data(), id: doc.id });
+          if (index === qry.size - 1) lastVisibleDoc.current = doc;
+        });
+        if (currentTab === FeedScreenTabs.POPULAR) {
+          setPosts((prev) => removeDup(prev.concat(temp), "id"));
+        } else {
+          setPosts((prev) => prev.concat(temp));
+        }
+        page.current = page.current + 1;
       });
-
-      if (tempPosts.length === posts.length) setOutOfPosts(true);
-      else {
-        setPosts(tempPosts);
-        setLoading(false);
-      }
-    }, onError);
+    // .onSnapshot((qry) => {
+    //   if (qry.size === 0) {
+    //     setOutOfPosts(true);
+    //     return;
+    //   }
+    //   let temp = [];
+    //   qry.forEach((doc, index) => {
+    //     temp.push({ ...doc.data(), id: doc.id });
+    //     if (index === qry.size - 1) lastVisibleDoc.current = doc;
+    //   });
+    //   setPosts((prev) => prev.concat(temp));
+    // });
   };
 
   const handleLovePost = (post) => {
+    console.log("item", post);
     const userIndex = post?.lovedUsers.indexOf(user?.uid);
     const newLovedUsers =
       userIndex > -1
@@ -171,45 +173,39 @@ export const FeedScreen = ({ navigation }) => {
 
     firestore()
       .collection(CollectionName.POSTS)
-      .doc(post?._id)
+      .doc(post?.id)
       .update({
         lovedUsers: newLovedUsers,
         countLovedUsers: newCount,
       })
-      .then(() => console.log("Update loved users of post successfully."));
+      .then(() => fetchFirst());
   };
 
-  const renderFooter = () => {
-    console.log(outOfPosts);
+  const PostFooter = () => {
     if (outOfPosts) return <Text style={styles.text}>Không còn bài viết</Text>;
 
-    return (
-      <Text style={styles.text}>Loading</Text>
-      //Footer View with Load More button
-      // <View style={styles.footer}>
-      //   <TouchableOpacity
-      //     activeOpacity={0.9}
-      //     onPress={fetchMorePosts}
-      //     //On Click of button load more data
-      //     style={styles.loadMoreBtn}
-      //   >
-      //     <Text style={styles.btnText}>Xem thêm</Text>
-      //     {loading ? (
-      //       <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
-      //     ) : null}
-      //   </TouchableOpacity>
-      // </View>
-    );
+    return <Text style={styles.text}>Loading...</Text>;
   };
 
   const Post = ({ item }) => {
-    if (!item) return <View></View>;
+    if (!item) return null;
+    if (item?.addition === "end") {
+      return <PostFooter />;
+    } else if (item?.addition === "start") {
+      return <Heading1>Bài viết</Heading1>;
+    }
 
     const hearted = item?.lovedUsers.includes(user?.uid);
     const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
 
     return (
-      <Card style={{ padding: sizes.base / 2, marginTop: sizes.base }}>
+      <Card
+        style={{
+          padding: sizes.base / 2,
+          marginTop: sizes.base,
+          minHeight: 300,
+        }}
+      >
         <LinkPreview
           text={item.url}
           titleNumberOfLines={5}
@@ -217,7 +213,7 @@ export const FeedScreen = ({ navigation }) => {
           onPress={() =>
             navigation.navigate("PostScreen", {
               hearted: hearted,
-              postId: item?._id,
+              postId: item?.id,
             })
           }
         />
@@ -253,13 +249,16 @@ export const FeedScreen = ({ navigation }) => {
   };
 
   return (
-    <ScreenView
-      isMainScreen
-      title="Bài viết"
-      scrollToTop
-      navigation={navigation}
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: sizes.base / 2,
+        paddingTop: sizes.base * 2,
+      }}
     >
-      <Row style={{ marginBottom: sizes.base }}>
+      <Row
+        style={{ marginBottom: sizes.base, marginHorizontal: sizes.base / 1.5 }}
+      >
         <TouchableOpacity
           onPress={() => setCurrentTab(FeedScreenTabs.NEW)}
           style={{
@@ -323,16 +322,23 @@ export const FeedScreen = ({ navigation }) => {
           </Space>
         </TouchableOpacity>
       </Row>
-      {posts ? (
-        <FlatList
-          data={posts}
-          renderItem={Post}
-          keyExtractor={(item) => item?._id}
-          onEndReached={fetchMorePosts}
-        />
-      ) : null}
-      {renderFooter()}
-    </ScreenView>
+      {/* {posts ? ( */}
+
+      <FlatList
+        style={{
+          paddingHorizontal: sizes.base / 1.5,
+          flex: 1,
+          paddingBottom: 200,
+        }}
+        data={[{ addition: "start" }, ...posts, { addition: "end" }]}
+        renderItem={Post}
+        keyExtractor={(item) => item?.id}
+        onEndReached={fetchMore}
+        onEndReachedThreshold={0.01}
+        ref={postsFlatListRef}
+        // showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 
@@ -363,9 +369,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "black",
-    fontSize: 18,
+    fontSize: sizes.h3,
     textAlign: "center",
-    marginTop: 8,
+    marginTop: sizes.base * 2,
+    marginBottom: 100,
   },
 });
 

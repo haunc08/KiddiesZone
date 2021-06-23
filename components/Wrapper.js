@@ -28,16 +28,27 @@ export const ScreenView = ({
   headerColor,
   scrollToTop,
   absoluteChildren,
+  onReachEnd,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const scrollRef = useRef(null);
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    return layoutMeasurement?.height + contentOffset?.y >= contentSize?.height;
+  };
+
   const handleScroll = (e) => {
     if (e.nativeEvent.contentOffset.y > headerHeight) {
       setShowHeader(true);
-      return;
-    }
-    if (e.nativeEvent.contentOffset.y < headerHeight) {
+    } else if (e.nativeEvent.contentOffset.y < headerHeight) {
       setShowHeader(false);
+    }
+    if (isCloseToBottom(e.nativeEvent)) {
+      onReachEnd();
     }
   };
 
