@@ -113,7 +113,7 @@ const TrackingScreen = ({ navigation }) => {
 
   const historyItem = ({ item }) => {
     try {
-      const createdAt = item?.createdAt.toDate().toDateString();
+      const createdAt = item?.createdAt?.toDate().toDateString();
       return (
         <View
           style={{
@@ -175,7 +175,7 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const childCard = ({ item, index }) => {
-    const age = calcAge(item?.birthday.toDate());
+    const age = calcAge(item.birthday.toDate());
     const latestRecord = healthRecords[0];
 
     return (
@@ -247,14 +247,18 @@ const TrackingScreen = ({ navigation }) => {
   };
 
   const getHeightWeightRecentMonths = (type, months) => {
+    if (!healthRecords) return;
     // calc average in each month
     const curYear = new Date().getFullYear();
     const result = months.map((month) => {
-      const recordsInMonth = healthRecords.filter(
-        (record) =>
+      const recordsInMonth = healthRecords.filter((record) => {
+        if (!record?.createdAt) return;
+        if (
           record?.createdAt.toDate().getMonth() === month - 1 &&
           record?.createdAt.toDate().getFullYear() === curYear
-      );
+        )
+          return record;
+      });
 
       if (recordsInMonth.length <= 0) return 0;
 
