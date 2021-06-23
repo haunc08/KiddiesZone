@@ -89,32 +89,35 @@ const GameAlphabet = ({ route, navigation }) => {
 
   useEffect(() => {
     if (childGameData?.timeLimit) {
-      BackgroundTimer.runBackgroundTimer(() => {
-        tempPlayingTime++;
-        console.log(tempPlayingTime);
-        if (tempPlayingTime == remainingTime) {
-          Alert.alert(
-            "Thông báo",
-            "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  createGameRecord();
-                  BackgroundTimer.stopBackgroundTimer();
-                  navigation.goBack();
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
                 },
-              },
-            ]
-          );
-        }
-      }, 1000);
+              ]
+            );
+          }
+        }, 1000);
+      }
     }
   }, [childGameData]);
 
   const createGameRecord = async () => {
     const endTime = new Date().getTime();
-    const playedTime = (endTime - startTime) / 1000;
+    const playedTime = Math.floor((endTime - startTime) / 1000);
 
     await firestore()
       .collection(CollectionName.GAMES)
