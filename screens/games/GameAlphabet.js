@@ -1,22 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground } from "react-native";
+import { Alert, ImageBackground } from "react-native";
 import { Image } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { ImageButton } from "../../components/Button";
 import { colors, sizes } from "../../constants";
-import {
-  IconManager,
-  getImage,
-  ImageManager,
-  autoSize,
-} from "../../utils/image";
+import { IconManager, ImageManager, autoSize } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 import { Hearts } from "../../components/Indicator";
 import { Row, Space } from "../../components/Wrapper";
 
-const GameAlphabet = ({ navigation }) => {
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
+
+const GameAlphabet = ({ route, navigation }) => {
+  const { child, gameKey, playedTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+  const startTime = new Date().getTime();
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
   const [question, setQuestion] = useState("Chữ này là chữ gì?");
   const [isAnswered, setIsAnswered] = useState(false);
   const lives = useRef(3);
@@ -59,6 +78,82 @@ const GameAlphabet = ({ navigation }) => {
 
   const randomLetterIndex = Math.floor(Math.random() * lowercaseLetters.length);
   const [chosenLetterIndex, setChosenLetterIndex] = useState(randomLetterIndex);
+
+  useEffect(() => {
+    fetchCurrentGame();
+  }, []);
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit) {
+      BackgroundTimer.runBackgroundTimer(() => {
+        tempPlayingTime++;
+        console.log(tempPlayingTime);
+        if (tempPlayingTime == remainingTime) {
+          Alert.alert(
+            "Thông báo",
+            "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  createGameRecord();
+                  BackgroundTimer.stopBackgroundTimer();
+                  navigation.goBack();
+                },
+              },
+            ]
+          );
+        }
+      }, 1000);
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = (endTime - startTime) / 1000;
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
 
   // return image on the left
   const getAlphabetImage = (index) => {
@@ -200,6 +295,13 @@ const GameAlphabet = ({ navigation }) => {
     setQuestion("Chữ này là chữ gì?");
   };
 
+  const handleBackBtn = () => {
+    // setCurPlayingTime(tempPlayingTime);
+    createGameRecord();
+    BackgroundTimer.stopBackgroundTimer();
+    navigation.goBack();
+  };
+
   return (
     <ImageBackground
       style={{ backgroundColor: "white", width: "100%", height: "100%" }}
@@ -217,7 +319,7 @@ const GameAlphabet = ({ navigation }) => {
         <View style={{ marginLeft: 16 }}>
           <ImageButton
             source={IconManager.buttons.orange.back}
-            onPress={() => navigation.goBack()}
+            onPress={handleBackBtn}
           />
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>

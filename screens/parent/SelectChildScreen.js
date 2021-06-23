@@ -1,36 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import { colors, sizes } from "../../constants";
-import { Row, ScreenView, Space } from "../../components/Wrapper";
-import { AutoIcon, Button, FilledButton } from "../../components/Button";
-import { StatusBar, View, Alert } from "react-native";
+import { ScreenView, Space } from "../../components/Wrapper";
+import { View } from "react-native";
 
-import { IconManager } from "../../utils/image";
-import { hexToRgba } from "../../utils/color";
-import { White12Icon, FlatInput } from "./AddRecordScreen";
-import { Body } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import DatePicker from "react-native-date-picker";
-import { CollectionName, Gender } from "../../utils/enum";
 import { ChildCard } from "./GameCatalogueScreen";
 
 import firestore from "@react-native-firebase/firestore";
-import { UserContext } from "../../App";
-
-const children = [
-  {
-    age: 5,
-    gender: "male",
-    name: "Ngô Công Hậu",
-  },
-  {
-    age: 3,
-    gender: "female",
-    name: "Phan Huy Tiến",
-  },
-];
+import { ChildrenContext } from "../../navigation/ParentNavigator";
 
 export const SelectChildScreen = ({ navigation }) => {
+  const children = useContext(ChildrenContext);
+
   return (
     <ScreenView
       navigation={navigation}
@@ -41,11 +23,11 @@ export const SelectChildScreen = ({ navigation }) => {
     >
       <View style={{ height: sizes.base }} />
       <Space>
-        {children.map((c, i) => (
+        {children.map((child, index) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("KidsZone", { child: c })}
+            onPress={() => navigation.navigate("KidsZone", { child: child })}
           >
-            <ChildCard item={c} key={i} cardColor={colors.white12} />
+            <ChildCard item={child} key={index} cardColor={colors.white12} />
           </TouchableOpacity>
         ))}
       </Space>

@@ -84,7 +84,6 @@ export const FeedScreen = ({ navigation }) => {
     .limit(pageSize);
 
   useEffect(() => {
-    console.log("change tab");
     fetchFirstPosts();
     setOutOfPosts(false);
   }, [currentTab]);
@@ -129,33 +128,28 @@ export const FeedScreen = ({ navigation }) => {
   };
 
   const fetchMorePosts = async () => {
-    setLoading(true);
-
-    const lastPostDoc = await firestore()
-      .collection(CollectionName.POSTS)
-      .doc(posts[posts.length - 1]?._id)
-      .get();
-
-    const query = getQueryBasedOnCurrentTab();
-
-    query.startAfter(lastPostDoc).onSnapshot((querySnapshot) => {
-      let tempPosts = [...posts];
-      querySnapshot.forEach((post) => {
-        console.log(post);
-        const tempPost = {
-          ...post.data(),
-          _id: post.id,
-        };
-
-        tempPosts.push(tempPost);
-      });
-
-      if (tempPosts.length === posts.length) setOutOfPosts(true);
-      else {
-        setPosts(tempPosts);
-        setLoading(false);
-      }
-    }, onError);
+    // setLoading(true);
+    // const lastPostDoc = await firestore()
+    //   .collection(CollectionName.POSTS)
+    //   .doc(posts[posts.length - 1]?._id)
+    //   .get();
+    // const query = getQueryBasedOnCurrentTab();
+    // query.startAfter(lastPostDoc).onSnapshot((querySnapshot) => {
+    //   let tempPosts = [...posts];
+    //   querySnapshot.forEach((post) => {
+    //     console.log(post);
+    //     const tempPost = {
+    //       ...post.data(),
+    //       _id: post.id,
+    //     };
+    //     tempPosts.push(tempPost);
+    //   });
+    //   if (tempPosts.length === posts.length) setOutOfPosts(true);
+    //   else {
+    //     setPosts(tempPosts);
+    //     setLoading(false);
+    //   }
+    // }, onError);
   };
 
   const handleLovePost = (post) => {

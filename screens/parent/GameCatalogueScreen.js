@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -9,9 +9,9 @@ import {
   Impress,
   RoundImpress,
 } from "../../components/Wrapper";
-import { AutoIcon, Button, ImageButton } from "../../components/Button";
+import { AutoIcon, Button } from "../../components/Button";
 import { HorizontalList } from "../../components/HorizontalList";
-import { ImageManager, IconManager } from "../../utils/image";
+import { ImageManager } from "../../utils/image";
 import { View, TouchableOpacity, Switch } from "react-native";
 import {
   Heading2,
@@ -25,6 +25,12 @@ import Carousel from "react-native-snap-carousel";
 import { LargeChildInfo } from "./TrackingScreen";
 import LineChart from "../../components/Chart/LineChart";
 import { FlatInput } from "./AddRecordScreen";
+
+import firestore from "@react-native-firebase/firestore";
+import { ChildrenContext } from "../../navigation/ParentNavigator";
+import { CollectionName } from "../../utils/enum";
+import { UserContext } from "../../App";
+import { calcAge } from "../../utils/string";
 
 const games = [
   {
@@ -65,19 +71,6 @@ const games = [
   },
 ];
 
-const children = [
-  {
-    age: 5,
-    gender: "male",
-    name: "Ngô Công Hậu",
-  },
-  {
-    age: 3,
-    gender: "female",
-    name: "Phan Huy Tiến",
-  },
-];
-
 const data = [0.4, 0.6, 0.8];
 const dataColors = [colors.pink, colors.orange, colors.yellow];
 
@@ -99,6 +92,8 @@ const usageData = [
 export const ChildCard = ({ item, index, cardColor, textColor }) => {
   const scheme = genderToColor(item.gender);
   const isWhite = cardColor === colors.white;
+  const age = calcAge(item.birthday.toDate());
+
   return (
     <View
       style={{
@@ -117,7 +112,7 @@ export const ChildCard = ({ item, index, cardColor, textColor }) => {
         <Space>
           <RoundImpress color={isWhite ? scheme : colors.white}>
             <Heading1 color={isWhite ? colors.white : colors.black}>
-              {item.age}
+              {age}
             </Heading1>
           </RoundImpress>
           <LargeChildInfo
@@ -207,11 +202,37 @@ const LimitRow = ({ current, color }) => {
 };
 
 export const GameCatalogueScreen = ({ navigation }) => {
+  const children = useContext(ChildrenContext);
+
   const [isLimit, setIsLimit] = useState(false);
+  const [currentChild, setCurrentChild] = useState(null);
+  const [games, setGames] = useState(null);
+
   const carouselChild = useRef();
+  const curChildIndex = carouselChild.current?.currentIndex;
+
   const carouselUsage = useRef();
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
+
+  const fetchGames = async () => {
+    let listGames = [];
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .get()
+      .then((res) =>
+        res.docs.forEach((doc) =>
+          listGames.push({ ...doc.data(), _id: doc.id })
+        )
+      );
+    setGames(listGames);
+  };
+
   const toggleSwitch = () => setIsLimit((previousState) => !previousState);
   const handleSelectChild = (index) => {};
+
   return (
     <ScreenView isMainScreen title="Giải trí" navigation={navigation}>
       <Space loose>

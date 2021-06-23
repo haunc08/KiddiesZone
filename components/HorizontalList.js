@@ -75,6 +75,8 @@ export const FullHorizontalList = ({
 };
 
 export const HorizontalList = ({ title, data }) => {
+  if (!data) return <View></View>;
+
   return (
     <View>
       {title && (
@@ -82,7 +84,7 @@ export const HorizontalList = ({ title, data }) => {
       )}
       <ScrollView showsHorizontalScrollIndicator={false} horizontal>
         {data.map((d) => (
-          <HorizontalListItem name={d.name} key={d.key} />
+          <HorizontalListItem name={d.name} key={d._id} />
         ))}
       </ScrollView>
     </View>
