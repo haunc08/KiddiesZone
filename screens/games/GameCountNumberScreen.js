@@ -135,7 +135,11 @@ const GameCountNumberScreen = ({ navigation }) => {
   };
 
   const handleWrongAnswer = () => {
-    playSoundFile("lose");
+    if (lives.current <= 1) {
+      playSoundFile("ouch");
+    } else {
+      playSoundFile("lose");
+    }
     setQuestion("Sai rồi!");
     lives.current = lives.current - 1;
     // const newLifePoint = lifePoint - 1;

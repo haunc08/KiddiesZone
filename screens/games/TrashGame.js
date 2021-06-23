@@ -20,6 +20,7 @@ import {
   Body,
   Heading3,
 } from "../../components/Typography";
+import { playSoundFile } from "../../utils/sound";
 
 const calcMarginVertical = (flex) => {
   return (sizes.short * flex) / 5;
@@ -70,7 +71,7 @@ const Trash = ({
         source={image}
         onPress={() => {
           onPress(trashKey);
-
+          playSoundFile("clean");
           isLanding = false;
           onChangeStateLanding(isLanding);
         }}
@@ -124,8 +125,9 @@ const TrashRain = ({ countLandingItems, setCountLandingItems, setPoints }) => {
     if (countLandingItems < limitLandingItems) {
       // why 0 0 0 0 1 2 ... ???
       // console.log(countLandingItems);
-      if (isLanding) setCountLandingItems(countLandingRef.current + 1);
-      else setCountLandingItems(countLandingRef.current - 1);
+      if (isLanding) {
+        setCountLandingItems(countLandingRef.current + 1);
+      } else setCountLandingItems(countLandingRef.current - 1);
     }
   };
 

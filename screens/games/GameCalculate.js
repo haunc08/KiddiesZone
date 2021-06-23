@@ -111,7 +111,12 @@ const GameCalculate = ({ route, navigation }) => {
   };
 
   const handleWrongAnswer = () => {
-    playSoundFile("lose");
+    if (lives.current <= 1) {
+      playSoundFile("ouch");
+    } else {
+      playSoundFile("lose");
+    }
+
     lives.current = lives.current - 1;
 
     setQuestion("Sai rồi!");
@@ -133,9 +138,11 @@ const GameCalculate = ({ route, navigation }) => {
     };
   };
 
-  const resetValue = () => {
-    points.current = 0;
-    lives.current = 3;
+  const resetValue = (currentLives) => {
+    if (!currentLives) {
+      points.current = 0;
+      lives.current = 3;
+    }
     const ranX = Math.floor(Math.random() * 10) + 1;
     const ranY = Math.floor(Math.random() * 10) + 1;
     newType();
@@ -444,7 +451,7 @@ const GameCalculate = ({ route, navigation }) => {
                 : IconManager.buttons.blue.replay
             }
             height={sizes.base * 5}
-            onPress={() => resetValue()}
+            onPress={() => resetValue(lives.current)}
             style={{
               marginTop: sizes.base,
               marginRight: sizes.base / 2,

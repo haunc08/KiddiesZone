@@ -93,7 +93,11 @@ const GameAlphabet = ({ navigation }) => {
   };
 
   const handleWrongAnswer = () => {
-    playSoundFile("lose");
+    if (lives.current <= 1) {
+      playSoundFile("ouch");
+    } else {
+      playSoundFile("lose");
+    }
     lives.current = lives.current - 1;
 
     setQuestion("Sai rồi!");

@@ -183,20 +183,21 @@ export const FeedScreen = ({ navigation }) => {
     if (outOfPosts) return <Text style={styles.text}>Không còn bài viết</Text>;
 
     return (
+      <Text style={styles.text}>Loading</Text>
       //Footer View with Load More button
-      <View style={styles.footer}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={fetchMorePosts}
-          //On Click of button load more data
-          style={styles.loadMoreBtn}
-        >
-          <Text style={styles.btnText}>Xem thêm</Text>
-          {loading ? (
-            <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
-          ) : null}
-        </TouchableOpacity>
-      </View>
+      // <View style={styles.footer}>
+      //   <TouchableOpacity
+      //     activeOpacity={0.9}
+      //     onPress={fetchMorePosts}
+      //     //On Click of button load more data
+      //     style={styles.loadMoreBtn}
+      //   >
+      //     <Text style={styles.btnText}>Xem thêm</Text>
+      //     {loading ? (
+      //       <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
+      //     ) : null}
+      //   </TouchableOpacity>
+      // </View>
     );
   };
 
@@ -332,6 +333,7 @@ export const FeedScreen = ({ navigation }) => {
           data={posts}
           renderItem={Post}
           keyExtractor={(item) => item?._id}
+          onEndReached={fetchMorePosts}
         />
       ) : (
         <View></View>

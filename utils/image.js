@@ -272,6 +272,7 @@ export const ImageManager = {
     numbers2: require("../assets/images/games/numbers.png"),
     letters: require("../assets/images/games/letters.png"),
     calc: require("../assets/images/games/calc.png"),
+    trash: require("../assets/images/games/trash.png"),
   },
   stories: {
     riu: require("../assets/images/stories/riu.png"),

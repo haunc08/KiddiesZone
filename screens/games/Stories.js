@@ -20,6 +20,7 @@ import {
 import { ImageButton } from "../../components/Button";
 import { FullHorizontalList } from "../../components/HorizontalList";
 import { IconManager, ImageManager } from "../../utils/image";
+import { playSoundFile } from "../../utils/sound";
 
 export const Stories = ({ navigation }) => {
   const stories = [
@@ -40,6 +41,10 @@ export const Stories = ({ navigation }) => {
   const handleChooseStory = (screenRoute) => {
     navigation.navigate(screenRoute);
   };
+
+  useEffect(() => {
+    playSoundFile("stories");
+  }, []);
 
   return (
     <NoScrollView

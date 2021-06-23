@@ -17,6 +17,7 @@ import {
 
 import { SketchCanvas } from "@terrylinla/react-native-sketch-canvas";
 import { IconManager } from "../../utils/image";
+import { playSoundFile } from "../../utils/sound";
 
 async function hasAndroidPermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
@@ -59,6 +60,7 @@ export const Sandbox = ({ navigation }) => {
   };
 
   const clear = () => {
+    playSoundFile("waterclear");
     canvasRef.current.clear();
   };
   const undo = () => {
