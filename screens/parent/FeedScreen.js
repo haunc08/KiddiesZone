@@ -10,10 +10,11 @@ import { hexToRgba } from "../../utils/color";
 import LinkPreview from "../../components/LinkPreview/LinkPreview";
 
 import firestore from "@react-native-firebase/firestore";
-import { CollectionName } from "../../utils/enum";
+import { CollectionName, FeedScreenTabs } from "../../utils/enum";
 import { ActivityIndicator } from "react-native";
 import { UserContext } from "../../App";
 import { calcTimeRangeUntilNow } from "../../utils/time";
+import { Text } from "react-native-elements";
 
 const posts = [
   {
@@ -59,45 +60,138 @@ const posts = [
 export const FeedScreen = ({ navigation }) => {
   const user = useContext(UserContext);
 
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState(FeedScreenTabs.NEW);
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [outOfPosts, setOutOfPosts] = useState(false);
+
+  const pageSize = 2;
+
+  const newPostsQuery = firestore()
+    .collection(CollectionName.POSTS)
+    .orderBy("createdAt", "desc")
+    .limit(pageSize);
+
+  const popularPostsQuery = firestore()
+    .collection(CollectionName.POSTS)
+    .orderBy("countLovedUsers", "desc")
+    .limit(pageSize);
+
+  const lovedPostsQuery = firestore()
+    .collection(CollectionName.POSTS)
+    .where("lovedUsers", "array-contains", user?.uid)
+    .orderBy("createdAt", "desc")
+    .limit(pageSize);
 
   useEffect(() => {
-    fetchPosts();
+    console.log("change tab");
+    fetchFirstPosts();
+    setOutOfPosts(false);
+  }, [currentTab]);
+
+  useEffect(() => {
+    setCurrentTab(FeedScreenTabs.NEW);
   }, []);
 
-  const fetchPosts = () => {
+  const getQueryBasedOnCurrentTab = () => {
+    switch (currentTab) {
+      case FeedScreenTabs.NEW:
+        return newPostsQuery;
+      case FeedScreenTabs.POPULAR:
+        return popularPostsQuery;
+      case FeedScreenTabs.LOVED:
+        return lovedPostsQuery;
+      default:
+        return;
+    }
+  };
+
+  const onError = (error) => console.log(error);
+
+  const fetchFirstPosts = () => {
     setLoading(true);
+    const query = getQueryBasedOnCurrentTab();
+
+    query.onSnapshot((querySnapshot) => {
+      let tempPosts = [];
+      querySnapshot.forEach((post) => {
+        const tempPost = {
+          ...post.data(),
+          _id: post.id,
+        };
+
+        tempPosts.push(tempPost);
+      });
+      console.log(tempPosts);
+      setPosts(tempPosts);
+      setLoading(false);
+    }, onError);
+  };
+
+  const fetchMorePosts = async () => {
+    setLoading(true);
+
+    const lastPostDoc = await firestore()
+      .collection(CollectionName.POSTS)
+      .doc(posts[posts.length - 1]?._id)
+      .get();
+
+    const query = getQueryBasedOnCurrentTab();
+
+    query.startAfter(lastPostDoc).onSnapshot((querySnapshot) => {
+      let tempPosts = [...posts];
+      querySnapshot.forEach((post) => {
+        console.log(post);
+        const tempPost = {
+          ...post.data(),
+          _id: post.id,
+        };
+
+        tempPosts.push(tempPost);
+      });
+
+      if (tempPosts.length === posts.length) setOutOfPosts(true);
+      else {
+        setPosts(tempPosts);
+        setLoading(false);
+      }
+    }, onError);
+  };
+
+  const handleLovePost = (post) => {
+    const userIndex = post?.lovedUsers.indexOf(user?.uid);
+    const newLovedUsers =
+      userIndex > -1
+        ? post?.lovedUsers.filter((userId) => userId !== user?.uid)
+        : [...post?.lovedUsers, user?.uid];
+
+    const newCount =
+      userIndex > -1 ? post?.countLovedUsers - 1 : post?.countLovedUsers + 1;
 
     firestore()
       .collection(CollectionName.POSTS)
-      .orderBy("createdAt", "desc")
-      .onSnapshot((querySnapshot) => {
-        let tempPosts = [];
-        querySnapshot.forEach((post) => {
-          const tempPost = {
-            ...post.data(),
-            _id: post.id,
-          };
-
-          tempPosts.push(tempPost);
-        });
-        setPosts(tempPosts);
-      });
+      .doc(post?._id)
+      .update({
+        lovedUsers: newLovedUsers,
+        countLovedUsers: newCount,
+      })
+      .then(() => console.log("Update loved users of post successfully."));
   };
 
   const renderFooter = () => {
+    console.log(outOfPosts);
+    if (outOfPosts) return <Text style={styles.text}>Không còn bài viết</Text>;
+
     return (
       //Footer View with Load More button
       <View style={styles.footer}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={getData}
+          onPress={fetchMorePosts}
           //On Click of button load more data
           style={styles.loadMoreBtn}
         >
-          <Text style={styles.btnText}>Load More</Text>
+          <Text style={styles.btnText}>Xem thêm</Text>
           {loading ? (
             <ActivityIndicator color="white" style={{ marginLeft: 8 }} />
           ) : null}
@@ -107,10 +201,10 @@ export const FeedScreen = ({ navigation }) => {
   };
 
   const Post = ({ item }) => {
-    const hearted = item?.lovedUsers.includes(user?.uid);
+    if (!item) return <View></View>;
 
+    const hearted = item?.lovedUsers.includes(user?.uid);
     const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
-    console.log(timeText);
 
     return (
       <Card style={{ padding: sizes.base / 2, marginTop: sizes.base }}>
@@ -121,7 +215,7 @@ export const FeedScreen = ({ navigation }) => {
           onPress={() =>
             navigation.navigate("PostScreen", {
               hearted: hearted,
-              url: item.url,
+              postId: item?._id,
             })
           }
         />
@@ -131,6 +225,7 @@ export const FeedScreen = ({ navigation }) => {
               source={hearted ? IconManager.heart : IconManager.heartempty}
               color={hearted ? colors.pink : colors.black}
               height={26}
+              onPress={() => handleLovePost(item)}
             />
             <Heading3
               style={{
@@ -159,13 +254,13 @@ export const FeedScreen = ({ navigation }) => {
     return (
       <Row style={{ marginBottom: sizes.base }}>
         <TouchableOpacity
-          onPress={() => setCurrentTab(0)}
+          onPress={() => setCurrentTab(FeedScreenTabs.NEW)}
           style={{
             borderRadius: 999,
             flex: 1,
             backgroundColor: hexToRgba(
               colors.blue,
-              currentTab === 0 ? 1 : 0.25
+              currentTab === FeedScreenTabs.NEW ? 1 : 0.25
             ),
             padding: sizes.base * 0.75,
             paddingHorizontal: sizes.base * 1,
@@ -180,13 +275,13 @@ export const FeedScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View style={{ width: sizes.base / 2 }} />
         <TouchableOpacity
-          onPress={() => setCurrentTab(1)}
+          onPress={() => setCurrentTab(FeedScreenTabs.POPULAR)}
           style={{
             borderRadius: 999,
             flex: 1,
             backgroundColor: hexToRgba(
               colors.yellow,
-              currentTab === 1 ? 1 : 0.25
+              currentTab === FeedScreenTabs.POPULAR ? 1 : 0.25
             ),
             padding: sizes.base * 0.75,
             paddingHorizontal: sizes.base * 1,
@@ -201,13 +296,13 @@ export const FeedScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View style={{ width: sizes.base / 2 }} />
         <TouchableOpacity
-          onPress={() => setCurrentTab(2)}
+          onPress={() => setCurrentTab(FeedScreenTabs.LOVED)}
           style={{
             borderRadius: 999,
             flex: 1,
             backgroundColor: hexToRgba(
               colors.pink,
-              currentTab === 2 ? 1 : 0.25
+              currentTab === FeedScreenTabs.LOVED ? 1 : 0.25
             ),
             padding: sizes.base * 0.75,
             paddingHorizontal: sizes.base * 1,
@@ -241,6 +336,7 @@ export const FeedScreen = ({ navigation }) => {
       ) : (
         <View></View>
       )}
+      {renderFooter()}
     </ScreenView>
   );
 };
@@ -258,16 +354,23 @@ const styles = StyleSheet.create({
   },
   loadMoreBtn: {
     padding: 10,
-    backgroundColor: "#800000",
+    backgroundColor: colors.primary,
     borderRadius: 4,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 8,
   },
   btnText: {
     color: "white",
     fontSize: 15,
     textAlign: "center",
+  },
+  text: {
+    color: "black",
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 8,
   },
 });
 

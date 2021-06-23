@@ -14,3 +14,9 @@ export const HandlingMode = {
   ADD: "add",
   EDIT: "edit",
 };
+
+export const FeedScreenTabs = {
+  NEW: "new",
+  POPULAR: "popular",
+  LOVED: "loved",
+};
