@@ -8,7 +8,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {
   AddChildScreen,
   AddRecordScreen,
-  ParentPasswordScreen,
   CreatePasswordScreen,
   FeedScreen,
   GameCatalogueScreen,
@@ -65,10 +64,7 @@ const ParentNavigator = () => {
         />
         <Stack.Screen name="SelectChildScreen" component={SelectChildScreen} />
         <Stack.Screen name="ChangeNameScreen" component={ChangeNameScreen} />
-        <Stack.Screen
-          name="ParentPasswordScreen"
-          component={ParentPasswordScreen}
-        />
+
         <Stack.Screen
           name="CreatePasswordScreen"
           component={CreatePasswordScreen}
