@@ -61,11 +61,12 @@ export const FeedScreen = ({ navigation }) => {
   const user = useContext(UserContext);
 
   const [currentTab, setCurrentTab] = useState(FeedScreenTabs.NEW);
+
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [outOfPosts, setOutOfPosts] = useState(false);
 
-  const pageSize = 2;
+  const pageSize = 3;
 
   const newPostsQuery = firestore()
     .collection(CollectionName.POSTS)
@@ -89,9 +90,9 @@ export const FeedScreen = ({ navigation }) => {
     setOutOfPosts(false);
   }, [currentTab]);
 
-  useEffect(() => {
-    setCurrentTab(FeedScreenTabs.NEW);
-  }, []);
+  // useEffect(() => {
+  //   setCurrentTab(FeedScreenTabs.NEW);
+  // }, []);
 
   const getQueryBasedOnCurrentTab = () => {
     switch (currentTab) {
@@ -251,8 +252,13 @@ export const FeedScreen = ({ navigation }) => {
     );
   };
 
-  const FeedTabs = () => {
-    return (
+  return (
+    <ScreenView
+      isMainScreen
+      title="Bài viết"
+      scrollToTop
+      navigation={navigation}
+    >
       <Row style={{ marginBottom: sizes.base }}>
         <TouchableOpacity
           onPress={() => setCurrentTab(FeedScreenTabs.NEW)}
@@ -317,17 +323,6 @@ export const FeedScreen = ({ navigation }) => {
           </Space>
         </TouchableOpacity>
       </Row>
-    );
-  };
-
-  return (
-    <ScreenView
-      isMainScreen
-      title="Bài viết"
-      scrollToTop
-      navigation={navigation}
-    >
-      <FeedTabs />
       {posts ? (
         <FlatList
           data={posts}
@@ -335,9 +330,7 @@ export const FeedScreen = ({ navigation }) => {
           keyExtractor={(item) => item?._id}
           onEndReached={fetchMorePosts}
         />
-      ) : (
-        <View></View>
-      )}
+      ) : null}
       {renderFooter()}
     </ScreenView>
   );
