@@ -16,6 +16,7 @@ import {
   Instruments,
   Story2,
   TrashGame,
+  ParentPasswordScreen,
 } from "./screens";
 
 import auth from "@react-native-firebase/auth";
@@ -54,6 +55,7 @@ const DisplayedScreens = () => {
         setUserInfo({ ...userInfo, name: documentSnapshot?.data()?.name })
       );
   }, []);
+  ParentPasswordScreen;
 
   if (user) {
     return (
@@ -68,6 +70,10 @@ const DisplayedScreens = () => {
           >
             <Stack.Screen name="ParentNavigator" component={ParentNavigator} />
             <Stack.Screen name="KidsZone" component={KidsZone} />
+            <Stack.Screen
+              name="ParentPasswordScreen"
+              component={ParentPasswordScreen}
+            />
             <Stack.Screen name="Instruments" component={Instruments} />
             <Stack.Screen name="Sandbox" component={Sandbox} />
             <Stack.Screen name="Shapes" component={Shapes} />

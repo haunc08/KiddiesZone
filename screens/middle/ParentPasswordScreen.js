@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 
 import { colors, sizes } from "../../constants";
 import {
@@ -23,19 +23,33 @@ import { ImageManager } from "../../utils/image";
 import { ImageButton } from "../../components/Button";
 import { Heading1, Heading2 } from "../../components/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import firestore from "@react-native-firebase/firestore";
+import { UserContext } from "../../App";
+import { CollectionName } from "../../utils/enum";
 
 const buttonSize = 54;
 const fieldSize = 12;
 const numberSize = 32;
-const testPassword = "4567";
 
 export const ParentPasswordScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const wrong = useRef(false);
+  const correctPassword = useRef();
+
+  const user = useContext(UserContext);
+
+  useEffect(() => {
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .get()
+      .then((doc) => (correctPassword.current = doc.data().passcode))
+      .catch((error) => console.log(error));
+  }, []);
 
   useEffect(() => {
     if (password.length >= 4) {
-      if (password !== testPassword) {
+      if (password.toString() !== correctPassword.current.toString()) {
         wrong.current = true;
         setPassword("");
       } else {
@@ -123,7 +137,7 @@ export const ParentPasswordScreen = ({ navigation }) => {
       >
         <ImageButton
           width={45}
-          onPress={() => navigation.navigate("KidsZone")}
+          onPress={() => navigation.goBack()}
           source={require("../../assets/icons/back.png")}
         />
       </View>
