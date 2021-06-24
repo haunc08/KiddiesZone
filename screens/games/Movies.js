@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, StatusBar, Text, ImageBackground, Image } from "react-native";
-import { colors, sizes } from "../../constants";
-import { Frame, NoScrollView, Space } from "../../components/Wrapper";
-import { ImageButton, StoryObject } from "../../components/Button";
-import { createSound } from "../../utils/sound";
-import { ImageManager, IconManager, autoSize } from "../../utils/image";
+import { View, ImageBackground } from "react-native";
+import { sizes } from "../../constants";
+import { NoScrollView, Space } from "../../components/Wrapper";
+import { ImageButton } from "../../components/Button";
+import { ImageManager, IconManager } from "../../utils/image";
 import { Heading1 } from "../../components/Typography";
-import Carousel from "react-native-snap-carousel";
 import YoutubePlayer from "react-native-youtube-iframe";
 import Orientation from "react-native-orientation-locker";
 import firestore from "@react-native-firebase/firestore";
@@ -16,45 +14,6 @@ import { subtractArray } from "../../utils/string";
 // const theaterSize = autoSize(ImageManager.movies, null, sizes.short);
 const screenHeight = sizes.short * 0.695;
 const screenWidth = screenHeight * 1.76;
-
-// var data = [
-//   {
-//     url: "3M4tJcWXQQE",
-//     watched: false,
-//   },
-//   {
-//     url: "JOhZ9UwXN5I",
-//     watched: false,
-//   },
-//   {
-//     url: "A_lfg_A8HBo",
-//     watched: false,
-//   },
-//   {
-//     url: "SQj4L97HPwI",
-//     watched: false,
-//   },
-//   {
-//     url: "bFQxhUewke8",
-//     watched: false,
-//   },
-//   {
-//     url: "JLduNG-6UKg",
-//     watched: true,
-//   },
-//   {
-//     url: "nvBi2lFs4bo",
-//     watched: true,
-//   },
-//   {
-//     url: "AFeNKKsk-tI",
-//     watched: true,
-//   },
-//   {
-//     url: "j1n5tPkAaQc",
-//     watched: true,
-//   },
-// ];
 
 export const Movies = ({ navigation, route }) => {
   const { child, gameKey, playedTime } = route.params;

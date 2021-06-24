@@ -16,19 +16,18 @@ import { CollectionName } from "../../utils/enum";
 import BackgroundTimer from "react-native-background-timer";
 
 const GameAlphabet = ({ route, navigation }) => {
-  const { child, gameKey, playedTime } = route.params;
+  const { child, gameKey, playedTime, startTime } = route.params;
 
   const [currentGame, setCurrentGame] = useState();
   const [childGameData, setChildGameData] = useState();
 
   let tempPlayingTime = 0;
-  const startTime = new Date().getTime();
 
   const remainingTime = playedTime
     ? childGameData?.timeLimit - playedTime
     : childGameData?.timeLimit;
 
-  if (remainingTime <= 0) {
+  if (remainingTime <= 0 && child?.isLimited) {
     Alert.alert(
       "Thông báo",
       "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
@@ -88,7 +87,7 @@ const GameAlphabet = ({ route, navigation }) => {
   }, [currentGame]);
 
   useEffect(() => {
-    if (childGameData?.timeLimit) {
+    if (childGameData?.timeLimit && child?.isLimited) {
       if (remainingTime > 0) {
         BackgroundTimer.runBackgroundTimer(() => {
           tempPlayingTime++;
@@ -301,7 +300,7 @@ const GameAlphabet = ({ route, navigation }) => {
   const handleBackBtn = () => {
     // setCurPlayingTime(tempPlayingTime);
     createGameRecord();
-    BackgroundTimer.stopBackgroundTimer();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
     navigation.goBack();
   };
 

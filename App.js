@@ -55,7 +55,7 @@ const DisplayedScreens = () => {
         setUserInfo({ ...userInfo, name: documentSnapshot?.data()?.name })
       );
   }, []);
-  ParentPasswordScreen;
+  // ParentPasswordScreen;
 
   if (user) {
     return (

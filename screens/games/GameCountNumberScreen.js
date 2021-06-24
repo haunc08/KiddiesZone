@@ -10,9 +10,31 @@ import { playSoundFile } from "../../utils/sound";
 import { Hearts } from "../../components/Indicator";
 import { Row } from "../../components/Wrapper";
 
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
+
 const food = ImageManager.count.food;
 
-const GameCountNumberScreen = ({ navigation }) => {
+const GameCountNumberScreen = ({ route, navigation }) => {
+  const { child, gameKey, playedTime, startTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
   // const [lifePoint, setLifePoint] = useState(3);
   const [isAnswered, setIsAnswered] = useState(false);
 
@@ -33,21 +55,90 @@ const GameCountNumberScreen = ({ navigation }) => {
 
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
+    fetchCurrentGame();
   }, []);
 
-  // const LifePoints = () => {
-  //   let lifePoints = [];
-  //   for (let i = 0; i < lifePoint; i++) {
-  //     lifePoints.push(
-  //       <Image
-  //         key={i}
-  //         source={require("../../assets/icons/salad.png")}
-  //         style={styles.imageIcon}
-  //       />
-  //     );
-  //   }
-  //   return lifePoints;
-  // };
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
+
+  const handleBackBtn = () => {
+    // setCurPlayingTime(tempPlayingTime);
+    createGameRecord();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
+    navigation.goBack();
+  };
 
   const getItemStyle = () => {
     if (numberOfItems <= 3) {
@@ -252,7 +343,7 @@ const GameCountNumberScreen = ({ navigation }) => {
             <ImageButton
               // small
               source={IconManager.buttons.orange.back}
-              onPress={() => navigation.goBack()}
+              onPress={handleBackBtn}
               height={sizes.base * 4.5}
               // color={colors.red}
             />
