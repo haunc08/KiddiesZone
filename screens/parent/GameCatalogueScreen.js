@@ -159,6 +159,7 @@ const LimitRow = ({
 };
 
 export const GameCatalogueScreen = ({ navigation }) => {
+  const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
 
   const [isLimit, setIsLimit] = useState(false);
@@ -233,7 +234,17 @@ export const GameCatalogueScreen = ({ navigation }) => {
     setGames(listGames);
   };
 
-  const toggleSwitch = () => setIsLimit((previousState) => !previousState);
+  const toggleSwitch = () => {
+    firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .collection(CollectionName.CHILDREN)
+      .doc(children[curChildIndex]?._id)
+      .update({
+        isLimited: !children[curChildIndex]?.isLimited,
+      })
+      .then(() => console.log("Updated isLimited"));
+  };
 
   const handleSelectChild = (index) => {
     setCurChild(children[index]);
@@ -335,13 +346,15 @@ export const GameCatalogueScreen = ({ navigation }) => {
                 false: "#767577",
                 true: hexToRgba(colors.primary, 0.25),
               }}
-              thumbColor={isLimit ? colors.primary : "#f4f3f4"}
+              thumbColor={
+                children[curChildIndex]?.isLimited ? colors.primary : "#f4f3f4"
+              }
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
-              value={isLimit}
+              value={children[curChildIndex]?.isLimited}
             />
           </Row>
-          {isLimit ? (
+          {children[curChildIndex]?.isLimited ? (
             <Card title="Hôm nay" style={{ alignItems: "center" }}>
               <ProgressChart
                 data={progressData}
