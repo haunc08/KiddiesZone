@@ -15,9 +15,9 @@ import firestore from "@react-native-firebase/firestore";
 import { CollectionName } from "../../utils/enum";
 import { calcAge } from "../../utils/string";
 
-export const calcPlayedTimeInDay = async (gameType, childId) => {
+export const calcPlayedTimeInDay = async (gameType, childId, date) => {
   let allPlayedTime = 0;
-  const d = new Date();
+  const d = date ?? new Date();
 
   try {
     const gamesRef = await firestore()

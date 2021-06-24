@@ -28,9 +28,12 @@ import { FlatInput } from "./AddRecordScreen";
 
 import firestore from "@react-native-firebase/firestore";
 import { ChildrenContext } from "../../navigation/ParentNavigator";
-import { CollectionName } from "../../utils/enum";
+import { CollectionName, GameType } from "../../utils/enum";
 import { UserContext } from "../../App";
 import { calcAge } from "../../utils/string";
+import { getLast7Days } from "../../utils/time";
+import { calcPlayedTimeInDay } from "../main/KidsZone";
+import { Alert } from "react-native";
 
 const games = [
   {
@@ -126,10 +129,15 @@ export const ChildCard = ({ item, index, cardColor, textColor }) => {
 };
 
 const UsageChart = ({ item }) => {
+  const last7Days = getLast7Days();
+
+  const dayLabels = last7Days.map((day) => day.getDay());
+  console.log(dayLabels);
+
   return (
     <LineChart
       data={{
-        labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+        labels: dayLabels,
         datasets: [
           {
             data: [
@@ -163,7 +171,32 @@ const UsageChart = ({ item }) => {
   );
 };
 
-const LimitRow = ({ current, color }) => {
+const LimitRow = ({
+  current,
+  color,
+  representation,
+  child,
+  onChangeText,
+  limit,
+}) => {
+  const fetchChildGameData = async () => {
+    console.log("fetch ag");
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(representation?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((childData) => {
+        const limit = childData.data()?.timeLimit / 60;
+        onChangeText(limit.toString());
+      });
+  };
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [child]);
+
   return (
     <Row style={{ marginBottom: -sizes.base * 0.75 }}>
       <Heading2
@@ -173,7 +206,7 @@ const LimitRow = ({ current, color }) => {
           marginRight: sizes.base / 2,
         }}
       >
-        {`${current} trên tổng `}
+        {`${current ?? 0} trên tổng `}
       </Heading2>
 
       <FlatInput
@@ -187,6 +220,8 @@ const LimitRow = ({ current, color }) => {
           fontWeight: "bold",
           marginTop: sizes.base / 4,
         }}
+        value={isNaN(limit) ? "" : limit}
+        onChangeText={onChangeText}
       />
       <Heading2
         style={{
@@ -205,7 +240,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
   const children = useContext(ChildrenContext);
 
   const [isLimit, setIsLimit] = useState(false);
-  const [currentChild, setCurrentChild] = useState(null);
+  const [curChild, setCurChild] = useState(null);
   const [games, setGames] = useState(null);
 
   const carouselChild = useRef();
@@ -213,9 +248,57 @@ export const GameCatalogueScreen = ({ navigation }) => {
 
   const carouselUsage = useRef();
 
+  const [storyPlayedTime, setStoryPlayedTime] = useState();
+  const [gamePlayedTime, setGamePlayedTime] = useState();
+  const [moviePlayedTime, setMoviePlayedTime] = useState();
+
+  const [storyLimit, setStoryLimit] = useState();
+  const [gameLimit, setGameLimit] = useState();
+  const [movieLimit, setMovieLimit] = useState();
+
+  const storyProgress = storyPlayedTime / storyLimit;
+  const gameProgress = gamePlayedTime / gameLimit;
+  const movieProgress = moviePlayedTime / movieLimit;
+  const progressData = [
+    isNaN(storyProgress) ? 0 : storyProgress,
+    isNaN(gameProgress) ? 0 : gameProgress,
+    isNaN(movieProgress) ? 0 : movieProgress,
+  ];
+
+  const story = games
+    ? games.find((game) => game?.type === GameType.STORY)
+    : null;
+  const game = games
+    ? games.find((game) => game?.type === GameType.GAME)
+    : null;
+  const movie = games
+    ? games.find((game) => game?.type === GameType.MOVIE)
+    : null;
+
   useEffect(() => {
     fetchGames();
   }, []);
+
+  useEffect(() => {
+    console.log("change child");
+    fetchPlayedTime();
+    // fetchAllTypesChildGameData();
+  }, [curChildIndex]);
+
+  const fetchPlayedTime = async () => {
+    await calcPlayedTimeInDay(
+      GameType.STORY,
+      children[curChildIndex]?._id
+    ).then((res) => setStoryPlayedTime(Math.floor(res / 60)));
+    await calcPlayedTimeInDay(
+      GameType.GAME,
+      children[curChildIndex]?._id
+    ).then((res) => setGamePlayedTime(Math.floor(res / 60)));
+    await calcPlayedTimeInDay(
+      GameType.MOVIE,
+      children[curChildIndex]?._id
+    ).then((res) => setMoviePlayedTime(Math.floor(res / 60)));
+  };
 
   const fetchGames = async () => {
     let listGames = [];
@@ -231,7 +314,63 @@ export const GameCatalogueScreen = ({ navigation }) => {
   };
 
   const toggleSwitch = () => setIsLimit((previousState) => !previousState);
-  const handleSelectChild = (index) => {};
+
+  const handleSelectChild = (index) => {
+    setCurChild(children[index]);
+  };
+
+  // check trung ko update de sau
+  const updateTimeLimit = async (gameType, newLimit) => {
+    if (!isNaN(newLimit)) {
+      const validGames = games.filter((game) => game.type === gameType);
+
+      for (const game of validGames) {
+        const childGameDataRef = await firestore()
+          .collection(CollectionName.GAMES)
+          .doc(game?._id)
+          .collection(CollectionName.CHILD_GAME_DATA)
+          .doc(children[curChildIndex]?._id)
+          .get();
+
+        if (childGameDataRef.data()) {
+          await childGameDataRef.ref
+            .update({
+              timeLimit: newLimit * 60, // store seconds
+            })
+            .then(() => console.log(`Updated time limit for ${gameType}`))
+            .catch((error) => console.log(error));
+        } else {
+          // create child data if not have
+          await childGameDataRef.ref
+            .set({
+              name: children[curChildIndex]?.name,
+              timeLimit: newLimit * 60, // store seconds
+            })
+            .then(() =>
+              console.log(
+                `Create new child data and updated time limit for ${gameType}`
+              )
+            )
+            .catch((error) => console.log(error));
+        }
+      }
+    }
+  };
+
+  const handleSubmitLimit = async () => {
+    console.log(storyLimit, gameLimit, movieLimit);
+    if (isNaN(storyLimit) || isNaN(gameLimit) || isNaN(movieLimit)) {
+      Alert.alert("Thông báo", "Giới hạn thời gian sử dụng phải là số.");
+    } else {
+      await updateTimeLimit(GameType.STORY, storyLimit);
+      await updateTimeLimit(GameType.GAME, gameLimit);
+      await updateTimeLimit(GameType.MOVIE, movieLimit);
+      Alert.alert(
+        "Thông báo",
+        "Cập nhật giới hạn thời gian sử dụng thành công."
+      );
+    }
+  };
 
   return (
     <ScreenView isMainScreen title="Giải trí" navigation={navigation}>
@@ -285,7 +424,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
           {isLimit ? (
             <Card title="Hôm nay" style={{ alignItems: "center" }}>
               <ProgressChart
-                data={data}
+                data={progressData}
                 width={sizes.short - sizes.base * 8}
                 height={220}
                 chartConfig={{
@@ -300,15 +439,36 @@ export const GameCatalogueScreen = ({ navigation }) => {
                 <View style={{ alignSelf: "stretch" }}>
                   <Space>
                     <Heading2>Đọc truyện</Heading2>
-                    <LimitRow current={30} color={colors.pink} />
+                    <LimitRow
+                      current={storyPlayedTime}
+                      color={colors.pink}
+                      representation={story}
+                      child={children[curChildIndex]}
+                      onChangeText={setStoryLimit}
+                      limit={storyLimit}
+                    />
                     <Heading2>Chơi game</Heading2>
-                    <LimitRow current={45} color={colors.orange} />
+                    <LimitRow
+                      current={gamePlayedTime}
+                      color={colors.orange}
+                      representation={game}
+                      child={children[curChildIndex]}
+                      onChangeText={setGameLimit}
+                      limit={gameLimit}
+                    />
                     <Heading2>Xem phim</Heading2>
-                    <LimitRow current={120} color={colors.yellow} />
+                    <LimitRow
+                      current={moviePlayedTime}
+                      color={colors.yellow}
+                      representation={movie}
+                      child={children[curChildIndex]}
+                      onChangeText={setMovieLimit}
+                      limit={movieLimit}
+                    />
                   </Space>
                 </View>
 
-                <Button>Lưu thay đổi</Button>
+                <Button onPress={handleSubmitLimit}>Lưu thay đổi</Button>
               </Space>
             </Card>
           ) : (

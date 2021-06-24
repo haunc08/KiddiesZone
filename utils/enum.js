@@ -23,3 +23,9 @@ export const FeedScreenTabs = {
   POPULAR: "popular",
   LOVED: "loved",
 };
+
+export const GameType = {
+  STORY: "story",
+  GAME: "game",
+  MOVIE: "movie",
+};
