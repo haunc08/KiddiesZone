@@ -83,7 +83,7 @@ const KidsZone = ({ route, navigation }) => {
         .doc(child?._id)
         .set({
           name: child?.name,
-          timeLimit: 0,
+          timeLimit: 1800,
         })
         .then(() => console.log(`Add child data for ${gameKey}`))
         .catch((error) => console.log(error));
@@ -99,6 +99,7 @@ const KidsZone = ({ route, navigation }) => {
         .then(() => console.log("updated isLimited"))
         .catch((error) => console.log(error));
     }
+    // too dirty
     return gameRef.docs[0]?.data().type;
   };
 

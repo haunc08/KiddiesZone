@@ -242,7 +242,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
         await childGameDataRef.ref
           .set({
             name: children[curChildIndex]?.name,
-            timeLimit: 0, // store seconds
+            timeLimit: 1800, // store seconds
           })
           .then(() =>
             console.log(
@@ -255,7 +255,8 @@ export const GameCatalogueScreen = ({ navigation }) => {
   };
 
   const toggleSwitch = async () => {
-    await createChildGameData();
+    if (!children[curChildIndex]?.isLimited) await createChildGameData();
+
     await firestore()
       .collection(CollectionName.USERS)
       .doc(user?.uid)
