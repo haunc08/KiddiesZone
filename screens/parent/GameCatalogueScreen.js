@@ -35,46 +35,6 @@ import { getLast7Days } from "../../utils/time";
 import { calcPlayedTimeInDay } from "../main/KidsZone";
 import { Alert } from "react-native";
 
-const games = [
-  {
-    key: "Instruments",
-    name: "Âm nhạc",
-  },
-  {
-    key: "Shapes",
-    name: "Hình khối",
-  },
-  {
-    key: "Movies",
-    name: "Xem hoạt hình",
-  },
-  {
-    key: "Sandbox",
-    name: "Vẽ trên cát",
-  },
-  {
-    key: "Stories",
-    name: "Đọc truyện",
-  },
-  {
-    key: "GameCountNumberScreen",
-    name: "Đếm số",
-  },
-  {
-    key: "GameAlphabet",
-    name: "Đánh vần",
-  },
-  {
-    key: "GameAdd",
-    name: "Phép cộng",
-  },
-  {
-    key: "TrashGame",
-    name: "Dọn rác",
-  },
-];
-
-const data = [0.4, 0.6, 0.8];
 const dataColors = [colors.pink, colors.orange, colors.yellow];
 
 const usageData = [
@@ -91,6 +51,11 @@ const usageData = [
     color: colors.yellow,
   },
 ];
+
+const StatisticMode = {
+  DAY: "day",
+  WEEK: "week",
+};
 
 export const ChildCard = ({ item, index, cardColor, textColor }) => {
   const scheme = genderToColor(item.gender);
@@ -125,49 +90,6 @@ export const ChildCard = ({ item, index, cardColor, textColor }) => {
         </Space>
       </View>
     </View>
-  );
-};
-
-const UsageChart = ({ item }) => {
-  const last7Days = getLast7Days();
-
-  const dayLabels = last7Days.map((day) => day.getDay());
-  console.log(dayLabels);
-
-  return (
-    <LineChart
-      data={{
-        labels: dayLabels,
-        datasets: [
-          {
-            data: [
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-            ],
-          },
-        ],
-      }}
-      width={sizes.short - sizes.base * 4} // from react-native
-      height={220}
-      chartConfig={{
-        backgroundGradientFrom: colors.white,
-        backgroundGradientTo: colors.white,
-        decimalPlaces: 0, // optional, defaults to 2dp
-        color: () => hexToRgba(item.color, 1),
-        style: {
-          borderRadius: 16,
-        },
-      }}
-      bezier
-      style={{
-        marginLeft: -sizes.base / 2,
-        borderRadius: 16,
-      }}
-    />
   );
 };
 
@@ -246,11 +168,10 @@ export const GameCatalogueScreen = ({ navigation }) => {
   const carouselChild = useRef();
   const curChildIndex = carouselChild.current?.currentIndex;
 
-  const carouselUsage = useRef();
-
   const [storyPlayedTime, setStoryPlayedTime] = useState();
   const [gamePlayedTime, setGamePlayedTime] = useState();
   const [moviePlayedTime, setMoviePlayedTime] = useState();
+  const allPlayedTime = storyPlayedTime + gamePlayedTime + moviePlayedTime;
 
   const [storyLimit, setStoryLimit] = useState();
   const [gameLimit, setGameLimit] = useState();
@@ -282,7 +203,6 @@ export const GameCatalogueScreen = ({ navigation }) => {
   useEffect(() => {
     console.log("change child");
     fetchPlayedTime();
-    // fetchAllTypesChildGameData();
   }, [curChildIndex]);
 
   const fetchPlayedTime = async () => {
@@ -485,29 +405,21 @@ export const GameCatalogueScreen = ({ navigation }) => {
                     style={{
                       fontSize: sizes.body,
                       color: colors.primary,
-                      opacity: 0.25,
                     }}
                   >
                     NGÀY
                   </Heading3>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                  <Heading3
-                    style={{ fontSize: sizes.body, color: colors.primary }}
-                  >
-                    TUẦN
-                  </Heading3>
-                </TouchableOpacity>
               </Space>
             </Row>
           </Row>
-          <Card title="Tuần này" style={{ alignItems: "center" }}>
+          <Card title="Hôm nay" style={{ alignItems: "center" }}>
             <Space>
               <View style={{ alignItems: "center" }}>
                 <Heading3
                   style={{ fontSize: sizes.h1 * 2, color: colors.purple }}
                 >
-                  30p
+                  {`${isNaN(allPlayedTime) ? 0 : allPlayedTime}p`}
                 </Heading3>
                 <Body
                   style={{
@@ -525,7 +437,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center" }}>
                   <Heading3 style={{ fontSize: sizes.h1, color: colors.pink }}>
-                    30p
+                    {`${storyPlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -540,7 +452,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   <Heading3
                     style={{ fontSize: sizes.h1, color: colors.orange }}
                   >
-                    1,5h
+                    {`${gamePlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -555,7 +467,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   <Heading3
                     style={{ fontSize: sizes.h1, color: colors.yellow }}
                   >
-                    30p
+                    {`${moviePlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -567,15 +479,6 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   </Body>
                 </View>
               </Row>
-              <Carousel
-                ref={(c) => {
-                  carouselUsage.current = c;
-                }}
-                data={usageData}
-                renderItem={UsageChart}
-                sliderWidth={sizes.short - sizes.base * 4}
-                itemWidth={sizes.short - sizes.base * 4}
-              />
             </Space>
           </Card>
         </Space>
