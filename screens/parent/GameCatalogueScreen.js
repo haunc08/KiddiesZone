@@ -52,11 +52,6 @@ const usageData = [
   },
 ];
 
-const StatisticMode = {
-  DAY: "day",
-  WEEK: "week",
-};
-
 export const ChildCard = ({ item, index, cardColor, textColor }) => {
   const scheme = genderToColor(item.gender);
   const isWhite = cardColor === colors.white;
@@ -162,7 +157,6 @@ export const GameCatalogueScreen = ({ navigation }) => {
   const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
 
-  const [isLimit, setIsLimit] = useState(false);
   const [curChild, setCurChild] = useState(null);
   const [games, setGames] = useState(null);
 
@@ -234,8 +228,35 @@ export const GameCatalogueScreen = ({ navigation }) => {
     setGames(listGames);
   };
 
-  const toggleSwitch = () => {
-    firestore()
+  const createChildGameData = async () => {
+    for (const game of games) {
+      const childGameDataRef = await firestore()
+        .collection(CollectionName.GAMES)
+        .doc(game?._id)
+        .collection(CollectionName.CHILD_GAME_DATA)
+        .doc(children[curChildIndex]?._id)
+        .get();
+
+      if (!childGameDataRef.data()) {
+        // create child data if not have
+        await childGameDataRef.ref
+          .set({
+            name: children[curChildIndex]?.name,
+            timeLimit: 0, // store seconds
+          })
+          .then(() =>
+            console.log(
+              `Create new child data and updated time limit for ${game?.type}`
+            )
+          )
+          .catch((error) => console.log(error));
+      }
+    }
+  };
+
+  const toggleSwitch = async () => {
+    await createChildGameData();
+    await firestore()
       .collection(CollectionName.USERS)
       .doc(user?.uid)
       .collection(CollectionName.CHILDREN)
