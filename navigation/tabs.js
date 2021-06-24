@@ -97,6 +97,7 @@ const Tabs = ({ navigation }) => {
   }, []);
   return (
     <Tab.Navigator
+      initialRouteName="Games"
       tabBarOptions={{
         showLabel: false,
         style: {
