@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 
 import { colors, sizes } from "../../constants";
 import { ScreenView, Space } from "../../components/Wrapper";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { ChildCard } from "./GameCatalogueScreen";
 
 import firestore from "@react-native-firebase/firestore";

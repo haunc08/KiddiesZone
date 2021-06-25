@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Image, View, StyleSheet, ImageBackground, Alert } from "react-native";
+import {
+  Image,
+  View,
+  StyleSheet,
+  ImageBackground,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
 import { ImageButton } from "../../components/Button";
 import { colors, sizes } from "../../constants";

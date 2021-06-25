@@ -3,9 +3,8 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { colors, sizes } from "../../constants";
 import { ScreenView, Space } from "../../components/Wrapper";
 
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Heading2 } from "../../components/Typography";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Alert } from "react-native";
 import { UserContext } from "../../App";
 

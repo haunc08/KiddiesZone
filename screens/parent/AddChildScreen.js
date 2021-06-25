@@ -8,13 +8,12 @@ import {
   FilledButton,
   OutlinedButton,
 } from "../../components/Button";
-import { StatusBar, View, Alert } from "react-native";
+import { StatusBar, View, Alert, TouchableOpacity } from "react-native";
 
 import { IconManager } from "../../utils/image";
 import { hexToRgba } from "../../utils/color";
 import { White12Icon, FlatInput } from "./AddRecordScreen";
 import { Body } from "../../components/Typography";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import DatePicker from "react-native-date-picker";
 import { CollectionName, Gender, HandlingMode } from "../../utils/enum";
 

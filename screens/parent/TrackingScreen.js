@@ -11,7 +11,7 @@ import {
 } from "../../components/Wrapper";
 import { AutoIcon, ImageButton } from "../../components/Button";
 import Carousel from "react-native-snap-carousel";
-import { View } from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import {
   Heading2,
   Heading3,
@@ -19,7 +19,6 @@ import {
   Heading1,
 } from "../../components/Typography";
 import { IconManager } from "../../utils/image";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { hexToRgba } from "../../utils/color";
 import { LineChart } from "react-native-chart-kit";
 import { calcAge } from "../../utils/string";

@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { Alert, ImageBackground } from "react-native";
+import { Alert, ImageBackground, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { ImageButton } from "../../components/Button";
 import { colors, sizes } from "../../constants";
 import { IconManager, ImageManager, autoSize } from "../../utils/image";

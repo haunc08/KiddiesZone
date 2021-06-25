@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Image, StyleSheet, View, ImageBackground } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Carousel from "react-native-snap-carousel";
 import { AutoIcon, ImageButton } from "../../components/Button";
 import { Hearts } from "../../components/Indicator";

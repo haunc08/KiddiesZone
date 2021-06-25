@@ -175,7 +175,7 @@ const TrashRain = ({ countLandingItems, setCountLandingItems, setPoints }) => {
   );
 };
 
-const TrashGame = ({ navigation }) => {
+const TrashGame = ({ navigation, route }) => {
   const [countLandingItems, setCountLandingItems] = useState(0);
   const [points, setPoints] = useState(0);
 

@@ -16,13 +16,13 @@ import {
   StatusBar,
   Text,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import { KidsZoneNavbar } from "../../components/Navigation";
 import { FullHorizontalList } from "../../components/HorizontalList";
 import { ImageManager } from "../../utils/image";
 import { ImageButton } from "../../components/Button";
 import { Heading1, Heading2 } from "../../components/Typography";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import firestore from "@react-native-firebase/firestore";
 import { UserContext } from "../../App";
 import { CollectionName } from "../../utils/enum";
