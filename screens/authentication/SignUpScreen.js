@@ -46,23 +46,15 @@ const SignUpScreen = ({ navigation }) => {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          // console.log("fucking res", res.user.uid);
-          // const { uid } = auth().currentUser;
-          // CHỮA CHÁY CHO NÓ WORKS TRƯỚC
-          auth().signOut();
+          const { uid } = auth().currentUser;
           res.user
             .updateProfile({
               displayName: displayName,
             })
             .then(() => {
-              // firebase
-              //   .database()
-              //   .ref("users/" + firebase.auth().currentUser.uid + "/profile")
-              //   .set({ name: firebase.auth().currentUser.displayName });
-              // addDefaultDatabase(uid);
               firestore()
                 .collection(CollectionName.USERS)
-                .doc(res.user.uid)
+                .doc(uid)
                 .set({ name: displayName })
                 .then(() => {
                   console.log("Add firestore successfully");
