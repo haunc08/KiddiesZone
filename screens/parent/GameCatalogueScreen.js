@@ -34,6 +34,7 @@ import { calcAge } from "../../utils/string";
 import { getLast7Days } from "../../utils/time";
 import { calcPlayedTimeInDay } from "../main/KidsZone";
 import { Alert } from "react-native";
+import { set } from "react-native-reanimated";
 
 const dataColors = [colors.pink, colors.orange, colors.yellow];
 
@@ -95,6 +96,8 @@ const LimitRow = ({
   child,
   onChangeText,
   limit,
+  onChangeCurText,
+  curLimit,
 }) => {
   const fetchChildGameData = async () => {
     console.log("fetch ag");
@@ -106,7 +109,7 @@ const LimitRow = ({
       .get()
       .then((childData) => {
         const limit = childData.data()?.timeLimit / 60;
-        onChangeText(limit.toString());
+        onChangeCurText(limit.toString());
       });
   };
 
@@ -137,6 +140,7 @@ const LimitRow = ({
           fontWeight: "bold",
           marginTop: sizes.base / 4,
         }}
+        defaultValue={isNaN(curLimit) ? "" : curLimit}
         value={isNaN(limit) ? "" : limit}
         keyboardType="numeric"
         onChangeText={onChangeText}
@@ -173,9 +177,13 @@ export const GameCatalogueScreen = ({ navigation }) => {
   const [gameLimit, setGameLimit] = useState();
   const [movieLimit, setMovieLimit] = useState();
 
-  const storyProgress = storyPlayedTime / storyLimit;
-  const gameProgress = gamePlayedTime / gameLimit;
-  const movieProgress = moviePlayedTime / movieLimit;
+  const [curStoryLimit, setCurStoryLimit] = useState();
+  const [curGameLimit, setCurGameLimit] = useState();
+  const [curMovieLimit, setCurMovieLimit] = useState();
+
+  const storyProgress = storyPlayedTime / curStoryLimit;
+  const gameProgress = gamePlayedTime / curGameLimit;
+  const movieProgress = moviePlayedTime / curMovieLimit;
   const progressData = [
     isNaN(storyProgress) ? 0 : storyProgress,
     isNaN(gameProgress) ? 0 : gameProgress,
@@ -319,6 +327,9 @@ export const GameCatalogueScreen = ({ navigation }) => {
       await updateTimeLimit(GameType.STORY, storyLimit);
       await updateTimeLimit(GameType.GAME, gameLimit);
       await updateTimeLimit(GameType.MOVIE, movieLimit);
+      setCurStoryLimit(storyLimit);
+      setCurGameLimit(gameLimit);
+      setCurMovieLimit(movieLimit);
       Alert.alert(
         "Thông báo",
         "Cập nhật giới hạn thời gian sử dụng thành công."
@@ -407,6 +418,8 @@ export const GameCatalogueScreen = ({ navigation }) => {
                       child={children[curChildIndex]}
                       onChangeText={setStoryLimit}
                       limit={storyLimit}
+                      onChangeCurText={setCurStoryLimit}
+                      curLimit={curStoryLimit}
                     />
                     <Heading2>Chơi game</Heading2>
                     <LimitRow
@@ -416,6 +429,8 @@ export const GameCatalogueScreen = ({ navigation }) => {
                       child={children[curChildIndex]}
                       onChangeText={setGameLimit}
                       limit={gameLimit}
+                      onChangeCurText={setCurGameLimit}
+                      curLimit={curGameLimit}
                     />
                     <Heading2>Xem phim</Heading2>
                     <LimitRow
@@ -425,6 +440,8 @@ export const GameCatalogueScreen = ({ navigation }) => {
                       child={children[curChildIndex]}
                       onChangeText={setMovieLimit}
                       limit={movieLimit}
+                      onChangeCurText={setCurMovieLimit}
+                      curLimit={curMovieLimit}
                     />
                   </Space>
                 </View>

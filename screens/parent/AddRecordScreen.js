@@ -58,6 +58,7 @@ export const FlatInput = ({
   color,
   secureTextEntry,
   placeholder,
+  defaultValue,
 }) => {
   if (!color) color = colors.white;
   return (
@@ -74,6 +75,7 @@ export const FlatInput = ({
         ...style,
       }}
       onChangeText={onChangeText}
+      defaultValue={defaultValue}
       value={value}
       keyboardType={keyboardType || "default"}
       secureTextEntry={secureTextEntry}
