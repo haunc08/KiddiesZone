@@ -21,6 +21,8 @@ const GameAlphabet = ({ route, navigation }) => {
   const [currentGame, setCurrentGame] = useState();
   const [childGameData, setChildGameData] = useState();
 
+  const user = useContext(UserContext);
+
   let tempPlayingTime = 0;
 
   const remainingTime = playedTime
