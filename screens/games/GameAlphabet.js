@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { Alert, ImageBackground } from "react-native";
 import { Image } from "react-native";
 import { StyleSheet, View } from "react-native";
@@ -14,6 +14,7 @@ import { Row, Space } from "../../components/Wrapper";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName } from "../../utils/enum";
 import BackgroundTimer from "react-native-background-timer";
+import { UserContext } from "../../App";
 
 const GameAlphabet = ({ route, navigation }) => {
   const { child, gameKey, playedTime, startTime } = route.params;
@@ -31,7 +32,21 @@ const GameAlphabet = ({ route, navigation }) => {
     Alert.alert(
       "Thông báo",
       "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
-      [{ text: "OK", onPress: () => navigation.goBack() }]
+      [
+        {
+          text: "Xin thêm thời gian",
+          onPress: () => {
+            firestore()
+              .collection(CollectionName.USERS)
+              .doc(user?.uid)
+              .collection(CollectionName.CHILDREN)
+              .doc(child?._id)
+              .update({ moreTime: 0 });
+            navigation.goBack();
+          },
+        },
+        { text: "OK", onPress: () => navigation.goBack() },
+      ]
     );
   }
 

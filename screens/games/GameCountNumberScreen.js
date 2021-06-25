@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Image, View, StyleSheet, ImageBackground } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Image, View, StyleSheet, ImageBackground, Alert } from "react-native";
 import { Text } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Orientation from "react-native-orientation-locker";
@@ -13,6 +13,7 @@ import { Row } from "../../components/Wrapper";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName } from "../../utils/enum";
 import BackgroundTimer from "react-native-background-timer";
+import { UserContext } from "../../App";
 
 const food = ImageManager.count.food;
 
@@ -21,6 +22,8 @@ const GameCountNumberScreen = ({ route, navigation }) => {
 
   const [currentGame, setCurrentGame] = useState();
   const [childGameData, setChildGameData] = useState();
+
+  const user = useContext(UserContext);
 
   let tempPlayingTime = 0;
 
@@ -32,7 +35,21 @@ const GameCountNumberScreen = ({ route, navigation }) => {
     Alert.alert(
       "Thông báo",
       "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
-      [{ text: "OK", onPress: () => navigation.goBack() }]
+      [
+        {
+          text: "Xin thêm thời gian",
+          onPress: () => {
+            firestore()
+              .collection(CollectionName.USERS)
+              .doc(user?.uid)
+              .collection(CollectionName.CHILDREN)
+              .doc(child?._id)
+              .update({ moreTime: 0 });
+            navigation.goBack();
+          },
+        },
+        { text: "OK", onPress: () => navigation.goBack() },
+      ]
     );
   }
   // const [lifePoint, setLifePoint] = useState(3);
