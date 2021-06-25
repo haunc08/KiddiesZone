@@ -49,7 +49,7 @@ async function savePicture(uri) {
     });
 }
 
-export const Sandbox = ({ navigation }) => {
+export const Sandbox = ({ route, navigation }) => {
   const { child, gameKey, playedTime, startTime } = route.params;
 
   const [currentGame, setCurrentGame] = useState();
