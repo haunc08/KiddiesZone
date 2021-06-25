@@ -102,7 +102,7 @@ const SettingRow = ({ onPress, iconSource, text, color }) => {
 export const UserScreen = ({ navigation }) => {
   const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
-
+  console.log("user", user);
   const handlePressAddChild = () => {
     navigation.navigate("AddChildScreen", { mode: HandlingMode.ADD });
   };
