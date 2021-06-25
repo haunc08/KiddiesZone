@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, ImageBackground, View } from "react-native";
-import { Text } from "react-native-elements";
+import { Alert, View } from "react-native";
 import Animated, { Easing } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 import { AutoIcon, ImageButton } from "../../components/Button";
@@ -14,13 +13,12 @@ import {
 import { IconManager, ImageManager } from "../../utils/image";
 import * as Progress from "react-native-progress";
 import { hexToRgba } from "../../utils/color";
-import {
-  Heading2,
-  Heading1,
-  Body,
-  Heading3,
-} from "../../components/Typography";
+import { Heading2, Heading1, Heading3 } from "../../components/Typography";
 import { playSoundFile } from "../../utils/sound";
+
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
 
 const calcMarginVertical = (flex) => {
   return (sizes.short * flex) / 5;
@@ -181,7 +179,113 @@ const TrashGame = ({ navigation }) => {
   const [countLandingItems, setCountLandingItems] = useState(0);
   const [points, setPoints] = useState(0);
 
+  const { child, gameKey, playedTime, startTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchCurrentGame();
+  }, []);
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
+
+  const handleBackBtn = () => {
+    // setCurPlayingTime(tempPlayingTime);
+    createGameRecord();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
+    navigation.goBack();
+    dispatch(clearAllTrashItems());
+  };
 
   return (
     <Frame background={ImageManager.ground}>
@@ -197,10 +301,7 @@ const TrashGame = ({ navigation }) => {
         <ImageButton
           small
           source={IconManager.buttons.orange.back}
-          onPress={() => {
-            navigation.goBack();
-            dispatch(clearAllTrashItems());
-          }}
+          onPress={handleBackBtn}
         />
       </View>
       {countLandingItems < limitLandingItems ? (

@@ -1,17 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StatusBar, Text, ImageBackground } from "react-native";
+import { View, StatusBar, Text, Alert } from "react-native";
 import { colors, sizes } from "../../constants";
 import { Frame, NoScrollView, Space } from "../../components/Wrapper";
 import { ImageButton, StoryObject } from "../../components/Button";
 import { createSound } from "../../utils/sound";
 import { ImageManager, IconManager } from "../../utils/image";
-import { Body, Heading1, Heading3 } from "../../components/Typography";
+import { Heading1, Heading3 } from "../../components/Typography";
+
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
 
 const gameImages = ImageManager.rabbitAndTurtle;
 
 const pages = 11;
 
-export const Story = ({ navigation }) => {
+export const Story = ({ route, navigation }) => {
+  const { child, gameKey, playedTime, startTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
   let script = useRef(null);
   let backgroundMusic = useRef(null);
 
@@ -385,6 +408,85 @@ export const Story = ({ navigation }) => {
 
   const [page, setPage] = useState(-1);
 
+  useEffect(() => {
+    fetchCurrentGame();
+  }, []);
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
+
   const handleStart = () => {
     console.log("handle start");
     backgroundMusic.current = createSound(media.background.audio, -1, 0.3);
@@ -442,6 +544,8 @@ export const Story = ({ navigation }) => {
     });
   };
   const goBack = async () => {
+    createGameRecord();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
     await stopScript();
     await backgroundMusic.current.stop(() => {
       backgroundMusic.current.release();
@@ -486,7 +590,7 @@ export const Story = ({ navigation }) => {
           <Space row>
             <ImageButton
               height={45}
-              onPress={() => goBack()}
+              onPress={goBack}
               source={IconManager.home}
             />
             <ImageButton

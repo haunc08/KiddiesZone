@@ -1,22 +1,128 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, StatusBar, Text, ImageBackground, Image } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text } from "react-native";
 import { colors, sizes } from "../../constants";
-import { Frame, NoScrollView, Space } from "../../components/Wrapper";
-import { ImageButton, StoryObject } from "../../components/Button";
-import { createSound, playSoundFile } from "../../utils/sound";
-import { ImageManager, IconManager, autoSize } from "../../utils/image";
-import { Heading1 } from "../../components/Typography";
-import Carousel from "react-native-snap-carousel";
-import YoutubePlayer from "react-native-youtube-iframe";
-import Orientation from "react-native-orientation-locker";
+import { NoScrollView } from "../../components/Wrapper";
+import { ImageButton } from "../../components/Button";
+import { playSoundFile } from "../../utils/sound";
+import { ImageManager, IconManager } from "../../utils/image";
 import { Piano } from "../../components/Piano";
 
-export const Instruments = ({ navigation }) => {
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
+
+export const Instruments = ({ route, navigation }) => {
+  const { child, gameKey, playedTime, startTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
   const instruments = ["piano", "drum"];
   const popUpTimer = useRef();
   const [note, setNote] = useState(null);
   const [drum, setDrum] = useState(null);
   const [insIndex, setInsIndex] = useState(0);
+
+  useEffect(() => {
+    fetchCurrentGame();
+  }, []);
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
+
+  const handleBackBtn = () => {
+    // setCurPlayingTime(tempPlayingTime);
+    createGameRecord();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
+    navigation.goBack();
+  };
+
   const noteName = (note) => {
     const charOnly = note.substring(0, note.length - 1);
     switch (charOnly) {
@@ -176,7 +282,7 @@ export const Instruments = ({ navigation }) => {
       >
         <ImageButton
           width={sizes.base * 4.5}
-          onPress={() => navigation.goBack()}
+          onPress={handleBackBtn}
           source={IconManager.buttons.blue.home}
         />
       </View>

@@ -19,6 +19,10 @@ import { SketchCanvas } from "@terrylinla/react-native-sketch-canvas";
 import { IconManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
+import firestore from "@react-native-firebase/firestore";
+import { CollectionName } from "../../utils/enum";
+import BackgroundTimer from "react-native-background-timer";
+
 async function hasAndroidPermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
 
@@ -46,12 +50,110 @@ async function savePicture(uri) {
 }
 
 export const Sandbox = ({ navigation }) => {
+  const { child, gameKey, playedTime, startTime } = route.params;
+
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
   const [stroke, setStroke] = useState({ type: "finger", width: 20 });
+
   useEffect(() => {
     Orientation.lockToLandscapeLeft();
+    fetchCurrentGame();
   }, []);
+
   const viewShotRef = useRef();
   const canvasRef = useRef();
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
+
   const screenShot = () => {
     viewShotRef.current.capture().then((uri) => {
       console.log("do something with ", uri);
@@ -82,6 +184,8 @@ export const Sandbox = ({ navigation }) => {
         {
           text: "OK",
           onPress: () => {
+            createGameRecord();
+            if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
             navigation.goBack();
             console.log("OK Pressed");
           },

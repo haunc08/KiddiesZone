@@ -22,7 +22,9 @@ import { FullHorizontalList } from "../../components/HorizontalList";
 import { IconManager, ImageManager } from "../../utils/image";
 import { playSoundFile } from "../../utils/sound";
 
-export const Stories = ({ navigation }) => {
+export const Stories = ({ route, navigation }) => {
+  const { child, gameKey, playedTime, startTime } = route.params;
+
   const stories = [
     {
       key: "Story",
@@ -39,7 +41,7 @@ export const Stories = ({ navigation }) => {
     navigation.goBack();
   };
   const handleChooseStory = (screenRoute) => {
-    navigation.navigate(screenRoute);
+    navigation.navigate(screenRoute, { child, gameKey, playedTime, startTime });
   };
 
   useEffect(() => {

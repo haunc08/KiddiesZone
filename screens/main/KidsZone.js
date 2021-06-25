@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { sizes } from "../../constants";
 import { NoScrollView, Space, RoundImpress } from "../../components/Wrapper";
@@ -14,6 +14,7 @@ import { ImageButton } from "../../components/Button";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName } from "../../utils/enum";
 import { calcAge } from "../../utils/string";
+import { UserContext } from "../../App";
 
 export const calcPlayedTimeInDay = async (gameType, childId, date) => {
   let allPlayedTime = 0;
@@ -52,6 +53,7 @@ export const calcPlayedTimeInDay = async (gameType, childId, date) => {
 };
 
 const KidsZone = ({ route, navigation }) => {
+  const user = useContext(UserContext);
   const { child } = route.params;
   const age = calcAge(child?.birthday.toDate());
 
@@ -81,11 +83,23 @@ const KidsZone = ({ route, navigation }) => {
         .doc(child?._id)
         .set({
           name: child?.name,
-          timeLimit: 0,
+          timeLimit: 1800,
         })
         .then(() => console.log(`Add child data for ${gameKey}`))
         .catch((error) => console.log(error));
+
+      await firestore()
+        .collection(CollectionName.USERS)
+        .doc(user?.uid)
+        .collection(CollectionName.CHILDREN)
+        .doc(child?._id)
+        .update({
+          isLimited: false,
+        })
+        .then(() => console.log("updated isLimited"))
+        .catch((error) => console.log(error));
     }
+    // too dirty
     return gameRef.docs[0]?.data().type;
   };
 
@@ -94,7 +108,13 @@ const KidsZone = ({ route, navigation }) => {
     const playedTime = await calcPlayedTimeInDay(gameType, child?._id);
     // console.log(playedTime);
 
-    navigation.navigate(screenName, { child, gameKey: screenName, playedTime });
+    const startTime = new Date().getTime();
+    navigation.navigate(screenName, {
+      child,
+      gameKey: screenName,
+      playedTime,
+      startTime,
+    });
   };
 
   const games = [

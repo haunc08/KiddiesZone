@@ -35,46 +35,6 @@ import { getLast7Days } from "../../utils/time";
 import { calcPlayedTimeInDay } from "../main/KidsZone";
 import { Alert } from "react-native";
 
-const games = [
-  {
-    key: "Instruments",
-    name: "Âm nhạc",
-  },
-  {
-    key: "Shapes",
-    name: "Hình khối",
-  },
-  {
-    key: "Movies",
-    name: "Xem hoạt hình",
-  },
-  {
-    key: "Sandbox",
-    name: "Vẽ trên cát",
-  },
-  {
-    key: "Stories",
-    name: "Đọc truyện",
-  },
-  {
-    key: "GameCountNumberScreen",
-    name: "Đếm số",
-  },
-  {
-    key: "GameAlphabet",
-    name: "Đánh vần",
-  },
-  {
-    key: "GameAdd",
-    name: "Phép cộng",
-  },
-  {
-    key: "TrashGame",
-    name: "Dọn rác",
-  },
-];
-
-const data = [0.4, 0.6, 0.8];
 const dataColors = [colors.pink, colors.orange, colors.yellow];
 
 const usageData = [
@@ -125,49 +85,6 @@ export const ChildCard = ({ item, index, cardColor, textColor }) => {
         </Space>
       </View>
     </View>
-  );
-};
-
-const UsageChart = ({ item }) => {
-  const last7Days = getLast7Days();
-
-  const dayLabels = last7Days.map((day) => day.getDay());
-  console.log(dayLabels);
-
-  return (
-    <LineChart
-      data={{
-        labels: dayLabels,
-        datasets: [
-          {
-            data: [
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-              Math.random() * 50,
-            ],
-          },
-        ],
-      }}
-      width={sizes.short - sizes.base * 4} // from react-native
-      height={220}
-      chartConfig={{
-        backgroundGradientFrom: colors.white,
-        backgroundGradientTo: colors.white,
-        decimalPlaces: 0, // optional, defaults to 2dp
-        color: () => hexToRgba(item.color, 1),
-        style: {
-          borderRadius: 16,
-        },
-      }}
-      bezier
-      style={{
-        marginLeft: -sizes.base / 2,
-        borderRadius: 16,
-      }}
-    />
   );
 };
 
@@ -237,20 +154,19 @@ const LimitRow = ({
 };
 
 export const GameCatalogueScreen = ({ navigation }) => {
+  const user = useContext(UserContext);
   const children = useContext(ChildrenContext);
 
-  const [isLimit, setIsLimit] = useState(false);
   const [curChild, setCurChild] = useState(null);
   const [games, setGames] = useState(null);
 
   const carouselChild = useRef();
   const curChildIndex = carouselChild.current?.currentIndex;
 
-  const carouselUsage = useRef();
-
   const [storyPlayedTime, setStoryPlayedTime] = useState();
   const [gamePlayedTime, setGamePlayedTime] = useState();
   const [moviePlayedTime, setMoviePlayedTime] = useState();
+  const allPlayedTime = storyPlayedTime + gamePlayedTime + moviePlayedTime;
 
   const [storyLimit, setStoryLimit] = useState();
   const [gameLimit, setGameLimit] = useState();
@@ -282,7 +198,6 @@ export const GameCatalogueScreen = ({ navigation }) => {
   useEffect(() => {
     console.log("change child");
     fetchPlayedTime();
-    // fetchAllTypesChildGameData();
   }, [curChildIndex]);
 
   const fetchPlayedTime = async () => {
@@ -313,7 +228,45 @@ export const GameCatalogueScreen = ({ navigation }) => {
     setGames(listGames);
   };
 
-  const toggleSwitch = () => setIsLimit((previousState) => !previousState);
+  const createChildGameData = async () => {
+    for (const game of games) {
+      const childGameDataRef = await firestore()
+        .collection(CollectionName.GAMES)
+        .doc(game?._id)
+        .collection(CollectionName.CHILD_GAME_DATA)
+        .doc(children[curChildIndex]?._id)
+        .get();
+
+      if (!childGameDataRef.data()) {
+        // create child data if not have
+        await childGameDataRef.ref
+          .set({
+            name: children[curChildIndex]?.name,
+            timeLimit: 1800, // store seconds
+          })
+          .then(() =>
+            console.log(
+              `Create new child data and updated time limit for ${game?.type}`
+            )
+          )
+          .catch((error) => console.log(error));
+      }
+    }
+  };
+
+  const toggleSwitch = async () => {
+    if (!children[curChildIndex]?.isLimited) await createChildGameData();
+
+    await firestore()
+      .collection(CollectionName.USERS)
+      .doc(user?.uid)
+      .collection(CollectionName.CHILDREN)
+      .doc(children[curChildIndex]?._id)
+      .update({
+        isLimited: !children[curChildIndex]?.isLimited,
+      })
+      .then(() => console.log("Updated isLimited"));
+  };
 
   const handleSelectChild = (index) => {
     setCurChild(children[index]);
@@ -415,13 +368,15 @@ export const GameCatalogueScreen = ({ navigation }) => {
                 false: "#767577",
                 true: hexToRgba(colors.primary, 0.25),
               }}
-              thumbColor={isLimit ? colors.primary : "#f4f3f4"}
+              thumbColor={
+                children[curChildIndex]?.isLimited ? colors.primary : "#f4f3f4"
+              }
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
-              value={isLimit}
+              value={children[curChildIndex]?.isLimited}
             />
           </Row>
-          {isLimit ? (
+          {children[curChildIndex]?.isLimited ? (
             <Card title="Hôm nay" style={{ alignItems: "center" }}>
               <ProgressChart
                 data={progressData}
@@ -485,29 +440,21 @@ export const GameCatalogueScreen = ({ navigation }) => {
                     style={{
                       fontSize: sizes.body,
                       color: colors.primary,
-                      opacity: 0.25,
                     }}
                   >
                     NGÀY
                   </Heading3>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                  <Heading3
-                    style={{ fontSize: sizes.body, color: colors.primary }}
-                  >
-                    TUẦN
-                  </Heading3>
-                </TouchableOpacity>
               </Space>
             </Row>
           </Row>
-          <Card title="Tuần này" style={{ alignItems: "center" }}>
+          <Card title="Hôm nay" style={{ alignItems: "center" }}>
             <Space>
               <View style={{ alignItems: "center" }}>
                 <Heading3
                   style={{ fontSize: sizes.h1 * 2, color: colors.purple }}
                 >
-                  30p
+                  {`${isNaN(allPlayedTime) ? 0 : allPlayedTime}p`}
                 </Heading3>
                 <Body
                   style={{
@@ -525,7 +472,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center" }}>
                   <Heading3 style={{ fontSize: sizes.h1, color: colors.pink }}>
-                    30p
+                    {`${storyPlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -540,7 +487,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   <Heading3
                     style={{ fontSize: sizes.h1, color: colors.orange }}
                   >
-                    1,5h
+                    {`${gamePlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -555,7 +502,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   <Heading3
                     style={{ fontSize: sizes.h1, color: colors.yellow }}
                   >
-                    30p
+                    {`${moviePlayedTime ?? 0}p`}
                   </Heading3>
                   <Body
                     style={{
@@ -567,15 +514,6 @@ export const GameCatalogueScreen = ({ navigation }) => {
                   </Body>
                 </View>
               </Row>
-              <Carousel
-                ref={(c) => {
-                  carouselUsage.current = c;
-                }}
-                data={usageData}
-                renderItem={UsageChart}
-                sliderWidth={sizes.short - sizes.base * 4}
-                itemWidth={sizes.short - sizes.base * 4}
-              />
             </Space>
           </Card>
         </Space>
