@@ -89,6 +89,7 @@ export const IconManager = {
     },
   },
   radioactive: require("../assets/icons/radioactive.png"),
+  moreTime: require("../assets/icons/moreTime.png"),
 };
 
 export const ImageManager = {
@@ -262,7 +263,7 @@ export const ImageManager = {
     test: require("../assets/images/passwordparent/test.png"),
   },
   gokid: require("../assets/images/gokid.jpg"),
-  gokidpng: require("../assets/images/gokid.png"),
+  gokidpng: require("../assets/images/gokidbordered.png"),
   games: {
     instrument: require("../assets/images/games/instrument.png"),
     shapes: require("../assets/images/games/shapes.png"),
@@ -278,7 +279,7 @@ export const ImageManager = {
     riu: require("../assets/images/stories/riu.png"),
     turtlerabbit: require("../assets/images/stories/turtlerabbit.png"),
   },
-  kidszonebg: require("../assets/images/kidszonebg.jpg"),
+  kidszonebg: require("../assets/images/kidszone2.jpg"),
   calc: {
     background: require("../assets/images/calculate/background.jpg"),
     easy: require("../assets/images/calculate/mode1.png"),

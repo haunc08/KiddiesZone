@@ -9,7 +9,7 @@ import GameCountNumberScreen from "./games/GameCountNumberScreen";
 import GameAlphabet from "./games/GameAlphabet";
 import GameCalculate from "./games/GameCalculate";
 import Movies from "./games/Movies";
-import Sandbox from "./games/Sandbox";
+import Sandbox from "./games/SandBox";
 import { Stories } from "./games/Stories";
 import Story from "./games/Story";
 import Story2 from "./games/Story2";

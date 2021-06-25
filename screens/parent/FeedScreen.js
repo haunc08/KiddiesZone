@@ -196,7 +196,7 @@ export const FeedScreen = ({ navigation }) => {
     }
 
     const hearted = item?.lovedUsers.includes(user?.uid);
-    const timeText = calcTimeRangeUntilNow(item?.createdAt.toDate());
+    const timeText = calcTimeRangeUntilNow(item?.createdAt?.toDate());
 
     return (
       <Card

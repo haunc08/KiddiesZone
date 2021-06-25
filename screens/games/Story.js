@@ -431,8 +431,12 @@ export const Story = ({ route, navigation }) => {
               [
                 {
                   text: "OK",
-                  onPress: () => {
+                  onPress: async () => {
                     BackgroundTimer.stopBackgroundTimer();
+                    await stopScript();
+                    await backgroundMusic.current.stop(() => {
+                      backgroundMusic.current.release();
+                    });
                     navigation.goBack();
                   },
                 },

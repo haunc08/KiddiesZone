@@ -1,5 +1,11 @@
 // react
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 
 // other packages
 import { createStackNavigator } from "@react-navigation/stack";
@@ -16,6 +22,7 @@ import {
   ChangeNameScreen,
 } from "../screens";
 import Tabs from "./tabs";
+import { MoreTimePopup } from "../screens/parent/UserScreen";
 
 import firestore from "@react-native-firebase/firestore";
 import { UserContext } from "../App";
@@ -28,6 +35,7 @@ const Stack = createStackNavigator();
 const ParentNavigator = () => {
   const user = useContext(UserContext);
   const [children, setChildren] = useState([]);
+  const moreTimeQueue = useRef([]);
 
   const childrenRef = firestore()
     .collection(CollectionName.USERS)
@@ -44,14 +52,38 @@ const ParentNavigator = () => {
           _id: documentSnapshot.id,
         };
         childrenData.push(child);
+        if (child.moreTime === 0) {
+          moreTimeQueue.current.push(child);
+        }
       });
-
       setChildren(childrenData);
     });
   }, []);
 
+  const updateMoreTime = (num) => {
+    if (moreTimeQueue) {
+      console.log("child.....", moreTimeQueue.current[0]);
+      childrenRef.doc(moreTimeQueue.current[0]?._id).update({ moreTime: num });
+      moreTimeQueue.current = moreTimeQueue.current.shift();
+    }
+  };
+
+  const handleAllow = () => {
+    updateMoreTime(1);
+  };
+
+  const handleDeny = () => {
+    updateMoreTime(-1);
+  };
   return (
     <ChildrenContext.Provider value={children}>
+      {moreTimeQueue.current[0] ? (
+        <MoreTimePopup
+          onAllow={handleAllow}
+          onDeny={handleDeny}
+          name={moreTimeQueue.current[0]?.name}
+        />
+      ) : null}
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="AddChildScreen" component={AddChildScreen} />

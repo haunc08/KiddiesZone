@@ -48,6 +48,7 @@ const DisplayedScreens = () => {
   const [userInfo, setUserInfo] = useState(userAuth);
 
   useEffect(() => {
+    console.log("test user.....", user);
     firestore()
       .collection(CollectionName.USERS)
       .doc(user?.uid)

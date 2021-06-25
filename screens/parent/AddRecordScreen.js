@@ -30,15 +30,17 @@ import firestore from "@react-native-firebase/firestore";
 import { CollectionName, HandlingMode } from "../../utils/enum";
 import { UserContext } from "../../App";
 
-export const White12Icon = ({ iconSource, title }) => {
+export const White12Icon = ({ iconSource, title, roundSize, iconSize }) => {
+  if (!roundSize) roundSize = 5;
+  if (!iconSize) iconSize = 2;
   return (
     <View style={{ alignItems: "center" }}>
       <Space tight>
-        <Round color={colors.white12} size={sizes.base * 5}>
+        <Round color={colors.white12} size={sizes.base * roundSize}>
           <AutoIcon
             source={iconSource}
             color={colors.white}
-            height={sizes.base * 2}
+            height={sizes.base * iconSize}
           />
         </Round>
 

@@ -8,18 +8,23 @@ import {
   Space,
   RoundImpress,
 } from "../../components/Wrapper";
-import { AutoIcon, Button } from "../../components/Button";
+import {
+  AutoIcon,
+  Button,
+  FilledButton,
+  OutlinedButton,
+} from "../../components/Button";
 import { IconManager } from "../../utils/image";
 import { Heading2, Body, Heading3 } from "../../components/Typography";
-import { ScrollView, View, TouchableOpacity } from "react-native";
+import { ScrollView, View, TouchableOpacity, Modal } from "react-native";
 import { hexToRgba } from "../../utils/color";
 import { Divider } from "react-native-elements";
-
 import auth from "@react-native-firebase/auth";
 import { UserContext } from "../../App";
 import { ChildrenContext } from "../../navigation/ParentNavigator";
 import { calcAge, shortenName } from "../../utils/string";
 import { HandlingMode } from "../../utils/enum";
+import { White12Icon } from "./AddRecordScreen";
 
 export const ChildItem = ({ age, name, color, onPress }) => {
   return (
@@ -134,7 +139,7 @@ export const UserScreen = ({ navigation }) => {
   return (
     <ScreenView title="Người dùng" isMainScreen>
       <Space>
-        <Card title="Tổng quan">
+        <Card title={"Tổng quan"}>
           <Space>
             <View style={{ alignItems: "center" }}>
               <Space>
@@ -175,6 +180,55 @@ export const UserScreen = ({ navigation }) => {
         </Card>
       </Space>
     </ScreenView>
+  );
+};
+
+export const MoreTimePopup = ({ onAllow, onDeny, name }) => {
+  return (
+    <Card
+      bgColor={colors.blue}
+      style={{
+        zIndex: 32,
+        position: "absolute",
+        width: (sizes.short * 9) / 10,
+        height: (sizes.long * 5.5) / 10,
+        marginLeft: sizes.short / 10 / 2,
+        marginTop: (sizes.long * 2.25) / 10,
+        alignItems: "center",
+        backgroundColor: colors.blue,
+      }}
+      title="Thông báo"
+      shadow={30}
+    >
+      <Divider
+        style={{
+          color: colors.white,
+          borderColor: colors.white,
+          backgroundColor: colors.white,
+          alignSelf: "stretch",
+          marginTop: -4,
+          marginBottom: sizes.base * 2,
+        }}
+      />
+      <White12Icon iconSource={IconManager.moreTime} roundSize={4} />
+      <Heading3 white style={{ marginBottom: sizes.base / 2 }}>
+        {name}
+      </Heading3>
+      <Body white>vừa yêu cầu thêm thời gian</Body>
+      <Body white>cho danh mục: Game </Body>
+      <View style={{ height: sizes.base * 2 }} />
+      <FilledButton onPress={onAllow}>Thêm 15 phút</FilledButton>
+
+      <View style={{ height: sizes.base }} />
+
+      <FilledButton
+        buttonColor={colors.white12}
+        color={colors.white}
+        onPress={onDeny}
+      >
+        Từ chối
+      </FilledButton>
+    </Card>
   );
 };
 

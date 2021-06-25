@@ -79,13 +79,21 @@ const TrackingScreen = ({ navigation }) => {
 
   const checkBMIResult = (bmi) => {
     if (bmi >= 0 && bmi < 14) return "Thiếu cân";
-    if (bmi >= 14 && bmi <= 18) return "Sức khỏe dinh dưỡng tốt";
+    if (bmi >= 14 && bmi <= 18) return "Sức khỏe tốt";
     if (bmi > 18 && bmi <= 20) return "Nguy cơ béo phì";
     if (bmi > 20) return "Béo phì";
   };
 
+  const checkBMIPicture = (bmi) => {
+    if (bmi >= 0 && bmi < 14) return "underweight";
+    if (bmi >= 14 && bmi <= 18) return "normal";
+    if (bmi > 18 && bmi <= 20) return "overweight";
+    if (bmi > 20) return "obese";
+  };
+
   const bmiIndex = calcBMI();
   const bmiResult = checkBMIResult(bmiIndex);
+  const bmiPicture = checkBMIPicture(bmiIndex);
 
   const childrenRef = firestore()
     .collection(CollectionName.USERS)
@@ -475,7 +483,7 @@ const TrackingScreen = ({ navigation }) => {
               </View>
               <AutoIcon
                 color={scheme}
-                source={IconManager.bmi.normal}
+                source={IconManager.bmi[bmiPicture]}
                 height={120}
               />
             </View>

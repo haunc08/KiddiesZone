@@ -10,18 +10,20 @@ import Orientation from "react-native-orientation-locker";
 import firestore from "@react-native-firebase/firestore";
 import { CollectionName } from "../../utils/enum";
 import { subtractArray } from "../../utils/string";
+import BackgroundTimer from "react-native-background-timer";
 
 // const theaterSize = autoSize(ImageManager.movies, null, sizes.short);
 const screenHeight = sizes.short * 0.695;
 const screenWidth = screenHeight * 1.76;
 
 export const Movies = ({ navigation, route }) => {
-  const { child, gameKey, playedTime } = route.params;
-
+  const { child, gameKey, playedTime, startTime } = route.params;
   const [playing, setPlaying] = useState(false);
   const [currentList, setCurrentList] = useState([]);
   const [filter, setFilter] = useState("new");
   const [index, setIndex] = useState(0);
+  const [currentGame, setCurrentGame] = useState();
+  const [childGameData, setChildGameData] = useState();
 
   // firebase
   const childDataRef = useRef();
@@ -29,6 +31,101 @@ export const Movies = ({ navigation, route }) => {
   const gameData = useRef();
   const childData = useRef();
   const currentURL = useRef(); //to handle finish callback
+
+  let tempPlayingTime = 0;
+
+  const remainingTime = playedTime
+    ? childGameData?.timeLimit - playedTime
+    : childGameData?.timeLimit;
+
+  if (remainingTime <= 0 && child?.isLimited) {
+    Alert.alert(
+      "Thông báo",
+      "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+      [{ text: "OK", onPress: () => navigation.goBack() }]
+    );
+  }
+
+  useEffect(() => {
+    fetchCurrentGame();
+  }, []);
+
+  useEffect(() => {
+    fetchChildGameData();
+  }, [currentGame]);
+
+  useEffect(() => {
+    console.log("limit data", childGameData?.timeLimit, child?.isLimited);
+    if (childGameData?.timeLimit && child?.isLimited) {
+      if (remainingTime > 0) {
+        BackgroundTimer.runBackgroundTimer(() => {
+          tempPlayingTime++;
+          console.log(tempPlayingTime);
+          if (tempPlayingTime == remainingTime) {
+            createGameRecord();
+
+            Alert.alert(
+              "Thông báo",
+              "Bạn không thể chơi do đã vượt quá thời gian giới hạn.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    BackgroundTimer.stopBackgroundTimer();
+                    navigation.goBack();
+                  },
+                },
+              ]
+            );
+          }
+        }, 1000);
+      }
+    }
+  }, [childGameData]);
+
+  const createGameRecord = async () => {
+    console.log("create game record");
+    const endTime = new Date().getTime();
+    const playedTime = Math.floor((endTime - startTime) / 1000);
+
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .collection(CollectionName.GAME_RECORDS)
+      .add({
+        playedTime: playedTime,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => console.log("Add game record successfully"))
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCurrentGame = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .where("key", "==", gameKey)
+      .get()
+      .then((querySnapshot) => {
+        const doc = querySnapshot.docs[0];
+        const game = { ...doc.data(), _id: doc.id };
+        setCurrentGame(game);
+      });
+  };
+
+  const fetchChildGameData = async () => {
+    await firestore()
+      .collection(CollectionName.GAMES)
+      .doc(currentGame?._id)
+      .collection(CollectionName.CHILD_GAME_DATA)
+      .doc(child?._id)
+      .get()
+      .then((doc) => {
+        const childData = { ...doc.data(), _id: doc.id };
+        setChildGameData(childData);
+      });
+  };
 
   const fetchMovies = () => {
     firestore()
@@ -41,11 +138,11 @@ export const Movies = ({ navigation, route }) => {
         // console.log("game44444444444", temp.videos);
         gameData.current = res;
         // setCurrentList(gameData.current.videos);
-        fetchChildGameData();
+        fetchChildMoviesData();
       });
   };
 
-  const fetchChildGameData = () => {
+  const fetchChildMoviesData = () => {
     console.log("gamedata666666666666666666666666", gameData);
     console.log("child7777777777777777777777777777", child);
     childDataRef.current = firestore()
@@ -167,6 +264,8 @@ export const Movies = ({ navigation, route }) => {
   }, []);
 
   const goHome = () => {
+    createGameRecord();
+    if (child?.isLimited) BackgroundTimer.stopBackgroundTimer();
     navigation.goBack();
   };
 

@@ -28,6 +28,7 @@ export const ScreenView = ({
   headerColor,
   scrollToTop,
   absoluteChildren,
+  popup,
 }) => {
   const [showHeader, setShowHeader] = useState(false);
   const scrollRef = useRef(null);
@@ -42,6 +43,20 @@ export const ScreenView = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: bgColor || colors.smoke }}>
+      {popup ? (
+        <View
+          style={{
+            zIndex: 2,
+            position: "absolute",
+            flex: 1,
+            alignSelf: "stretch",
+            alignContent: "stretch",
+            alignItems: "stretch",
+          }}
+        >
+          {popup()}
+        </View>
+      ) : null}
       {absoluteChildren ? (
         <View
           style={{ zIndex: 2, position: "absolute" }}
@@ -222,14 +237,16 @@ export const Card = ({
   imgSource,
   height,
   noShadow,
+  shadow,
 }) => {
+  if (!shadow) shadow = 1;
   const containerStyle = {
     backgroundColor: bgColor || "white",
     padding: sizes.base * 2,
     borderWidth: 0,
     borderRadius: sizes.base,
     alignItems: "stretch",
-    elevation: noShadow ? 0 : sizes.base / 4,
+    elevation: noShadow ? 0 : (sizes.base / 4) * shadow,
     shadowOpacity: 0,
     height: height || "auto",
     ...style,

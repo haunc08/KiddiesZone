@@ -138,6 +138,7 @@ const LimitRow = ({
           marginTop: sizes.base / 4,
         }}
         value={isNaN(limit) ? "" : limit}
+        keyboardType="numeric"
         onChangeText={onChangeText}
       />
       <Heading2
@@ -326,7 +327,12 @@ export const GameCatalogueScreen = ({ navigation }) => {
   };
 
   return (
-    <ScreenView isMainScreen title="Giải trí" navigation={navigation}>
+    <ScreenView
+      isMainScreen
+      title="Giải trí"
+      navigation={navigation}
+      // bgColor={"white"}
+    >
       <Space loose>
         <View style={{ alignItems: "flex-end" }}>
           <AutoIcon
@@ -336,7 +342,7 @@ export const GameCatalogueScreen = ({ navigation }) => {
           <View style={{ position: "absolute" }}>
             <TouchableOpacity
               onPress={() => navigation.navigate("SelectChildScreen")}
-              style={{ marginRight: sizes.base, marginTop: sizes.base * 3 }}
+              style={{ marginRight: sizes.base * 2, marginTop: sizes.base * 3 }}
             >
               <Impress color={colors.grass}>
                 <Heading3 white style={{ fontSize: sizes.base + 5 }}>
