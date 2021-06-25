@@ -41,9 +41,10 @@ const ParentNavigator = () => {
     .collection(CollectionName.USERS)
     .doc(user?.uid)
     .collection(CollectionName.CHILDREN);
-
+  console.log(user);
   // fetch all children of user
   useEffect(() => {
+    console.log("reload children");
     childrenRef.onSnapshot((querySnapshot) => {
       let childrenData = [];
       querySnapshot.forEach((documentSnapshot) => {
@@ -58,7 +59,7 @@ const ParentNavigator = () => {
       });
       setChildren(childrenData);
     });
-  }, []);
+  }, [user]);
 
   const updateMoreTime = (num) => {
     if (moreTimeQueue) {

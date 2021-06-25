@@ -40,12 +40,7 @@ export const UserContext = createContext();
 const DisplayedScreens = () => {
   const [user, loading, error] = useAuthState(auth());
 
-  const userAuth = {
-    uid: user?.uid,
-    email: user?.email,
-  };
-
-  const [userInfo, setUserInfo] = useState(userAuth);
+  const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
     console.log("test user.....", user);
@@ -53,9 +48,13 @@ const DisplayedScreens = () => {
       .collection(CollectionName.USERS)
       .doc(user?.uid)
       .onSnapshot((documentSnapshot) =>
-        setUserInfo({ ...userInfo, name: documentSnapshot?.data()?.name })
+        setUserInfo({
+          uid: user?.uid,
+          email: user?.email,
+          name: documentSnapshot?.data()?.name,
+        })
       );
-  }, []);
+  }, [user]);
   // ParentPasswordScreen;
 
   if (user) {
