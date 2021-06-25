@@ -366,7 +366,12 @@ const TrashGame = ({ navigation, route }) => {
               // play();
               dispatch(clearAllTrashItems());
               navigation.goBack();
-              navigation.navigate("TrashGame");
+              navigation.navigate("TrashGame", {
+                child: child,
+                gameKey: "TrashGame",
+                playedTime: playedTime,
+                startTime: startTime,
+              });
             }}
           />
           <Heading3>Điểm của bạn</Heading3>

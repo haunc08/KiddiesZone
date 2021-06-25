@@ -59,6 +59,7 @@ const DisplayedScreens = () => {
   // ParentPasswordScreen;
 
   if (user) {
+    console.log("so who's user???", user);
     return (
       <UserContext.Provider value={userInfo}>
         <NavigationContainer>

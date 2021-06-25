@@ -276,8 +276,8 @@ const TrackingScreen = ({ navigation }) => {
       const recordsInMonth = healthRecords.filter((record) => {
         if (!record?.createdAt) return;
         if (
-          record?.createdAt.toDate().getMonth() === month - 1 &&
-          record?.createdAt.toDate().getFullYear() === curYear
+          record?.createdAt?.toDate().getMonth() === month - 1 &&
+          record?.createdAt?.toDate().getFullYear() === curYear
         )
           return record;
       });
@@ -333,8 +333,8 @@ const TrackingScreen = ({ navigation }) => {
       // }
       const recordsInMonth = healthRecords.filter(
         (record) =>
-          record?.createdAt.toDate().getMonth() === m - 1 &&
-          record?.createdAt.toDate().getFullYear() === year
+          record?.createdAt?.toDate().getMonth() === m - 1 &&
+          record?.createdAt?.toDate().getFullYear() === year
       );
       if (recordsInMonth.length <= 0) {
         return 0;

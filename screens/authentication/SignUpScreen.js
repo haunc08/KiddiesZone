@@ -46,8 +46,10 @@ const SignUpScreen = ({ navigation }) => {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          const { uid } = auth().currentUser;
-
+          // console.log("fucking res", res.user.uid);
+          // const { uid } = auth().currentUser;
+          // CHỮA CHÁY CHO NÓ WORKS TRƯỚC
+          auth().signOut();
           res.user
             .updateProfile({
               displayName: displayName,
@@ -60,15 +62,17 @@ const SignUpScreen = ({ navigation }) => {
               // addDefaultDatabase(uid);
               firestore()
                 .collection(CollectionName.USERS)
-                .doc(uid)
+                .doc(res.user.uid)
                 .set({ name: displayName })
-                .then(() => console.log("Add firestore successfully"))
+                .then(() => {
+                  console.log("Add firestore successfully");
+                  navigation.navigate("SignIn");
+                  console.log("User registered successfully!");
+                })
                 .catch((error) => console.log(error));
             });
-          console.log("User registered successfully!");
 
           reset();
-          navigation.navigate("SignIn");
         })
         .catch((error) => {
           // set isLoading to false b/c if not, SignUpScreen will return Loading screen and stay there

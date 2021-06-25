@@ -382,7 +382,12 @@ export const Shapes = ({ route, navigation }) => {
             // setPoints(0);
             // play();
             navigation.goBack();
-            navigation.navigate("Shapes");
+            navigation.navigate("Shapes", {
+              child: child,
+              gameKey: "Shapes",
+              playedTime: playedTime,
+              startTime: startTime,
+            });
           }}
         />
         <Heading1 white>{points}</Heading1>

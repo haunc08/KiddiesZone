@@ -132,12 +132,12 @@ const Tabs = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="Games"
-        component={ParentScreens.GameCatalogueScreen}
+        name="Tracking"
+        component={ParentScreens.TrackingScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={IconManager.games}
+              source={icons.like}
               resizeMode="contain"
               style={{
                 width: 25,
@@ -149,14 +149,13 @@ const Tabs = ({ navigation }) => {
           tabBarButton: (props) => <TabBarCustomButton {...props} />,
         }}
       />
-
       <Tab.Screen
-        name="Tracking"
-        component={ParentScreens.TrackingScreen}
+        name="Games"
+        component={ParentScreens.GameCatalogueScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
-              source={icons.like}
+              source={IconManager.games}
               resizeMode="contain"
               style={{
                 width: 25,

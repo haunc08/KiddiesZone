@@ -163,6 +163,7 @@ export const AddRecordScreen = ({ route, navigation }) => {
       name: childName,
       birthday: date,
       gender: selectedGender,
+      moreTime: -1,
     };
 
     // add new child
