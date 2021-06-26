@@ -116,7 +116,7 @@ const LimitRow = ({
   useEffect(() => {
     fetchChildGameData();
   }, [child]);
-
+  console.log(curLimit);
   return (
     <Row style={{ marginBottom: -sizes.base * 0.75 }}>
       <Heading2
@@ -140,8 +140,8 @@ const LimitRow = ({
           fontWeight: "bold",
           marginTop: sizes.base / 4,
         }}
-        defaultValue={isNaN(curLimit) ? "" : curLimit}
-        value={isNaN(limit) ? "" : limit}
+        // defaultValue={isNaN(curLimit) ? "" : curLimit}
+        value={isNaN(limit) ? (isNaN(curLimit) ? "" : curLimit) : limit}
         keyboardType="numeric"
         onChangeText={onChangeText}
       />
