@@ -110,6 +110,7 @@ const LimitRow = ({
       .then((childData) => {
         const limit = childData.data()?.timeLimit / 60;
         onChangeCurText(limit.toString());
+        onChangeText(limit.toString());
       });
   };
 
@@ -141,7 +142,7 @@ const LimitRow = ({
           marginTop: sizes.base / 4,
         }}
         // defaultValue={isNaN(curLimit) ? "" : curLimit}
-        value={isNaN(limit) ? (isNaN(curLimit) ? "" : curLimit) : limit}
+        value={isNaN(limit) ? "" : limit}
         keyboardType="numeric"
         onChangeText={onChangeText}
       />
